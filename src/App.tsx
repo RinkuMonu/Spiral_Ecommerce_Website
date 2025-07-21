@@ -18,13 +18,15 @@ import Terms from "./pages/tems$policy/Terms"
 import { Product } from './types'; // Import Product interface
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
-import { addItemToCart } from './reduxslice/CartSlice';
+import { addItemToCart , fetchCart  } from './reduxslice/CartSlice';
 import Orders from './pages/orders';
 import ShoppingCart from './pages/BackCart';
 // import {Phonepay} from './components/Phonepay/Phonepay';
 import Checkout from './components/checkout/checkout';
 import PaymentStatus from './components/PaymentStatus/PaymentStatus';
 import ResultPage from './pages/ResultPage';
+import Wishlist from './pages/Wishlist';
+
 
 
 function App() {
@@ -42,18 +44,42 @@ function App() {
 
   const dispatch = useDispatch();
 
-  const handleAddToCart = (product: Product) => {
-    dispatch(
-      addItemToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      }),
+  useEffect(() => {
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+    dispatch(fetchCart()); // ✅ fetch from backend if logged in
+  }
+}, [dispatch]);
+
+
+  // const handleAddToCart = (product: Product) => {
+  //   dispatch(
+  //     addItemToCart({
+  //       id: product.id,
+  //       name: product.name,
+  //       price: product.price,
+  //       image: product.image,
+  //     }),
       
-    );
-    toggleCart()
-  };
+  //   );
+  //   toggleCart()
+  // };
+
+  const handleAddToCart = (product: Product) => {
+  dispatch(
+    addItemToCart({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      quantity: 1,
+    })
+  );
+  toggleCart();
+};
+
+
+
   const ScrollToTop = () => {
     const location = useLocation();
   
@@ -94,6 +120,8 @@ function App() {
             <Route path='/paymentstatus' element={<PaymentStatus />} />
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/resultPage' element={<ResultPage/>} />
+            <Route path="/wishlist" element={<Wishlist />} />
+
 
             {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
 

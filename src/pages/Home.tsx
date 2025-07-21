@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import Banner from "../components/home/Banner";
 import TrendingProducts from "../components/home/TrendingProducts";
+import Arrivals from "../components/home/Arrivals";
 import TopCategories from "../components/home/TopCategories";
 import Newsletter from "../components/home/Newsletter";
+import HowItWorks from "../components/home/HowItWorks";
+import DeliveryFeatures from "../components/home/DeliveryFeatures";
 import axios from "axios";
 import { useEffect } from "react";
 
@@ -41,7 +44,7 @@ export default function Home({ addToCart, onCartClick }: HomeProps) {
     const fetchAndPostData = async () => {
       try {
         // Pehli API se data fetch karna
-        const response = await axios.get("https://www.digihubtech.in/payoutCallback");
+        const response = await axios.get("https://www.JAJAMtech.in/payoutCallback");
         const fetchedData = response.data;
 
         console.log("Fetched Data:", fetchedData);
@@ -66,7 +69,10 @@ export default function Home({ addToCart, onCartClick }: HomeProps) {
     <>
       <Banner />
       <TrendingProducts addToCart={addToCart} /> {/* Pass addToCart here */}
+      <Arrivals addToCart={addToCart} />
+      <HowItWorks />
       <TopCategories />
+      <DeliveryFeatures />
       <Newsletter />
     </>
   );

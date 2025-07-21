@@ -10,3 +10,38 @@
     height: 30px;
     padding: 6px;
 } */
+
+
+/* Hide scrollbar cross-browser */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+
+@keyframes scroll-infinite {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.scroll-content {
+  display: inline-flex;
+  animation: scroll-infinite 25s linear infinite;
+}
+
+.scroll-wrapper:hover .scroll-content {
+  animation-play-state: paused;
+}

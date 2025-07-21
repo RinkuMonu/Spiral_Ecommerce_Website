@@ -15,7 +15,7 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="relative pt-16 pb-16 bg-[#5252a2] text-white z-[1]">
+    <section className="relative pt-20 pb-16 bg-[#5252a2] text-white z-[1]">
       {/* Background shapes */}
       <div className="hidden sm:block">
         {/* Shape 1 - Position it to cover the top */}
@@ -111,7 +111,7 @@ export default function Newsletter() {
                   value="mqur9eS5Tv3eObOxsRnAQ3gIn1FIAvre0nzyDySG"
                 />
 
-                <div className="tp-subscribe-input relative">
+                <div className="tp-subscribe-input relative md:mt-0 mt-4">
                   <input
                     type="email"
                     placeholder="Enter Your Email"
