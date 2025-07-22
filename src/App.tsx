@@ -26,6 +26,7 @@ import Checkout from './components/checkout/checkout';
 import PaymentStatus from './components/PaymentStatus/PaymentStatus';
 import ResultPage from './pages/ResultPage';
 import Wishlist from './pages/Wishlist';
+import VendorVerificationForm from './pages/VerdorVerification';
 
 
 
@@ -121,6 +122,7 @@ function App() {
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/resultPage' element={<ResultPage/>} />
             <Route path="/wishlist" element={<Wishlist />} />
+             <Route path="/vendorverification" element={<VendorVerificationForm/>} />
 
 
             {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
