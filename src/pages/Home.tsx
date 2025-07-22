@@ -73,7 +73,7 @@ export default function Home({ addToCart, onCartClick }: HomeProps) {
       <HowItWorks />
       <TopCategories />
       <DeliveryFeatures />
-      <Newsletter />
+      {/* <Newsletter /> */}
     </>
   );
 }

@@ -1,245 +1,244 @@
-// import React from 'react';
-// import { ShoppingBag, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
-// import { Link } from 'react-router-dom';
-// import img1 from "../../assest/4.png"
-
-// export default function Footer() {
-//   return (
-//     <footer className="bg-gray-900 text-gray-300">
-//       <div className="container mx-auto px-4 py-12">
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-//           <div>
-//             <Link to="/" className="flex items-center space-x-4 text-white mb-2">
-//               <img src={img1} alt="" style={{ width: "50%" }} />
-
-//             </Link>
-//             <p className="mb-4">Your one-stop shop for all things tech</p>
-//             <div className="flex space-x-4">
-//               <a href="#" className="hover:text-white"><Facebook className="h-5 w-5" /></a>
-//               <a href="#" className="hover:text-white"><Twitter className="h-5 w-5" /></a>
-//               <a href="#" className="hover:text-white"><Instagram className="h-5 w-5" /></a>
-//               <a href="#" className="hover:text-white"><Youtube className="h-5 w-5" /></a>
-//             </div>
-//           </div>
-
-//           <div>
-//             <h3 className="text-white text-lg font-semibold mb-4">Quick Links</h3>
-//             <ul className="space-y-2">
-//               {["Sarees",
-//                 "Suits",
-//                 "Fabrics",].map((item) => (
-//                   <Link
-//                     key={item}
-//                     to={`/category/${item.toLowerCase()}`}
-//                     className=" h-full flex items-center"
-//                   >
-//                     {item}
-//                   </Link>
-//                 ))}
-
-//             </ul>
-//           </div>
-
-//           <div>
-//             <h3 className="text-white text-lg font-semibold mb-4">Customer Service</h3>
-//             <ul className="space-y-2">
-//               <li><Link to="/shipping" className="hover:text-white">Shipping Policy</Link></li>
-//               <li><Link to="/refund" className="hover:text-white">Returns & Exchanges</Link></li>
-//               <li><Link to="/terms" className="hover:text-white">Terms & Conditions</Link></li>
-//               <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
-//               <li><Link to="/cancellation_policy" className="hover:text-white">Cancellation Policy</Link></li>
-//               <li><Link to="/cookies" className="hover:text-white">Cookies</Link></li>
-
-//             </ul>
-//           </div>
-
-//           <div>
-//             <h3 className="text-white text-lg font-semibold mb-4">Contact Info</h3>
-//             <ul className="space-y-2">
-//               <li>PLOT NO 97, DAKSHINPURI-I, SHRIKISHANPURA, SANGANER,</li>
-//               <li>Jagatpura, Jaipur, Jaipur- 302017,Rajasthan</li>
-//               <li>Phone: 01414511098</li>
-//               <li>Email: info@JAJAM.com</li>
-//             </ul>
-//           </div>
-//         </div>
-
-//         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-//           <p>&copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE LIMITED. All rights reserved.</p>
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// }
-
-
-
-import React from 'react';
-import { ShoppingBag, Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
-// import img1 from "../../assest/4.png";
-import logo from "../../assest/logo.jpg";
-import footerLogo from "../../assest/footerLogo.jpg";
+"use client"
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Heart } from "lucide-react"
+import { Link } from "react-router-dom"
+import footerLogo from "../../assest/footerLogo.jpg"
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 to-indigo-950 text-gray-300 pt-16 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          {/* Brand Section */}
-          <div className="space-y-6">
-            <Link to="/" className="inline-block">
-              <img 
-                // src={img1}
-                // src={logo} 
-                src={footerLogo} 
-                alt="Company Logo"
-                className="w-52"
-              />
-            </Link>
-            <p className="text-gray-400 max-w-xs leading-relaxed">
-              Your premium destination for authentic traditional wear and modern fashion solutions.
-            </p>
-            <div className="flex space-x-5">
-              {[
-                { icon: <Facebook className="h-5 w-5" />, label: "Facebook" },
-                { icon: <Twitter className="h-5 w-5" />, label: "Twitter" },
-                { icon: <Instagram className="h-5 w-5" />, label: "Instagram" },
-                { icon: <Youtube className="h-5 w-5" />, label: "YouTube" }
-              ].map((social, index) => (
-                <a 
-                  key={index}
-                  href="#" 
-                  className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-indigo-700 transition-all duration-300 hover:-translate-y-1 group"
-                  aria-label={social.label}
-                >
-                  <span className="group-hover:text-white transition-colors">
-                    {social.icon}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
+    <footer className="relative overflow-hidden">
+      {/* Decorative background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23A13C78' fillOpacity='0.1'%3E%3Cpath d='M40 40c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm20-20c11.046 0 20 8.954 20 20s-8.954 20-20 20-20-8.954-20-20 8.954-20 20-20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white text-xl font-semibold mb-6 pb-2 border-b border-gray-700 inline-block">
-              Shop Categories
-            </h3>
-            <ul className="space-y-3">
-              {["Sarees", "Suits", "Fabrics"].map((item) => (
-                <li key={item}>
-                  <Link
-                    to={`/category/${item.toLowerCase()}`}
-                    className="flex items-center py-2 hover:text-white transition-all group"
-                  >
-                    <span className="w-2 h-2 bg-indigo-500 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+      {/* Main footer content */}
+      <div
+        className="relative bg-gradient-to-br from-slate-50 to-blue-50 border-t-4"
+        style={{ borderColor: "rgb(157 48 137)" }}
+      >
+        {/* Decorative top border pattern */}
+        <div
+          className="w-full h-2"
+          style={{
+            background:
+              "linear-gradient(90deg, rgb(157 48 137) 0%, #A13C78 25%, #872D67 50%, #681853 75%, rgb(157 48 137) 100%)",
+          }}
+        ></div>
 
-          {/* Customer Service */}
-          <div>
-            <h3 className="text-white text-xl font-semibold mb-6 pb-2 border-b border-gray-700 inline-block">
-              Customer Support
-            </h3>
-            <ul className="space-y-3">
-              {[
-                { title: "Shipping Policy", path: "/shipping" },
-                { title: "Returns & Exchanges", path: "/refund" },
-                { title: "Terms & Conditions", path: "/terms" },
-                { title: "Privacy Policy", path: "/privacy" },
-                { title: "Cancellation Policy", path: "/cancellation_policy" },
-                { title: "Cookies", path: "/cookies" }
-              ].map((item, index) => (
-                <li key={index}>
-                  <Link 
-                    to={item.path} 
-                    className="py-2 inline-block hover:text-white transition-colors hover:pl-2 duration-300"
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="container mx-auto px-4 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-16">
+            {/* Brand Section - Enhanced */}
+            <div className="lg:col-span-1 space-y-8">
+              <Link to="/" className="inline-block group">
+                <div className="relative">
+                  <img
+                    src={footerLogo || "/placeholder.svg"}
+                    alt="Company Logo"
+                    className="w-56 rounded-2xl shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </Link>
 
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-white text-xl font-semibold mb-6 pb-2 border-b border-gray-700 inline-block">
-              Contact Us
-            </h3>
-            <ul className="space-y-4">
-              <li className="flex">
-                <MapPin className="h-5 w-5 text-indigo-400 mt-1 flex-shrink-0" />
-                <span className="ml-3">
-                   JANKI BLOCK PRINTS   JANKI HOUSE,PLOT NO 21-A (2),RAMDWARA COLONY-2,SANGANER,JAIPUR-302029
-                </span>
-              </li>
-                <li className="flex">
-                <MapPin className="h-5 w-5 text-indigo-400 mt-1 flex-shrink-0" />
-                <span className="ml-3">
-                   LANDMARK :- BEHIND SPARSH HOSPITAL 
-                </span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-                {/* <span className="ml-3">01414511098</span> */}
-                <span className="ml-3"> 9116131960</span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-                {/* <span className="ml-3">info@jajam.com</span> */}
-                <span className="ml-3">shreeshyamblockprints.1@gmail.com</span>
-              </li>
-            </ul>
-            
-            {/* Newsletter Subscription */}
-            <div className="mt-8">
-              <h4 className="text-white text-lg font-medium mb-3">
-                Stay Updated
-              </h4>
-              <div className="flex">
-                <input 
-                  type="email" 
-                  placeholder="Your email address" 
-                  className="px-4 py-2 w-full bg-gray-800 border border-gray-700 rounded-l focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-                <button className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-r transition-colors">
-                  Subscribe
-                </button>
+              <div className="space-y-6">
+                <p className="text-gray-700 text-lg leading-relaxed max-w-sm">
+                  ✨ Your premium destination for{" "}
+                  <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                    authentic traditional wear
+                  </span>{" "}
+                  and modern fashion solutions.
+                </p>
+
+                {/* Enhanced social media */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-bold" style={{ color: "#1B2E4F" }}>
+                    Follow Our Journey
+                  </h4>
+                  <div className="flex space-x-4">
+                    {[
+                      { icon: <Facebook className="h-5 w-5" />, label: "Facebook", color: "#1877F2" },
+                      { icon: <Twitter className="h-5 w-5" />, label: "Twitter", color: "#1DA1F2" },
+                      { icon: <Instagram className="h-5 w-5" />, label: "Instagram", color: "#E4405F" },
+                      { icon: <Youtube className="h-5 w-5" />, label: "YouTube", color: "#FF0000" },
+                    ].map((social, index) => (
+                      <a
+                        key={index}
+                        href="#"
+                        className="group relative h-12 w-12 flex items-center justify-center rounded-full border-2 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+                        style={{
+                          borderColor: "rgba(157, 48, 137, 0.3)",
+                          color: "rgb(157 48 137)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = social.color
+                          e.currentTarget.style.color = "white"
+                          e.currentTarget.style.borderColor = social.color
+                          e.currentTarget.style.transform = "translateY(-8px) scale(1.1)"
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "transparent"
+                          e.currentTarget.style.color = "rgb(157 48 137)"
+                          e.currentTarget.style.borderColor = "rgba(157, 48, 137, 0.3)"
+                          e.currentTarget.style.transform = "translateY(0) scale(1)"
+                        }}
+                        aria-label={social.label}
+                      >
+                        {social.icon}
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          {social.label}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
+
+            {/* Shop Categories - Enhanced */}
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-3xl font-bold mb-2" style={{ color: "#1B2E4F" }}>
+                  Shop Categories
+                </h3>
+                <div className="flex items-center space-x-2 mb-6">
+                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                {["Sarees", "Suits", "Fabrics"].map((item, index) => (
+                  <Link
+                    key={item}
+                    to={`/category/${item.toLowerCase()}`}
+                    className="group flex items-center p-4 rounded-xl transition-all duration-300 hover:shadow-lg border border-transparent hover:border-purple-200"
+                    style={{
+                      background: "rgba(157, 48, 137, 0.05)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(157, 48, 137, 0.1)"
+                      e.currentTarget.style.transform = "translateX(8px)"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(157, 48, 137, 0.05)"
+                      e.currentTarget.style.transform = "translateX(0)"
+                    }}
+                  >
+                    <div
+                      className="w-3 h-3 rounded-full mr-4 transition-all duration-300 group-hover:scale-125"
+                      style={{ background: `rgb(${157 + index * 10} ${48 + index * 5} ${137 - index * 10})` }}
+                    ></div>
+                    <span className="text-lg font-semibold text-gray-700 group-hover:text-purple-800 transition-colors">
+                      {item}
+                    </span>
+                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div
+                        className="w-6 h-6 rounded-full flex items-center justify-center"
+                        style={{ background: "rgb(157 48 137)" }}
+                      >
+                        <span className="text-white text-xs">→</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact Info - Enhanced */}
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-3xl font-bold mb-2" style={{ color: "#1B2E4F" }}>
+                  Get In Touch
+                </h3>
+                <div className="flex items-center space-x-2 mb-6">
+                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4  ">
+                  <MapPin className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <div>
+                    <h5 className="font-semibold text-gray-800 mb-1">Our Location</h5>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA COLONY-2, SANGANER, JAIPUR-302029
+                    </p>
+                    <p className="text-gray-500 text-xs mt-1">LANDMARK: BEHIND SPARSH HOSPITAL</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4   ">
+                  <Phone className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <div>
+                    <h5 className="font-semibold text-gray-800 mb-1">Call Us</h5>
+                    <p className="text-gray-600">9116131960</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4   ">
+                  <Mail className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <div>
+                    <h5 className="font-semibold text-gray-800 mb-1">Email Us</h5>
+                    <p className="text-gray-600 text-sm">shreeshyamblockprints.1@gmail.com</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 
-        {/* Payment Methods */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {/* {["Visa", "MasterCard", "PayPal", "Google Pay", "Apple Pay"].map((method, index) => (
-            <div 
-              key={index} 
-              className="h-10 w-16 bg-gray-800 rounded-lg flex items-center justify-center text-xs font-medium"
-            >
-              {method}
-            </div>
-          ))} */}
-        </div>
+        {/* Copyright section with Customer Support links */}
+        <div
+          className="border-t-2 py-8"
+          style={{
+            borderColor: "rgba(157, 48, 137, 0.2)",
+            background: "linear-gradient(135deg, rgba(157, 48, 137, 0.05), rgba(161, 60, 120, 0.05))",
+          }}
+        >
+          <div className="container mx-auto px-4">
+            <div className="text-center space-y-6">
+              <p className="text-gray-700 text-lg font-medium">
+                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE LIMITED. All rights reserved.
+              </p>
 
-        {/* Copyright */}
-        <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
-          <p>
-            &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE LIMITED. All rights reserved.
-          </p>
-          <div className="mt-2 flex justify-center space-x-6 text-sm">
-            <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link to="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
+              {/* Customer Support Links with dividers */}
+              <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
+                {[
+                  { title: "Terms of Service", path: "/terms" },
+                  { title: "Privacy Policy", path: "/privacy" },
+                  { title: "Cookie Policy", path: "/cookies" },
+                  { title: "Shipping Policy", path: "/shipping" },
+                  { title: "Returns & Exchanges", path: "/refund" },
+                  { title: "Cancellation Policy", path: "/cancellation_policy" },
+                ].map((item, index, array) => (
+                  <div key={index} className="flex items-center">
+                    <Link
+                      to={item.path}
+                      className="text-gray-600 hover:text-purple-700 transition-colors font-medium px-3 py-1 rounded-full hover:bg-purple-50"
+                    >
+                      {item.title}
+                    </Link>
+                    {index < array.length - 1 && (
+                      <div
+                        className="w-1 h-1 rounded-full mx-2"
+                        style={{ background: "rgba(157, 48, 137, 0.4)" }}
+                      ></div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

@@ -1,278 +1,219 @@
-// import React from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { removeItemFromWishlist, clearWishlist } from "../reduxslice/WishlistSlice";
-// import { Trash2, Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
-// import { Link } from 'react-router-dom';
-
-// const Wishlist = () => {
-//   const wishlistItems = useSelector((state: any) => state.wishlist.items);
-//   const dispatch = useDispatch();
-
-//   const handleRemove = (id: string) => {
-//     dispatch(removeItemFromWishlist(id));
-//   };
-
-//   const handleClear = () => {
-//     if (wishlistItems.length > 0) {
-//       if (window.confirm("Are you sure you want to clear your entire wishlist?")) {
-//         dispatch(clearWishlist());
-//       }
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6">
-//       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-//         <div>
-//           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-//             <Heart className="text-rose-500 fill-rose-100" size={28} />
-//             Your Wishlist
-//           </h1>
-//           <p className="text-gray-500 mt-2">
-//             {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} saved for later
-//           </p>
-//         </div>
-
-//         {wishlistItems.length > 0 && (
-//           <button
-//             onClick={handleClear}
-//             className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors duration-200"
-//           >
-//             <Trash2 size={18} />
-//             Clear All
-//           </button>
-//         )}
-//       </div>
-
-//       {wishlistItems.length === 0 ? (
-//         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
-//           <div className="mx-auto bg-rose-50 w-24 h-24 rounded-full flex items-center justify-center mb-6">
-//             <Heart className="text-rose-500" size={48} strokeWidth={1.5} />
-//           </div>
-//           <h3 className="text-2xl font-bold text-gray-900 mb-3">Your wishlist is empty</h3>
-//           <p className="text-gray-600 max-w-md mx-auto mb-8">
-//             Start adding items you love! Click the heart icon on any product to save it here.
-//           </p>
-//           <Link
-//             to="/"
-//             className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200"
-//           >
-//             <ArrowLeft size={18} />
-//             Continue Shopping
-//           </Link>
-//         </div>
-//       ) : (
-//         <div className="grid grid-cols-1 gap-6">
-//           {wishlistItems.map((item: any) => (
-//             <div
-//               key={item.id}
-//               className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row"
-//             >
-//               <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-//                 <img
-//                   src={item.image}
-//                   alt={item.name}
-//                   className="w-full sm:w-40 h-40 object-contain rounded-xl bg-gray-50 p-4"
-//                 />
-//               </div>
-
-//               <div className="flex-grow">
-//                 <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-//                   <div>
-//                     <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.name}</h3>
-//                     <p className="text-lg font-bold text-indigo-600 mb-2">₹{item.price}</p>
-//                     <p className="text-gray-500 text-sm mb-3">{item.category}</p>
-
-//                     <div className="flex items-center gap-3 mt-4">
-//                       <button
-//                         onClick={() => handleRemove(item.id)}
-//                         className="flex items-center gap-1.5 text-gray-500 hover:text-rose-500 transition-colors text-sm"
-//                       >
-//                         <Trash2 size={16} />
-//                         Remove
-//                       </button>
-
-//                       <button className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 transition-colors text-sm">
-//                         <ShoppingBag size={16} />
-//                         Add to Cart
-//                       </button>
-//                     </div>
-//                   </div>
-
-//                   <div className="flex-shrink-0">
-//                     <Link
-//                       to={`/product/${item.id}`}
-//                       className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
-//                     >
-//                       View Product
-//                     </Link>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-
-//       {wishlistItems.length > 0 && (
-//         <div className="mt-12 flex justify-between items-center flex-wrap gap-4">
-//           <Link
-//             to="/"
-//             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
-//           >
-//             <ArrowLeft size={18} />
-//             Continue Shopping
-//           </Link>
-
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Wishlist;
-
-
-
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeItemFromWishlist, clearWishlist, fetchWishlist } from "../reduxslice/WishlistSlice";
-import { Trash2, Heart, ArrowLeft, ShoppingBag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+"use client"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { removeItemFromWishlist, clearWishlist, fetchWishlist } from "../reduxslice/WishlistSlice"
+import { Trash2, Heart, ArrowLeft, ShoppingBag, Star, Eye } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const Wishlist = () => {
-  const { items: wishlistItems, loading } = useSelector((state: any) => state.wishlist);
-  const dispatch = useDispatch<any>();
+  const { items: wishlistItems, loading } = useSelector((state: any) => state.wishlist)
+  const dispatch = useDispatch<any>()
 
   useEffect(() => {
-    dispatch(fetchWishlist());
-  }, [dispatch]);
-
-  // const handleRemove = (id: string) => {
-  //   dispatch(removeItemFromWishlist(id));
-  // };
+    dispatch(fetchWishlist())
+  }, [dispatch])
 
   const handleRemove = (id: string) => {
-  dispatch(removeItemFromWishlist(id)).then(() => {
-    dispatch(fetchWishlist());
-  });
-};
+    dispatch(removeItemFromWishlist(id)).then(() => {
+      dispatch(fetchWishlist())
+    })
+  }
 
   const handleClear = () => {
     if (wishlistItems.length > 0 && window.confirm("Are you sure you want to clear your entire wishlist?")) {
-      dispatch(clearWishlist());
+      dispatch(clearWishlist())
     }
-  };
+  }
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }).map((_, i) => (
+      <Star
+        key={i}
+        size={14}
+        className={`${i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}`}
+      />
+    ))
+  }
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6">
-      {/* header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <Heart className="text-rose-500 fill-rose-100" size={28} />
-            Your Wishlist
-          </h1>
-          <p className="text-gray-500 mt-2">
-            {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} saved for later
-          </p>
-        </div>
-        {wishlistItems.length > 0 && (
-          <button onClick={handleClear} className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors duration-200">
-            <Trash2 size={18} />
-            Clear All
-          </button>
-        )}
-      </div>
-
-      {/* loading */}
-      {loading && <p className="text-center">Loading wishlist...</p>}
-
-      {/* empty */}
-      {!loading && wishlistItems.length === 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
-          <div className="mx-auto bg-rose-50 w-24 h-24 rounded-full flex items-center justify-center mb-6">
-            <Heart className="text-rose-500" size={48} strokeWidth={1.5} />
+    <div className="min-h-screen">
+      <div className="container mx-auto py-12 px-4">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-gray-200">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight flex items-center gap-3 text-gray-900">
+              <Heart className="fill-current" style={{ color: "rgb(157 48 137)" }} size={32} />
+              Your Wishlist
+            </h1>
+            <p className="text-gray-600">
+              <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                {wishlistItems.length}
+              </span>{" "}
+              {wishlistItems.length === 1 ? "item" : "items"} saved for later
+            </p>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Your wishlist is empty</h3>
-          <p className="text-gray-600 max-w-md mx-auto mb-8">
-            Start adding items you love! Click the heart icon on any product to save it here.
-          </p>
-          <Link to="/" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200">
-            <ArrowLeft size={18} />
-            Continue Shopping
-          </Link>
-        </div>
-      )}
-
-      {/* items */}
-      <div className="grid grid-cols-1 gap-6">
-        {wishlistItems.map((item) => (
-          <div key={item.product._id} className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row">
-            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
-              <img
-                src={item.product.images?.[0]}
-                alt={item.product.productName}
-                className="w-full sm:w-40 h-40 object-contain rounded-xl bg-gray-50 p-4"
-              />
+          {wishlistItems.length > 0 && (
+            <div className="mt-4 md:mt-0">
+              <button
+                onClick={handleClear}
+                className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-red-300 hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Clear All</span>
+              </button>
             </div>
-            <div className="flex-grow">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    {item.product.productName}
-                  </h3>
+          )}
+        </div>
 
-                  {/* Show discounted price if exists */}
-                  <p className="text-lg font-bold text-indigo-600 mb-2">
-                    ₹{item.product.actualPrice}
-                    {item.product.discount ? (
-                      <span className="text-sm text-gray-500 line-through ml-2">₹{item.product.price}</span>
-                    ) : null}
-                  </p>
+        {/* Loading State */}
+        {loading && (
+          <div className="bg-gray-50 rounded-lg p-12 text-center">
+            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
+              <Heart className="w-10 h-10" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Loading your wishlist...</h3>
+            <p className="text-gray-600">Please wait while we gather your saved items</p>
+          </div>
+        )}
 
-                  {/* Discount percent */}
-                  {item.product.discount ? (
-                    <p className="text-green-600 text-sm mb-3">
-                      {item.product.discount}% off
-                    </p>
-                  ) : null}
+        {/* Empty State */}
+        {!loading && wishlistItems.length === 0 && (
+          <div className="bg-gray-50 rounded-lg p-12 text-center">
+            <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
+              <Heart className="w-10 h-10" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Your wishlist is empty</h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              Start adding items you love! Click the heart icon on any product to save it here for later.
+            </p>
+            <Link
+              to="/"
+              className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
+              style={{ background: "rgb(157 48 137)" }}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Continue Shopping</span>
+            </Link>
+          </div>
+        )}
 
-                  <div className="flex items-center gap-3 mt-4">
-                    <button
-                      onClick={() => handleRemove(item.product._id)}
-                      className="flex items-center gap-1.5 text-gray-500 hover:text-rose-500 transition-colors text-sm"
-                    >
-                      <Trash2 size={16} />
-                      Remove
-                    </button>
+        {/* Wishlist Items */}
+        {!loading && wishlistItems.length > 0 && (
+          <div className="space-y-6">
+            {wishlistItems.map((item: any) => (
+              <div
+                key={item.product._id}
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 p-6"
+              >
+                <div className="flex flex-col lg:flex-row gap-6">
+                  {/* Product Image */}
+                  <div className="flex-shrink-0">
+                    <div className="relative w-full lg:w-48 h-48 rounded-lg overflow-hidden bg-gray-50 p-3">
+                      <img
+                        src={item.product.images?.[0] || "/placeholder.svg?height=300&width=300"}
+                        alt={item.product.productName}
+                        className="w-full h-full object-contain rounded-md"
+                      />
+                      {item.product.discount && (
+                        <div
+                          className="absolute top-3 left-3 text-white text-xs font-medium px-2 py-1 rounded-md"
+                          style={{ background: "rgb(157 48 137)" }}
+                        >
+                          {item.product.discount}% OFF
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="flex-grow">
+                    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                      <div className="flex-grow">
+                        <h3 className="text-xl font-bold mb-2 text-gray-900">{item.product.productName}</h3>
+
+                        <p className="text-gray-600 mb-3 line-clamp-2">
+                          {item.product.description ||
+                            "Premium quality traditional wear crafted with authentic techniques and finest materials."}
+                        </p>
+
+                        {/* Rating */}
+                        <div className="flex items-center mb-3">
+                          <div className="flex mr-2">{renderStars(item.product.rating || 4)}</div>
+                          <span className="text-sm text-gray-500">(Reviews)</span>
+                        </div>
+
+                        {/* Price */}
+                        <div className="flex items-center mb-4">
+                          <span className="text-2xl font-bold mr-2" style={{ color: "rgb(157 48 137)" }}>
+                            ₹{item.product.actualPrice}
+                          </span>
+                          {item.product.price && item.product.price !== item.product.actualPrice && (
+                            <span className="text-base text-gray-400 line-through">₹{item.product.price}</span>
+                          )}
+                        </div>
+
+                        {/* Category */}
+                        <div className="mb-4">
+                          <span className="text-sm text-gray-600">Category: </span>
+                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                            {item.product.category?.name || "Traditional Wear"}
+                          </span>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Link
+                            to={`/product/${item.product._id}`}
+                            className="flex-1 flex items-center justify-center gap-2 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+                            style={{ background: "rgb(157 48 137)" }}
+                          >
+                            <Eye size={16} />
+                            <span>View Product</span>
+                          </Link>
+                          <button
+                            onClick={() => handleRemove(item.product._id)}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-300 rounded-lg font-medium transition-colors text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={16} />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex-shrink-0">
-                  <Link
-                    to={`/product/${item.product._id}`}
-                    className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
-                  >
-                    View Product
-                  </Link>
-                </div>
               </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom Navigation */}
+        {!loading && wishlistItems.length > 0 && (
+          <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 p-6 rounded-lg">
+            <Link
+              to="/"
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Continue Shopping</span>
+            </Link>
+
+            <div className="text-center">
+              <p className="text-gray-600 mb-2 text-sm">Found something you love?</p>
+              <Link
+                to="/products"
+                className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
+                style={{ background: "rgb(157 48 137)" }}
+              >
+                <ShoppingBag className="h-4 w-4" />
+                <span>Explore More</span>
+              </Link>
             </div>
           </div>
-        ))}
+        )}
       </div>
-
-
-      {wishlistItems.length > 0 && (
-        <div className="mt-12 flex justify-between items-center flex-wrap gap-4">
-          <Link to="/" className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
-            <ArrowLeft size={18} />
-            Continue Shopping
-          </Link>
-        </div>
-      )}
     </div>
-  );
-};
+  )
+}
 
-export default Wishlist;
+export default Wishlist

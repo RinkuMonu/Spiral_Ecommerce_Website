@@ -1,7 +1,7 @@
 "use client"
-
 import { useEffect, useState } from "react"
-import { Eye, Heart, ShoppingCart, Star, X, Clock } from "lucide-react"
+import { Eye, Heart, ShoppingCart, Star, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
 import { addItemToCart } from "../../reduxslice/CartSlice"
@@ -10,12 +10,45 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [quantity, setQuantity] = useState(1)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
   const [products, setProducts] = useState<any[]>([])
-  const [wishlistedItems, setWishlistedItems] = useState<Set<string>>(new Set())
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [itemsPerSlide, setItemsPerSlide] = useState(4)
   const dispatch = useDispatch()
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+
+  // Responsive items per slide
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerSlide(1)
+      } else if (window.innerWidth < 1024) {
+        setItemsPerSlide(2)
+      } else if (window.innerWidth < 1280) {
+        setItemsPerSlide(3)
+      } else {
+        setItemsPerSlide(4)
+      }
+    }
+
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  // Auto-slide functionality
+  useEffect(() => {
+    if (products.length === 0) return
+
+    const maxSlides = Math.ceil(products.length / itemsPerSlide)
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % maxSlides)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [products.length, itemsPerSlide])
 
   useEffect(() => {
     if (isModalOpen) {
@@ -34,7 +67,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
         const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
         const data = await res.json()
         if (Array.isArray(data.products)) {
-          setProducts(data.products)
+          setProducts(data.products.slice(0, 12)) // Get 12 products for slider
         } else {
           console.error("Unexpected products format:", data)
         }
@@ -43,7 +76,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
       }
     }
     fetchProducts()
-  }, [])
+  }, [baseUrl, referenceWebsite])
 
   const openProductModal = (product: any) => {
     setSelectedProduct(product)
@@ -55,6 +88,9 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
     setIsModalOpen(false)
     setTimeout(() => setSelectedProduct(null), 300)
   }
+
+  const handleIncrease = () => setQuantity((prev) => prev + 1)
+  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1)
 
   const handleAddToCart = (product: any) => {
     dispatch(
@@ -71,17 +107,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
   }
 
   const handleAddToWishlist = (product: any) => {
-    const productId = product._id
-    const newWishlistedItems = new Set(wishlistedItems)
-
-    if (wishlistedItems.has(productId)) {
-      newWishlistedItems.delete(productId)
-    } else {
-      newWishlistedItems.add(productId)
-    }
-
-    setWishlistedItems(newWishlistedItems)
-    dispatch(addItemToWishlist(productId))
+    dispatch(addItemToWishlist(product._id))
   }
 
   const renderStars = (rating: number) => {
@@ -94,198 +120,268 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
     ))
   }
 
-  const calculateDiscount = (originalPrice: number, salePrice: number) => {
-    return Math.round(((originalPrice - salePrice) / originalPrice) * 100)
+  const maxSlides = Math.ceil(products.length / itemsPerSlide)
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % maxSlides)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + maxSlides) % maxSlides)
+  }
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index)
   }
 
   return (
-    <section className="py-16 bg-gray-50 px-4 sm:px-8">
+    <section className="py-16 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        {/* <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight" style={{ color: "#A13C78" }}>
-            SALE
+        {/* Simple Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
+            Trending <span style={{ color: "rgb(157 48 137)" }}>Products</span>
           </h2>
-          <p className="text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed" style={{ color: "#384D89" }}>
-            Discover our wide range of women's ethnic wear and western wear fashion
-          </p>
-        </div> */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center mb-4">
-            <div className="w-12 h-0.5 mr-4" style={{ backgroundColor: "#A13C78" }}></div>
-            <h2 className="text-lg font-semibold tracking-wider" style={{ color: "#A13C78" }}>
-              TRENDING COLLECTION
-            </h2>
-            <div className="w-12 h-0.5 ml-4" style={{ backgroundColor: "#A13C78" }}></div>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            <span className="text-gray-900" >Popular</span>{" "}
-            <span className=""  style={{ color: "#A13C78" }}>Products</span>
-          </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover our most popular items loved by customers worldwide
           </p>
         </div>
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-          {products.slice(0, 8).map((product, index) => {
-            const originalPrice = product.price || 0
-            const salePrice = product.actualPrice || originalPrice
-            const discountPercentage = originalPrice > salePrice ? calculateDiscount(originalPrice, salePrice) : 0
-            const rating = product.rating || 4.2 + index * 0.2
-            const isWishlisted = wishlistedItems.has(product._id)
 
-            return (
-              <div
-                key={product._id}
-                className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
-              >
-                {/* Product Image Container */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
-                  {/* Wishlist Button */}
-                  <button
-                    onClick={() => handleAddToWishlist(product)}
-                    className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 hover:scale-110"
+        {/* Products Slider */}
+        <div className="relative">
+          {/* Navigation Arrows */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -ml-6"
+            style={{
+              background: "white",
+              border: "2px solid rgb(157 48 137)",
+              color: "rgb(157 48 137)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.color = "white"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white"
+              e.currentTarget.style.color = "rgb(157 48 137)"
+            }}
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -mr-6"
+            style={{
+              background: "white",
+              border: "2px solid rgb(157 48 137)",
+              color: "rgb(157 48 137)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.color = "white"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white"
+              e.currentTarget.style.color = "rgb(157 48 137)"
+            }}
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          {/* Slider Container */}
+          <div className="overflow-hidden rounded-2xl">
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${currentSlide * 100}%)`,
+              }}
+            >
+              {Array.from({ length: maxSlides }).map((_, slideIndex) => (
+                <div key={slideIndex} className="w-full flex-shrink-0">
+                  <div
+                    className="grid gap-6"
                     style={{
-                      backgroundColor: isWishlisted ? "#A13C78" : "rgba(255, 255, 255, 0.9)",
+                      gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
                     }}
                   >
-                    <Heart
-                      size={16}
-                      className={`transition-colors duration-200 ${
-                        isWishlisted ? "text-white fill-current" : "text-gray-600"
-                      }`}
-                    />
-                  </button>
-
-                  {/* Discount Badge */}
-                  {discountPercentage > 0 && (
-                    <div
-                      className="absolute top-3 left-3 px-2 py-1 rounded-full text-xs font-semibold text-white z-10"
-                      style={{ backgroundColor: "#A13C78" }}
-                    >
-                      {discountPercentage}% OFF
-                    </div>
-                  )}
-
-                  {/* Product Images with Hover Effect */}
-                  <div className="relative w-full h-full">
-                    {/* First Image (Default) */}
-                    <img
-                      src={product.images?.[0] || "/placeholder.svg?height=400&width=300&query=ethnic wear"}
-                      alt={product.productName}
-                      className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:scale-105"
-                      loading="lazy"
-                    />
-
-                    {/* Second Image (Hover) */}
-                    {product.images?.[1] && (
-                      <img
-                        src={product.images[1] || "/placeholder.svg"}
-                        alt={`${product.productName} - Alternative view`}
-                        className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
-                        loading="lazy"
-                      />
-                    )}
-
-                    {/* Fallback for products with only one image */}
-                    {!product.images?.[1] && (
-                      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-                    )}
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-
-                  {/* Quick Action Buttons */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-                        style={{ color: "#384D89" }}
+                    {products.slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide).map((product) => (
+                      <div
+                        key={product._id}
+                        className="group relative bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
+                        onMouseEnter={() => {
+                          setHoveredProduct(product._id)
+                        }}
+                        onMouseLeave={() => {
+                          setHoveredProduct(null)
+                        }}
                       >
-                        <ShoppingCart size={18} />
-                      </button>
-                      <button
-                        onClick={() => openProductModal(product)}
-                        className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-                        style={{ color: "#384D89" }}
-                      >
-                        <Eye size={18} />
-                      </button>
-                    </div>
+                        {/* Product Image */}
+                        <div className="relative aspect-square overflow-hidden">
+                          {/* First Image (Default) */}
+                          <img
+                            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-0"
+                            src={product.images?.[0] || "/placeholder.svg"}
+                            alt={product.productName}
+                          />
+
+                          {/* Second Image (Hover) */}
+                          {product.images?.[1] && (
+                            <img
+                              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
+                              src={product.images[1] || "/placeholder.svg"}
+                              alt={`${product.productName} - View 2`}
+                            />
+                          )}
+
+                          {/* Discount Badge */}
+                          {product.discount && (
+                            <div
+                              className="absolute top-4 left-4 text-white text-xs font-bold px-3 py-2 rounded-full z-10"
+                              style={{ background: "rgb(157 48 137)" }}
+                            >
+                              {product.discount}% OFF
+                            </div>
+                          )}
+
+                          {/* Action Buttons */}
+                          <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                            <button
+                              onClick={() => handleAddToCart(product)}
+                              className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
+                              style={{
+                                color: "rgb(157 48 137)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgb(157 48 137)"
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "white"
+                              }}
+                            >
+                              <ShoppingCart size={18} />
+                            </button>
+                            <button
+                              onClick={() => openProductModal(product)}
+                              className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
+                              style={{
+                                color: "rgb(157 48 137)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgb(157 48 137)"
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "white"
+                              }}
+                            >
+                              <Eye size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleAddToWishlist(product)}
+                              className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
+                              style={{
+                                color: hoveredProduct === product._id ? "#ef4444" : "rgb(157 48 137)",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.background = "rgb(157 48 137)"
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.background = "white"
+                              }}
+                            >
+                              <Heart size={18} />
+                            </button>
+                          </div>
+
+                          {/* Add to Cart Overlay */}
+                          <button
+                            onClick={() => handleAddToCart(product)}
+                            className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 z-20 ${
+                              hoveredProduct === product._id
+                                ? "translate-y-0 opacity-100"
+                                : "translate-y-full opacity-0"
+                            }`}
+                            style={{ background: "rgb(157 48 137)" }}
+                          >
+                            ADD TO CART
+                          </button>
+                        </div>
+
+                        {/* Product Info */}
+                        <div className="p-5">
+                          <div className="mb-3">
+                            <h3 className="text-lg font-bold mb-1 line-clamp-1" style={{ color: "#1B2E4F" }}>
+                              {product.productName}
+                            </h3>
+                            <p className="text-sm text-gray-500">{product.category?.name || "Traditional Wear"}</p>
+                          </div>
+
+                          {/* Rating */}
+                          <div className="flex items-center mb-3">
+                            <div className="flex mr-2">{renderStars(product.rating || 4)}</div>
+                            <span className="text-xs text-gray-500">(Reviews)</span>
+                          </div>
+
+                          {/* Price */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xl font-bold" style={{ color: "rgb(157 48 137)" }}>
+                                ₹{product.actualPrice}
+                              </span>
+                              {product.price && product.price !== product.actualPrice && (
+                                <span className="text-sm text-gray-400 line-through">₹{product.price}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Product Info */}
-                <div className="p-4 space-y-3">
-                  {/* Rating */}
-                  <div className="flex items-center gap-1">
-                    <div className="flex">{renderStars(rating)}</div>
-                    <span className="text-sm font-medium text-gray-600 ml-1">{rating.toFixed(1)}</span>
-                  </div>
-
-                  {/* Product Name */}
-                  <h3 className="font-semibold text-base leading-tight line-clamp-2" style={{ color: "#384D89" }}>
-                    {product.productName}
-                  </h3>
-
-                  {/* Price Section */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-lg font-bold" style={{ color: "#A13C78" }}>
-                      ₹{salePrice?.toLocaleString()}
-                    </span>
-                    {discountPercentage > 0 && (
-                      <>
-                        <span className="text-sm text-gray-500 line-through">₹{originalPrice?.toLocaleString()}</span>
-                        <span className="text-sm font-semibold" style={{ color: "#A13C78" }}>
-                          {discountPercentage}% OFF
-                        </span>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Shipping Info */}
-                  <div className="flex items-center gap-1 text-xs" style={{ color: "#384D89" }}>
-                    <Clock size={12} />
-                    <span className="font-bold">24-HOUR</span>
-                    <span className="text-gray-600">Ships within 24 hours</span>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+          {/* Slider Dots */}
+          <div className="flex justify-center mt-8 space-x-2">
+            {Array.from({ length: maxSlides }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index ? "w-8" : ""}`}
+                style={{
+                  background: currentSlide === index ? "rgb(157 48 137)" : "rgba(157, 48, 137, 0.3)",
+                }}
+              />
+            ))}
+          </div>
         </div>
 
         {/* View All Button */}
-        {products.length > 8 && (
-          <div className="text-center mt-12">
-            <button
-              className="inline-flex items-center px-8 py-4 rounded-full font-semibold transition-all duration-300 border-2 hover:shadow-lg"
-              style={{
-                color: "rgb(157 48 137)",
-                borderColor: "rgb(157 48 137)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgb(157 48 137)"
-                e.currentTarget.style.color = "white"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent"
-                e.currentTarget.style.color = "rgb(157 48 137)"
-              }}
-            >
-              View All Products
-            </button>
-          </div>
-        )}
+        <div className="text-center mt-12">
+          <Link
+            to="/products"
+            className="inline-flex items-center px-8 py-4 rounded-full font-semibold transition-all duration-300 border-2 hover:shadow-lg"
+            style={{
+              color: "rgb(157 48 137)",
+              borderColor: "rgb(157 48 137)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.color = "white"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent"
+              e.currentTarget.style.color = "rgb(157 48 137)"
+            }}
+          >
+            View All Products
+          </Link>
+        </div>
       </div>
 
-      {/* Product Quick View Modal */}
+      {/* Product Modal */}
       {isModalOpen && selectedProduct && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
@@ -297,23 +393,19 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="sticky top-0 z-10 bg-white p-4 border-b flex justify-between items-center shadow-sm">
-              <h3 className="text-xl font-bold" style={{ color: "#384D89" }}>
+            <div className="sticky top-0 z-10 bg-white p-6 border-b flex justify-between items-center">
+              <h3 className="text-2xl font-bold" style={{ color: "#1B2E4F" }}>
                 {selectedProduct.productName}
               </h3>
               <button
                 onClick={closeModal}
-                className="text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-full hover:bg-gray-100"
-                aria-label="Close"
+                className="text-gray-500 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-100"
               >
                 <X size={24} />
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Product Image */}
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px]"
@@ -322,49 +414,42 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                 />
               </div>
 
-              {/* Product Details */}
               <div>
                 <div className="mb-6">
-                  {/* Rating */}
                   <div className="flex items-center mb-4">
-                    <div className="flex mr-2">{renderStars(selectedProduct.rating || 4.5)}</div>
-                    <span className="text-sm text-gray-500">({selectedProduct.reviews || "150"} reviews)</span>
+                    <div className="flex mr-2">{renderStars(selectedProduct.rating || 4)}</div>
+                    <span className="text-sm text-gray-500">(Reviews)</span>
                   </div>
-
-                  {/* Price */}
                   <div className="flex items-center mb-6">
-                    <span className="text-3xl font-bold mr-3" style={{ color: "#A13C78" }}>
-                      ₹{selectedProduct.actualPrice || selectedProduct.price}
+                    <span className="text-3xl font-bold mr-3" style={{ color: "rgb(157 48 137)" }}>
+                      ₹{selectedProduct.actualPrice}
                     </span>
-                    {selectedProduct.price && selectedProduct.actualPrice !== selectedProduct.price && (
+                    {selectedProduct.price && selectedProduct.price !== selectedProduct.actualPrice && (
                       <span className="text-lg text-gray-400 line-through">₹{selectedProduct.price}</span>
                     )}
                   </div>
-
-                  {/* Description */}
                   <p className="text-gray-600 mb-8 leading-relaxed">
                     {selectedProduct.description ||
-                      "Premium quality ethnic wear with modern design and excellent craftsmanship. Perfect for all occasions."}
+                      "Premium quality traditional wear crafted with authentic techniques and finest materials. Perfect for special occasions and cultural celebrations."}
                   </p>
                 </div>
 
-                {/* Product Details */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ color: "#384D89" }}>
+                  <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ color: "#1B2E4F" }}>
                     Product Details
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col">
                       <span className="text-gray-600 text-sm">Category</span>
-                      <span className="font-medium">{selectedProduct.category?.name || "Ethnic Wear"}</span>
+                      <span className="font-medium">{selectedProduct.category?.name || "Traditional Wear"}</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-gray-600 text-sm">Material</span>
-                      <span className="font-medium">Premium Silk</span>
+                      <span className="font-medium">Premium Fabric</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-gray-600 text-sm">Occasion</span>
-                      <span className="font-medium">Festive & Party</span>
+                      <span className="font-medium">Festive & Wedding</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-gray-600 text-sm">Availability</span>
@@ -373,32 +458,18 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    style={{ backgroundColor: "#2A4172" }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#1B2E4F"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#2A4172"
-                    }}
+                    className="flex-1 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-lg"
+                    style={{ background: "rgb(157 48 137)" }}
                   >
                     <ShoppingCart size={18} />
                     <span>Add to Cart</span>
                   </button>
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
-                    className="flex-1 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
-                    style={{ backgroundColor: "#A13C78" }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#872D67"
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#A13C78"
-                    }}
+                    className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-lg"
                   >
                     <span>Buy Now</span>
                   </button>
