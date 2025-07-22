@@ -42,7 +42,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     const maxSlides = Math.ceil(products.length / itemsPerSlide)
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % maxSlides)
-    }, 4000) // Auto-slide every 4 seconds
+    }, 4000)
 
     return () => clearInterval(interval)
   }, [products.length, itemsPerSlide])
@@ -109,7 +109,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
         const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
         const data = await res.json()
         if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(5, 17)) // Get 12 products for slider
+          setProducts(data.products.slice(5, 17))
         } else {
           console.error("Unexpected products format:", data)
         }
@@ -135,47 +135,15 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   }
 
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="flex items-center space-x-3">
-              <div
-                className="w-12 h-0.5 rounded-full"
-                style={{ background: "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)" }}
-              />
-              <div
-                className="w-8 h-8 rounded-full border-2 flex items-center justify-center"
-                style={{ borderColor: "rgb(157 48 137)", background: "rgba(157, 48, 137, 0.1)" }}
-              >
-                <div className="w-3 h-3 rounded-full" style={{ background: "rgb(157 48 137)" }} />
-              </div>
-              <div
-                className="w-12 h-0.5 rounded-full"
-                style={{ background: "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)" }}
-              />
-            </div>
-          </div>
-
-          <div className="inline-flex items-center justify-center mb-6">
-            <span
-              className="text-sm font-semibold px-6 py-3 rounded-full inline-flex items-center gap-2 border-2"
-              style={{
-                color: "rgb(157 48 137)",
-                borderColor: "rgb(157 48 137)",
-              }}
-            >
-              New Collection
-            </span>
-          </div>
-
-          <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: "#1B2E4F" }}>
+        {/* Simple Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
             Latest <span style={{ color: "rgb(157 48 137)" }}>Arrivals</span>
           </h2>
-
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our newest collection of authentic traditional wear, crafted with heritage techniques
+            Discover our newest collection of authentic traditional wear
           </p>
         </div>
 
@@ -241,8 +209,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                     {products.slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide).map((product) => (
                       <div
                         key={product._id}
-                        className="group relative bg-white rounded-2xl border-2 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
-                        style={{ borderColor: "rgba(157, 48, 137, 0.1)" }}
+                        className="group relative bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
                         onMouseEnter={() => {
                           setHoveredProduct(product._id)
                         }}
@@ -252,11 +219,21 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                       >
                         {/* Product Image */}
                         <div className="relative aspect-square overflow-hidden">
+                          {/* First Image (Default) */}
                           <img
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-0"
                             src={product.images?.[0] || "/placeholder.svg"}
                             alt={product.productName}
                           />
+
+                          {/* Second Image (Hover) */}
+                          {product.images?.[1] && (
+                            <img
+                              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
+                              src={product.images[1] || "/placeholder.svg"}
+                              alt={`${product.productName} - View 2`}
+                            />
+                          )}
 
                           {/* Discount Badge */}
                           {product.discount && (
@@ -320,7 +297,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           {/* Add to Cart Overlay */}
                           <button
                             onClick={() => handleAddToCart(product)}
-                            className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 ${
+                            className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 z-20 ${
                               hoveredProduct === product._id
                                 ? "translate-y-0 opacity-100"
                                 : "translate-y-full opacity-0"
@@ -404,7 +381,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
         </div>
       </div>
 
-      {/* Product Modal - Keep the existing modal code */}
+      {/* Keep existing modal code */}
       {isModalOpen && selectedProduct && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
@@ -416,7 +393,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div className="sticky top-0 z-10 bg-white p-6 border-b flex justify-between items-center">
               <h3 className="text-2xl font-bold" style={{ color: "#1B2E4F" }}>
                 {selectedProduct.productName}
@@ -429,9 +405,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Product Image */}
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px]"
@@ -440,9 +414,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                 />
               </div>
 
-              {/* Product Details */}
               <div>
-                {/* Rating & Price */}
                 <div className="mb-6">
                   <div className="flex items-center mb-4">
                     <div className="flex mr-2">{renderStars(selectedProduct.rating || 4)}</div>
@@ -450,7 +422,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                   </div>
                   <div className="flex items-center mb-6">
                     <span className="text-3xl font-bold mr-3" style={{ color: "rgb(157 48 137)" }}>
-                      ₹{selectedProduct.actualPrice}
+                      ��{selectedProduct.actualPrice}
                     </span>
                     {selectedProduct.price && selectedProduct.price !== selectedProduct.actualPrice && (
                       <span className="text-lg text-gray-400 line-through">₹{selectedProduct.price}</span>
@@ -462,7 +434,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                   </p>
                 </div>
 
-                {/* Product Details */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold mb-4 border-b pb-2" style={{ color: "#1B2E4F" }}>
                     Product Details
@@ -487,7 +458,6 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
