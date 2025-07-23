@@ -289,7 +289,7 @@ export default function CategoryPage() {
               <span>Reset</span>
             </button>
             <button
-              onClick={() => setShowFilters(!showFilters)}
+              onClick={() => {}}
               className="flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
               style={{ background: "rgb(157 48 137)" }}
             >
