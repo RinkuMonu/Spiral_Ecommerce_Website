@@ -133,7 +133,6 @@ export default function CategoryPage() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("newest")
   const [showFilters, setShowFilters] = useState(false)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [openSections, setOpenSections] = useState({
     price: true,
     brands: true,

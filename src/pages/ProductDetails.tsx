@@ -603,6 +603,7 @@ import { ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
 import Arrivals from "../components/home/Arrivals"
 
+<<<<<<< HEAD
 // Define Product type directly in this file as requested
 interface Product {
   _id: string
@@ -620,6 +621,23 @@ interface Product {
   rating?: number // Rating, optional
   quantity?: number // Used in cart context, optional
 }
+=======
+
+
+import  { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Product } from "../types";
+import {  Heart, ShoppingCart } from "lucide-react";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaPinterestP,
+  FaLinkedinIn,
+  FaWhatsapp,
+  FaEnvelope,
+  FaRegCopy,
+} from "react-icons/fa";
+>>>>>>> 81c0799a2cfe9c66f721d9aab56cb28571f5e4fe
 
 interface ProductDetailsProps {
   addToCart: (product: Product) => void
