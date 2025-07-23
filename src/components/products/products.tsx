@@ -1,9 +1,9 @@
-import ProductDetails from "../../pages/ProductDetails";
+// import ProductDetails from "../../pages/ProductDetails";
 
 export default function products() {
     return (
         <>
-            <ProductDetails addToCart={() => {}} />
+            {/* <ProductDetails addToCart={() => {}} /> */}
         </>
     )
 }

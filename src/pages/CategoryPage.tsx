@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { Sliders, X, ChevronDown, ChevronUp, Grid, List } from "lucide-react"
+import { Sliders, X, ChevronDown, ChevronUp, } from "lucide-react"
 import ProductCard from "../components/products/ProductCard"
 
 // Define Product type
@@ -509,11 +509,12 @@ export default function CategoryPage() {
             ) : (
               <div
                 className={`grid gap-6 ${
-                  viewMode === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
+                  "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 }`}
               >
                 {filteredProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
+              
                 ))}
               </div>
             )}
