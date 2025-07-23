@@ -596,14 +596,11 @@
 
 "use client"
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { Heart, ShoppingCart, Star } from "lucide-react"
 import { FaFacebookF, FaTwitter, FaPinterestP, FaLinkedinIn, FaWhatsapp, FaEnvelope, FaRegCopy } from "react-icons/fa"
-import { ArrowRight } from "lucide-react"
-import { Link } from "react-router-dom"
 import Arrivals from "../components/home/Arrivals"
 
-<<<<<<< HEAD
 // Define Product type directly in this file as requested
 interface Product {
   _id: string
@@ -621,23 +618,6 @@ interface Product {
   rating?: number // Rating, optional
   quantity?: number // Used in cart context, optional
 }
-=======
-
-
-import  { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Product } from "../types";
-import {  Heart, ShoppingCart } from "lucide-react";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaPinterestP,
-  FaLinkedinIn,
-  FaWhatsapp,
-  FaEnvelope,
-  FaRegCopy,
-} from "react-icons/fa";
->>>>>>> 81c0799a2cfe9c66f721d9aab56cb28571f5e4fe
 
 interface ProductDetailsProps {
   addToCart: (product: Product) => void
@@ -650,7 +630,6 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description")
   const [mainImage, setMainImage] = useState<string>("") // Re-introducing mainImage state
   const { id } = useParams()
-  const navigate = useNavigate()
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
@@ -722,7 +701,6 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
     )
     relatedProductsFiltered = [...relatedProductsFiltered, ...otherProducts].slice(0, 4)
   }
-  const relatedProducts = relatedProductsFiltered
 
   const dummyReviews = [
     {
@@ -1082,7 +1060,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
 
     
       </div> */}
-      <Arrivals />
+      <Arrivals addToCart={function (): void {
+        throw new Error("Function not implemented.")
+      } } />
     </div>
   )
 }
