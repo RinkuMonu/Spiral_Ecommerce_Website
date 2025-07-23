@@ -11,6 +11,7 @@ import Cookies from "./pages/tems$policy/Cookies"
 import Privacy from "./pages/tems$policy/Privacy"
 import CancellationPolicy from "./pages/tems$policy/CancellationPolicy"
 import Refund from "./pages/tems$policy/Refund"
+import Termsandcondition from "./pages/tems$policy/Termsandcondition"
 import ShippingAddress from "./pages/AddresShiping"
 import Shipping from "./pages/tems$policy/Shipping"
 // import Policy from "./pages/Policy"
@@ -129,6 +130,7 @@ function App() {
             <Route path="/orderhistory" element={<OrderHistory />} />
             <Route path="/trackorder" element={<TrackOrder />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/termsandcondition" element={<Termsandcondition />} />
 
 
             {/* <Route path="/phonepay" element={<Phonepay/>} />  */}

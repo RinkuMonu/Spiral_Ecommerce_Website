@@ -531,7 +531,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                     e.currentTarget.style.boxShadow = "none"
                   }}
                 >
-                  <span className="relative z-10">{item}</span>
+                  <span className="relative z-10 text-[14px]">{item}</span>
                   {/* Traditional corner decorations */}
                   <div
                     className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"

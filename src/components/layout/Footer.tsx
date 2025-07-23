@@ -213,10 +213,10 @@ export default function Footer() {
                 {[
                   { title: "Terms of Service", path: "/terms" },
                   { title: "Privacy Policy", path: "/privacy" },
-                  { title: "Cookie Policy", path: "/cookies" },
+                  { title: "Terams And Conditions", path: "/termsandcondition" },
                   { title: "Shipping Policy", path: "/shipping" },
                   { title: "Returns & Exchanges", path: "/refund" },
-                  { title: "Cancellation Policy", path: "/cancellation_policy" },
+                  // { title: "Cancellation Policy", path: "/cancellation_policy" },
                 ].map((item, index, array) => (
                   <div key={index} className="flex items-center">
                     <Link
