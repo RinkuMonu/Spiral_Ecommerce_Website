@@ -597,10 +597,10 @@
 
 
 
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Product } from "../types";
-import { Eye, Heart, ShoppingCart } from "lucide-react";
+import {  Heart, ShoppingCart } from "lucide-react";
 import {
   FaFacebookF,
   FaTwitter,
