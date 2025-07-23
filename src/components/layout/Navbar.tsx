@@ -251,8 +251,16 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               </div>
             </div>
 
+          
+
             {/* Desktop Actions with traditional styling */}
             <div className="hidden lg:flex items-center space-x-3 xl:space-x-6">
+                <Link
+           to="/vendorverification"
+                className=" px-4 py-2 text-sm bg-[#c561b1] text-white font-bold transition-all duration-300 rounded-full flex items-center space-x-2 group"
+              >
+                Vendor Verification
+              </Link>
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}

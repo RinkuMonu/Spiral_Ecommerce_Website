@@ -9,67 +9,67 @@ const styleMap: Record<string, any> = {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "320+ Products",
-    image: "/saree.webp",
+    image: "/saree1.webp",
   },
   "Cotton mal mal saree": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "450+ Products",
-    image: "/saree.webp",
+    image: "/saree2.webp",
   },
   "Chanderi Silk saree": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "180+ Products",
-    image: "/saree.webp",
+    image: "/saree3.webp",
   },
   "Maheswari Silk saree": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "210+ Products",
-    image: "/saree.webp",
+    image: "/saree4.webp",
   },
   "Kota Doriya Saree": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "380+ Products",
-    image: "/saree.webp",
+    image: "/saree5.webp",
   },
   "Cotton Suit": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "150+ Products",
-    image: "/saree.webp",
+    image: "/saree6.webp",
   },
   "Sanganeri Print Fabric": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "160+ Products",
-    image: "/saree.webp",
+    image: "/saree7.webp",
   },
   "Dabu Print Fabric": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "140+ Products",
-    image: "/saree.webp",
+    image: "/saree8.webp",
   },
   "Bagru Print": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "130+ Products",
-    image: "/saree.webp",
+    image: "/saree9.webp",
   },
   "Cotton Suit In Kota": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "170+ Products",
-    image: "/saree.webp",
+    image: "/saree10.webp",
   },
   "Chanderi Silk Suits": {
     color: "rgb(157 48 137)",
     lightColor: "rgba(157, 48, 137, 0.1)",
     count: "190+ Products",
-    image: "/saree.webp",
+    image: "/saree11.webp",
   },
 }
 
@@ -132,7 +132,7 @@ export default function TopCategories() {
               color: "rgb(157 48 137)",
               lightColor: "rgba(157, 48, 137, 0.1)",
               count: "100+ Products",
-              image: "/saree.webp",
+              image: "/saree12.webp",
             }
 
             return (
