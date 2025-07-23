@@ -28,6 +28,8 @@ import ResultPage from './pages/ResultPage';
 import Wishlist from './pages/Wishlist';
 import VendorVerificationForm from './pages/VerdorVerification';
 import Products from './components/products/products';
+import OrderHistory from './pages/order-history';
+import TrackOrder from './pages/track-order';
 
 
 
@@ -125,6 +127,8 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
              <Route path="/vendorverification" element={<VendorVerificationForm/>} />
             <Route path="/productss" element={<Products />} />
+            <Route path="/orderhistory" element={<OrderHistory />} />
+            <Route path="/trackorder" element={<TrackOrder />} />
 
 
             {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
