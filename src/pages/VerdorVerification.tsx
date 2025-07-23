@@ -193,7 +193,12 @@ const VendorVerificationForm = () => {
               id="phoneNumber"
               name="phoneNumber"
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+           onChange={(e) => {
+  const value = e.target.value;
+
+  const numericValue = value.replace(/[^0-9]/g, '');
+  setPhoneNumber(numericValue);
+}}
               placeholder="e.g., 9876543210"
               maxLength="10"
               className="
