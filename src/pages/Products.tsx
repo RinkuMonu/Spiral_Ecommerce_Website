@@ -4,157 +4,58 @@ import { useParams } from "react-router-dom"
 import { Sliders, X, ChevronDown, ChevronUp } from "lucide-react"
 import ProductCard from "../components/products/ProductCard"
 
-// Define Product type
-interface Product {
-  _id: string
-  productName: string
-  description: string
-  images: string[]
-  actualPrice: number
-  price?: number
-  discount?: number
-  size?: string
-  brand?: string
-  category: {
-    _id: string
-    name: string
-  }
-  rating?: number
-  createdAt: string
-}
 
-// Static dummy data for products
-const dummyProducts: Product[] = [
-  {
-    _id: "1",
-    productName: "Royal Brocade Saree with Golden Border",
-    description: "A magnificent handwoven brocade saree, perfect for grand celebrations.",
-  images: ["/saree4.webp" , "/saree2.webp"],
-    actualPrice: 25000,
-    price: 30000,
-    discount: 17,
-    brand: "Maharaja Textiles",
-    category: { _id: "cat1", name: "Sarees" },
-    rating: 4.9,
-    createdAt: "2024-07-22T10:00:00Z",
-  },
-  {
-    _id: "2",
-    productName: "Emerald Green Anarkali Suit",
-    description: "Elegant Anarkali suit in rich emerald green with intricate gold embroidery.",
-  images: ["/saree3.webp" , "/saree6.webp"],
-    actualPrice: 15000,
-    price: 18000,
-    discount: 16,
-    brand: "Nawab Couture",
-    category: { _id: "cat2", name: "Suits" },
-    rating: 4.7,
-    createdAt: "2024-07-21T11:00:00Z",
-  },
-  {
-    _id: "3",
-    productName: "Artisan Block Print Cotton Fabric",
-    description: "Premium cotton fabric featuring traditional artisan block prints.",
-  images: ["/saree12.webp" , "/saree5.webp"],
-    actualPrice: 3500,
-    brand: "Dastkar Fabrics",
-    category: { _id: "cat3", name: "Fabrics" },
-    rating: 4.8,
-    createdAt: "2024-07-20T12:00:00Z",
-  },
-  {
-    _id: "4",
-    productName: "Crimson Velvet Bridal Lehenga",
-    description: "Luxurious crimson velvet lehenga with heavy zardozi work.",
-  images: ["/saree8.webp" , "/saree9.webp"],
-    actualPrice: 45000,
-    price: 55000,
-    discount: 18,
-    brand: "Royal Attire",
-    category: { _id: "cat4", name: "Lehengas" },
-    rating: 4.9,
-    createdAt: "2024-07-19T13:00:00Z",
-  },
-  {
-    _id: "5",
-    productName: "Indigo Dabu Print Kurta",
-    description: "Comfortable and stylish indigo kurta with authentic Dabu print.",
-  images: ["/saree10.webp" , "/saree12.webp"],
-    actualPrice: 6800,
-    brand: "Rural Roots",
-    category: { _id: "cat5", name: "Kurtas" },
-    rating: 4.6,
-    createdAt: "2024-07-18T14:00:00Z",
-  },
-  {
-    _id: "6",
-    productName: "Kashmiri Pashmina Shawl",
-    description: "Soft and warm Pashmina shawl with delicate hand embroidery.",
-images: ["/saree11.webp" , "/saree2.webp"],
-    actualPrice: 11000,
-    brand: "Kashmir Crafts",
-    category: { _id: "cat6", name: "Accessories" },
-    rating: 4.8,
-    createdAt: "2024-07-17T15:00:00Z",
-  },
-  {
-    _id: "7",
-    productName: "Silk Chanderi Dupatta",
-    description: "Elegant silk Chanderi dupatta with traditional motifs.",
-images: ["/saree7.webp" , "/saree6.webp"],
-    actualPrice: 4500,
-    price: 5500,
-    discount: 18,
-    brand: "Chanderi Weavers",
-    category: { _id: "cat7", name: "Accessories" },
-    rating: 4.5,
-    createdAt: "2024-07-16T16:00:00Z",
-  },
-  {
-    _id: "8",
-    productName: "Banarasi Silk Saree",
-    description: "Traditional Banarasi silk saree with intricate zari work.",
-images: ["/saree5.webp" , "/saree1.webp"],
-    actualPrice: 35000,
-    price: 42000,
-    discount: 17,
-    brand: "Banaras Heritage",
-    category: { _id: "cat1", name: "Sarees" },
-    rating: 4.9,
-    createdAt: "2024-07-15T17:00:00Z",
-  },
-]
 
-// Calculate initial price range from static data
-const initialPrices = dummyProducts.map((p) => p.actualPrice)
-const initialMinPrice = Math.min(...initialPrices)
-const initialMaxPrice = Math.max(...initialPrices, 1) // Ensure maxPrice is not 0
-
+const initialMinPrice = 0
+const initialMaxPrice =10000
+const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 export default function Products() {
   const { category } = useParams()
-  const products = dummyProducts // Use static data directly
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+   const [products, setProducts] = useState<any[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+const [selectedSizes, setSelectedSizes] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("newest")
   const [showFilters, setShowFilters] = useState(false)
   const [openSections, setOpenSections] = useState({
     price: true,
     brands: true,
   })
+    const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
 
-  // Filter and sort products when dependencies change
+    useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
+        const data = await res.json()
+        if (Array.isArray(data.products)) {
+          setProducts(data.products)
+          console.log(data)
+        } else {
+          console.error("Unexpected products format:", data)
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error)
+      }
+    }
+    fetchProducts()
+  }, [baseUrl, referenceWebsite])
+
   useEffect(() => {
-    let filtered = products.filter((product) => {
-      const productCategory = product.category?.name?.toLowerCase()
-      const matchesCategory = !category || category === "all-categories" || productCategory === category
-      const matchesPrice = product.actualPrice >= priceRange[0] && product.actualPrice <= priceRange[1]
-      const matchesBrand = selectedBrands.length === 0 || (product.brand && selectedBrands.includes(product.brand))
-      return matchesCategory && matchesPrice && matchesBrand
+    const filtered = products.filter((product) => {
+      const priceMatch = product.actualPrice >= priceRange[0] && product.actualPrice <= priceRange[1]
+     if (selectedSizes.length === 0) return priceMatch
+      
+      // If product has no size property, don't show it when sizes are selected
+      if (!product.size) return false
+      
+      // Only show products that match selected sizes
+      return priceMatch && selectedSizes.includes(product.size.toUpperCase())
+    
     })
 
-    // Sort products
-    filtered = filtered.sort((a, b) => {
+    const sorted = filtered.sort((a, b) => {
       switch (sortBy) {
         case "price-low":
           return a.actualPrice - b.actualPrice
@@ -162,18 +63,20 @@ export default function Products() {
           return b.actualPrice - a.actualPrice
         case "oldest":
           return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        default: // "newest"
+        default:
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       }
     })
 
-    setFilteredProducts(filtered)
-  }, [products, category, priceRange, selectedBrands, sortBy])
+    setFilteredProducts(sorted)
+  }, [products, priceRange, sortBy, selectedSizes])
 
-  const allBrands = Array.from(new Set(products.map((p) => p.brand).filter(Boolean))) as string[]
-
-  const handleBrandChange = (brand: string) => {
-    setSelectedBrands((prev) => (prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]))
+const handleSizeChange = (size: string) => {
+    setSelectedSizes(prev => 
+      prev.includes(size) 
+        ? prev.filter(s => s !== size) 
+        : [...prev, size]
+    )
   }
 
   const toggleSection = (section: keyof typeof openSections) => {
@@ -182,9 +85,10 @@ export default function Products() {
 
   const resetFilters = () => {
     setPriceRange([initialMinPrice, initialMaxPrice])
-    setSelectedBrands([])
+    setSelectedSizes([])
     setSortBy("newest")
   }
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -271,14 +175,12 @@ export default function Products() {
               </div>
               {openSections.price && (
                 <div className="space-y-4">
-                  {/* Price Display */}
                   <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                     <span className="text-sm font-medium text-gray-700">₹{priceRange[0].toLocaleString()}</span>
                     <span className="text-xs text-gray-500">to</span>
                     <span className="text-sm font-medium text-gray-700">₹{priceRange[1].toLocaleString()}</span>
                   </div>
 
-                  {/* Dual Range Slider */}
                   <div className="relative pt-2">
                     <div className="relative h-1 bg-gray-200 rounded-full">
                       <div
@@ -314,7 +216,6 @@ export default function Products() {
                     />
                   </div>
 
-                  {/* Manual Input */}
                   <div className="grid grid-cols-2 gap-3 pt-2">
                     <div>
                       <label className="text-xs text-gray-600 block mb-1">Min Price</label>
@@ -351,59 +252,41 @@ export default function Products() {
               )}
             </div>
 
-            {/* Brands */}
-            {allBrands.length > 0 && (
-              <div className="border-b border-gray-200 pb-6">
-                <div
-                  className="flex justify-between items-center cursor-pointer mb-4"
-                  onClick={() => toggleSection("brands")}
-                >
-                  <h3 className="font-semibold text-gray-800">Brands</h3>
-                  {openSections.brands ? (
-                    <ChevronUp className="h-4 w-4 text-gray-500" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
-                  )}
-                </div>
-                {openSections.brands && (
-                  <div className="space-y-3 max-h-48 overflow-y-auto">
-                    {allBrands.map((brand) => (
-                      <label key={brand} className="flex items-center space-x-3 cursor-pointer group">
-                        <div className="relative">
-                          <input
-                            type="checkbox"
-                            checked={selectedBrands.includes(brand)}
-                            onChange={() => handleBrandChange(brand)}
-                            className="sr-only"
-                          />
-                          <div
-                            className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                              selectedBrands.includes(brand)
-                                ? "border-purple-600"
-                                : "border-gray-300 group-hover:border-purple-400"
-                            }`}
-                            style={{
-                              background: selectedBrands.includes(brand) ? "rgb(157 48 137)" : "transparent",
-                            }}
-                          >
-                            {selectedBrands.includes(brand) && (
-                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        </div>
-                        <span className="text-sm text-gray-700 group-hover:text-gray-900">{brand}</span>
-                      </label>
-                    ))}
+                  
+      
+          <div className="space-y-3">
+            {sizeOptions.map((size) => (
+              <label key={size} className="flex items-center space-x-3 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={selectedSizes.includes(size)}
+                    onChange={() => handleSizeChange(size)}
+                    className="sr-only"
+                  />
+                  <div
+                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                      selectedSizes.includes(size)
+                        ? "border-purple-600 bg-purple-600"
+                        : "border-gray-300 group-hover:border-purple-400"
+                    }`}
+                  >
+                    {selectedSizes.includes(size) && (
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+                <span className="text-sm text-gray-700 group-hover:text-gray-900">{size}</span>
+              </label>
+            ))}
+          </div>
+        
 
             <button
               onClick={resetFilters}
@@ -443,7 +326,7 @@ export default function Products() {
         </div>
       </div>
       {/* Custom CSS for range sliders */}
-      <style jsx>{`
+       <style jsx>{`
         .range-slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
