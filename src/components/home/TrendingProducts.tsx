@@ -209,7 +209,8 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                     {products.slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide).map((product) => (
                       <div
                         key={product._id}
-                        className="group relative bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
+className="group relative rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
+
                         onMouseEnter={() => {
                           setHoveredProduct(product._id)
                         }}
@@ -220,21 +221,20 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                         {/* Product Image */}
                         <div className="relative aspect-square overflow-hidden">
                           {/* First Image (Default) */}
-                          <img
-                            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-0"
-                            // src={?.[0] || "/placeholder.svg"}
-                            src={`http://api.jajamblockprints.com${product.images}`}
-                            alt={product.productName}
-                          />
+                        <img
+  className="absolute inset-0 w-full h-full object-cover"
+  src={`http://api.jajamblockprints.com${product.images}`}
+  alt={product.productName}
+/>
 
                           {/* Second Image (Hover) */}
-                          {product.images?.[1] && (
+                          {/* {product.images?.[1] && (
                             <img
                               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
                               src={product.images[1] || "/placeholder.svg"}
                               alt={`${product.productName} - View 2`}
                             />
-                          )}
+                          )} */}
 
                           {/* Discount Badge */}
                           {product.discount && (
