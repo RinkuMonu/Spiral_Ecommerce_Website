@@ -11,6 +11,7 @@ import Cookies from "./pages/tems$policy/Cookies"
 import Privacy from "./pages/tems$policy/Privacy"
 import CancellationPolicy from "./pages/tems$policy/CancellationPolicy"
 import Refund from "./pages/tems$policy/Refund"
+import Termsandcondition from "./pages/tems$policy/Termsandcondition"
 import ShippingAddress from "./pages/AddresShiping"
 import Shipping from "./pages/tems$policy/Shipping"
 // import Policy from "./pages/Policy"
@@ -27,6 +28,8 @@ import PaymentStatus from './components/PaymentStatus/PaymentStatus';
 import ResultPage from './pages/ResultPage';
 import Wishlist from './pages/Wishlist';
 import VendorVerificationForm from './pages/VerdorVerification';
+import OrderHistory from './pages/order-history';
+import TrackOrder from './pages/track-order';
 import Products from './pages/Products';
 
 
@@ -124,7 +127,10 @@ function App() {
             <Route path='/resultPage' element={<ResultPage/>} />
             <Route path="/wishlist" element={<Wishlist />} />
              <Route path="/vendorverification" element={<VendorVerificationForm/>} />
+            <Route path="/orderhistory" element={<OrderHistory />} />
+            <Route path="/trackorder" element={<TrackOrder />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/termsandcondition" element={<Termsandcondition />} />
 
 
             {/* <Route path="/phonepay" element={<Phonepay/>} />  */}

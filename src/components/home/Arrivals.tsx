@@ -222,7 +222,8 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           {/* First Image (Default) */}
                           <img
                             className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-0"
-                            src={product.images?.[0] || "/placeholder.svg"}
+                            // src={product.images?.[0] || "/placeholder.svg"}
+                            src={`http://localhost:8080${product.images}`}
                             alt={product.productName}
                           />
 
@@ -230,7 +231,8 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           {product.images?.[1] && (
                             <img
                               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:scale-110"
-                              src={product.images[1] || "/placeholder.svg"}
+                              // src={product.images[1] || "/placeholder.svg"}
+                              src={`http://localhost:8080${product.images}`}
                               alt={`${product.productName} - View 2`}
                             />
                           )}
