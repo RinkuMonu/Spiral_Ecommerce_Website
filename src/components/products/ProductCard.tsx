@@ -83,7 +83,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Second Image on Hover */}
           {product.images?.[1] && (
             <img
-              src={product.images[1] || "/placeholder.svg"}
+              src={`http://localhost:8080${product.images[1]} ` || "/placeholder.svg"}
               alt={`${product.productName} - View 2`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                 isHovered ? "opacity-100" : "opacity-0"
