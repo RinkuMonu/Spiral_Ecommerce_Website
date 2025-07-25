@@ -223,7 +223,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
                           <img
                             className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-0"
                             // src={?.[0] || "/placeholder.svg"}
-                            src={`http://localhost:8080${product.images}`}
+                            src={`http://api.jajamblockprints.com${product.images}`}
                             alt={product.productName}
                           />
 
@@ -410,7 +410,7 @@ const TrendingProducts = ({ addToCart }: { addToCart: (product: any) => void }) 
               <div className="flex items-center justify-center bg-gray-50 rounded-xl p-8">
                 <img
                   className="rounded-xl object-contain max-h-[400px]"
-                  src= {`http://localhost:8080${selectedProduct.images}`}
+                  src= {`http://api.jajamblockprints.com${selectedProduct.images}`}
                   alt={selectedProduct.productName}
                 />
               </div>

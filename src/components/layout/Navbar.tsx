@@ -466,6 +466,56 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                       <Search size={16} />
                     </button>
                   </div>
+                   {searchQuery && (
+                    <div
+                      className="absolute z-20 mt-3 w-full bg-gradient-to-b from-slate-50 to-blue-50 shadow-2xl rounded-2xl overflow-hidden border-3 max-h-60 overflow-y-auto"
+                      style={{ borderColor: "rgb(157 48 137)" }}
+                    >
+                      {categories
+                        .filter((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .map((cat, index) => (
+                          <div
+                            key={index}
+                            className="px-4 xl:px-6 py-3 xl:py-4 cursor-pointer transition-all duration-200 flex items-center justify-between border-b last:border-b-0 hover:shadow-md"
+                            style={{
+                              borderColor: "rgb(157 48 137)",
+                              background: index % 2 === 0 ? "transparent" : "rgba(56, 77, 137, 0.05)",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "linear-gradient(90deg, rgba(56, 77, 137, 0.1), rgba(161, 60, 120, 0.1))"
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background =
+                                index % 2 === 0 ? "transparent" : "rgba(56, 77, 137, 0.05)"
+                            }}
+                            onClick={() => handleCategorySelect(cat)}
+                          >
+                            <span className="font-bold text-sm xl:text-base" style={{ color: "#1B2E4F" }}>
+                              {cat}
+                            </span>
+                            <div className="flex items-center">
+                              <span
+                                className="text-xs text-white px-2 xl:px-3 py-1 rounded-full font-semibold"
+                                style={{ background: "linear-gradient(135deg, #A13C78, #872D67)" }}
+                              >
+                                Category
+                              </span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4 xl:h-5 xl:w-5 ml-2 xl:ml-3"
+                                style={{ color: "rgb(157 48 137)" }}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                 </form>
               </div>
             </div>
@@ -707,12 +757,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                     </div>
                     <div>
                       <p className="font-bold text-white text-base sm:text-lg">{user.firstName}</p>
-                      <p className="text-xs text-blue-100">Welcome back!</p>
+                      <p className="text-xs text-blue-100 ">Welcome back!</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-3 sm:space-y-4 relative z-10">
-                    <p className="text-white font-bold text-base sm:text-lg">Welcome to Heritage Store!</p>
+                  <div className="space-y-3 sm:space-y-4 relative z-10"  style={{"width" : "fit-content"}}>
+                    <p className="text-white font-bold text-base sm:text-lg"  style={{"width" : "fit-content"}}>Welcome to Heritage Store!</p>
                     <div className="flex space-x-2 sm:space-x-3">
                       <Link
                         to="/login"

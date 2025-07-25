@@ -1,7 +1,6 @@
 "use client"
 import { useState } from "react"
 import type React from "react"
-
 import { Eye, Heart, ShoppingCart, Star } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
@@ -36,6 +35,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+
     dispatch(
       addItemToCart({
         id: product._id,
@@ -75,7 +75,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="relative aspect-square overflow-hidden bg-gray-50">
           {/* Main Image */}
           <img
-         src={`http://localhost:8080${product.images}`}
+         src={`http://api.jajamblockprints.com${product.images}`}
             alt={product.productName}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
@@ -83,7 +83,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Second Image on Hover */}
           {product.images?.[1] && (
             <img
-                   src={`http://localhost:8080${product.images}`}
+                   src={`http://api.jajamblockprints.com${product.images}`}
               alt={`${product.productName} - View 2`}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                 isHovered ? "opacity-100" : "opacity-0"

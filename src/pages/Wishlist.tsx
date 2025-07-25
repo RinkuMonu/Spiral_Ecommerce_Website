@@ -110,7 +110,8 @@ const Wishlist = () => {
                   <div className="flex-shrink-0">
                     <div className="relative w-full lg:w-48 h-48 rounded-lg overflow-hidden bg-gray-50 p-3">
                       <img
-                        src={item.product.images?.[0] || "/placeholder.svg?height=300&width=300"}
+                        // src={item.product.images?.[0] || "/placeholder.svg?height=300&width=300"}
+                        src={`http://api.jajamblockprints.com${item.product.images}`}
                         alt={item.product.productName}
                         className="w-full h-full object-contain rounded-md"
                       />

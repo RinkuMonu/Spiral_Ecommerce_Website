@@ -581,7 +581,8 @@ function AddressShipping({ cartItems }) {
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-3">
                     <img
-                      src={item.image || "/placeholder.svg"}
+                      // src={item.image || "/placeholder.svg"}
+                      src={`http://api.jajamblockprints.com${item.images}`}
                       alt={item.name}
                       className="w-16 h-16 object-cover rounded-lg"
                     />

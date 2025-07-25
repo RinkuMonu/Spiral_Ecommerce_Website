@@ -8,6 +8,7 @@ export default function CategoryPage() {
   let initialMinPrice = 0
   let initialMaxPrice = 10000
   const { category } = useParams()
+  const catagory1 = category?.replace("-", " ")
   const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
@@ -22,29 +23,47 @@ export default function CategoryPage() {
   const baseUrl = import.meta.env.VITE_API_BASE_URL
 const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
   // Initialize products
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
-        const data = await res.json()
-        if (Array.isArray(data.products)) {
-          setProducts(data.products)
-        } else {
-          console.error("Unexpected products format:", data)
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error)
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const queryParams = new URLSearchParams({
+        referenceWebsite,
+        ...(catagory1 && { category: catagory1 }),
+        minPrice: priceRange[0].toString(),
+        maxPrice: priceRange[1].toString(),
+        sortBy: sortBy === "price-low" ? "actualPrice" :
+                sortBy === "price-high" ? "actualPrice" :
+                "createdAt",
+        sortOrder: sortBy === "oldest" ? "asc" :
+                   sortBy === "price-low" ? "asc" :
+                   "desc",
+        page: "1",   // default page
+        limit: "100", // You can adjust this as needed
+      })
+
+      const res = await fetch(`${baseUrl}/product/getproducts?${queryParams.toString()}`)
+      const data = await res.json()
+
+      if (Array.isArray(data.products)) {
+        setProducts(data.products)
+        // Optional: setPagination(data.pagination)
+      } else {
+        console.error("Unexpected products format:", data)
       }
+    } catch (error) {
+      console.error("Error fetching products:", error)
     }
-    fetchProducts()
-  }, [baseUrl, referenceWebsite])
+  }
+
+  fetchProducts()
+}, [baseUrl, referenceWebsite, catagory1, priceRange, sortBy])
+
 
   useEffect(() => {
     const filtered = products.filter((product) => {
       const priceMatch = product.actualPrice >= priceRange[0] && product.actualPrice <= priceRange[1]
      if (selectedSizes.length === 0) return priceMatch
-      
-      // If product has no size property, don't show it when sizes are selected
+    
       if (!product.size) return false
       
       // Only show products that match selected sizes

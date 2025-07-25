@@ -155,7 +155,7 @@ export default function TopCategories() {
                   <div className="relative h-48 overflow-hidden">
                     <img
                       // src={styles.image || "/placeholder.svg"}
-                      src={`http://localhost:8080${styles.image}`}
+                      src={`http://api.jajamblockprints.com${styles.image}`}
                       alt={name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />

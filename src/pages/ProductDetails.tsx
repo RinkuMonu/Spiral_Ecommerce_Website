@@ -661,14 +661,18 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const handleIncrease = () => setQuantity((prev) => prev + 1)
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1)
 
-  const handleAddToCart = () => {
-    if (product) {
-      addToCart({
-        ...product,
-        quantity,
-      })
-    }
-  }
+  // const handleAddToCart = () => {
+  //   if (product) {
+  //     addToCart({
+  //       ...product,
+  //       quantity,
+  //     })
+  //   }
+  // }
+
+  // const handleAddToWishlist = (product: any) => {
+  //     dispatch(addItemToWishlist(product._id))
+  //   }
 
   const handleBuyNow = () => {
     if (product) {
@@ -743,7 +747,8 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             style={{ borderColor: "rgba(157, 48, 137, 0.1)" }}
           >
             <img
-              src={mainImage || "/placeholder.svg?height=600&width=600&query=main product image"}
+              // src={mainImage || "/placeholder.svg?height=600&width=600&query=main product image"}
+              src={`http://api.jajamblockprints.com${product.images}`}
               alt={product.productName}
               className="w-full h-auto object-cover"
             />
@@ -752,7 +757,8 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {product.images.map((img: string, index: number) => (
               <img
                 key={index}
-                src={img || "/placeholder.svg?height=100&width=100&query=product thumbnail"}
+                // src={img || "/placeholder.svg?height=100&width=100&query=product thumbnail"}
+                 src={`http://api.jajamblockprints.com${product.images}`}
                 alt={`Thumbnail ${index + 1}`}
                 className={`w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 ${mainImage === img ? "border-purple-600 shadow-lg" : "border-gray-200 hover:border-purple-300"
                   }`}
@@ -763,13 +769,13 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {product.images.length === 0 && (
               <>
                 <img
-                  src="/placeholder.svg?height=100&width=100"
+                 src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 2"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                   onClick={() => setMainImage("/placeholder.svg?height=600&width=600")}
                 />
                 <img
-                  src="/placeholder.svg?height=100&width=100"
+                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 3"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                   onClick={() => setMainImage("/placeholder.svg?height=600&width=600")}
@@ -779,13 +785,13 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {product.images.length === 1 && (
               <>
                 <img
-                  src={product.images[0] || "/placeholder.svg?height=100&width=100&query=product thumbnail 2"}
+                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 2"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                   onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
                 />
                 <img
-                  src={product.images[0] || "/placeholder.svg?height=100&width=100&query=product thumbnail 3"}
+                  src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 3"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                   onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
@@ -794,7 +800,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             )}
             {product.images.length === 2 && (
               <img
-                src={product.images[0] || "/placeholder.svg?height=100&width=100&query=product thumbnail 3"}
+                src={`http://api.jajamblockprints.com${product.images}`}
                 alt="Thumbnail 3"
                 className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                 onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
@@ -875,7 +881,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {" "}
             {/* Reduced gap */}
             <button
-              onClick={handleAddToCart}
+              onClick={handleBuyNow}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
               style={{ background: "rgb(157 48 137)" }}
             >
@@ -887,7 +893,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             >
               Buy Now
             </button>
-            <button
+            {/* <button
               className="flex items-center justify-center gap-2 px-5 py-3 border-2 rounded-full font-bold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] text-sm" // Smaller buttons
               style={{ borderColor: "rgb(157 48 137)", color: "rgb(157 48 137)" }}
               onMouseEnter={(e) => {
@@ -900,7 +906,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               }}
             >
               <Heart size={20} /> Add to Wishlist
-            </button>
+            </button> */}
           </div>
 
           {/* Share Options */}
