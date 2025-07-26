@@ -1,7 +1,7 @@
 "use client"
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Heart } from "lucide-react"
 import { Link } from "react-router-dom"
-import footerLogo from "../../assest/footerLogo.jpg"
+import footerLogo from "../../assest/logo.png"
 
 export default function Footer() {
   return (
@@ -19,14 +19,14 @@ export default function Footer() {
       {/* Main footer content */}
       <div
         className="relative bg-gradient-to-br from-slate-50 to-blue-50 border-t-4"
-        style={{ borderColor: "rgb(157 48 137)" }}
+        style={{ borderColor: "#6aa1c1" }}
       >
         {/* Decorative top border pattern */}
         <div
           className="w-full h-2"
           style={{
             background:
-              "linear-gradient(90deg, rgb(157 48 137) 0%, #A13C78 25%, #872D67 50%, #681853 75%, rgb(157 48 137) 100%)",
+              "linear-gradient(90deg, #6aa1c1 0%, #A13C78 25%, #872D67 50%, #681853 75%, #6aa1c1 100%)",
           }}
         ></div>
 
@@ -48,7 +48,7 @@ export default function Footer() {
               <div className="space-y-6">
                 <p className="text-gray-700 text-lg leading-relaxed max-w-sm">
                   ✨ Your premium destination for{" "}
-                  <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                  <span className="font-semibold" style={{ color: "#6aa1c1" }}>
                     authentic traditional wear
                   </span>{" "}
                   and modern fashion solutions.
@@ -72,7 +72,7 @@ export default function Footer() {
                         className="group relative h-12 w-12 flex items-center justify-center rounded-full border-2 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
                         style={{
                           borderColor: "rgba(157, 48, 137, 0.3)",
-                          color: "rgb(157 48 137)",
+                          color: "#6aa1c1",
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = social.color
@@ -82,7 +82,7 @@ export default function Footer() {
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent"
-                          e.currentTarget.style.color = "rgb(157 48 137)"
+                          e.currentTarget.style.color = "#6aa1c1"
                           e.currentTarget.style.borderColor = "rgba(157, 48, 137, 0.3)"
                           e.currentTarget.style.transform = "translateY(0) scale(1)"
                         }}
@@ -106,8 +106,8 @@ export default function Footer() {
                   Shop Categories
                 </h3>
                 <div className="flex items-center space-x-2 mb-6">
-                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
-                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div className="w-16 h-1 rounded-full" style={{ background: "#6aa1c1" }}></div>
+                  <div className="w-2 h-2 rounded-full" style={{ background: "#6aa1c1" }}></div>
                 </div>
               </div>
 
@@ -139,7 +139,7 @@ export default function Footer() {
                     <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
                       <div
                         className="w-6 h-6 rounded-full flex items-center justify-center"
-                        style={{ background: "rgb(157 48 137)" }}
+                        style={{ background: "#6aa1c1" }}
                       >
                         <span className="text-white text-xs">→</span>
                       </div>
@@ -156,36 +156,36 @@ export default function Footer() {
                   Get In Touch
                 </h3>
                 <div className="flex items-center space-x-2 mb-6">
-                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
-                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div className="w-16 h-1 rounded-full" style={{ background: "#6aa1c1" }}></div>
+                  <div className="w-2 h-2 rounded-full" style={{ background: "#6aa1c1" }}></div>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="flex items-start space-x-4  ">
-                  <MapPin className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <MapPin className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: "#6aa1c1" }} />
                   <div>
                     <h5 className="font-semibold text-gray-800 mb-1">Our Location</h5>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA COLONY-2, SANGANER, JAIPUR-302029
+                      SHOP NO F-5 227/228, MANGLAM TOWER, JAGNATHPURI, KANTA CHORAHA KALWAD ROAD, JHOTWARA JAIPUR, RAJASTHAN, 302012
                     </p>
-                    <p className="text-gray-500 text-xs mt-1">LANDMARK: BEHIND SPARSH HOSPITAL</p>
+                    {/* <p className="text-gray-500 text-xs mt-1">LANDMARK: BEHIND SPARSH HOSPITAL</p> */}
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4   ">
-                  <Phone className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <Phone className="h-6 w-6 flex-shrink-0" style={{ color: "#6aa1c1" }} />
                   <div>
                     <h5 className="font-semibold text-gray-800 mb-1">Call Us</h5>
-                    <p className="text-gray-600">9116131960</p>
+                    <p className="text-gray-600">7691097859</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4   ">
-                  <Mail className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <Mail className="h-6 w-6 flex-shrink-0" style={{ color: "#6aa1c1" }} />
                   <div>
                     <h5 className="font-semibold text-gray-800 mb-1">Email Us</h5>
-                    <p className="text-gray-600 text-sm">shreeshyamblockprints.1@gmail.com</p>
+                    <p className="text-gray-600 text-sm">info@spiral.fashion</p>
                   </div>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export default function Footer() {
           <div className="container mx-auto px-4">
             <div className="text-center space-y-6">
               <p className="text-gray-700 text-lg font-medium">
-                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE LIMITED. All rights reserved.
+                &copy; {new Date().getFullYear()} SPIRAL STYLE FASHION PRIVATE LIMITED. All rights reserved.
               </p>
 
               {/* Customer Support Links with dividers */}

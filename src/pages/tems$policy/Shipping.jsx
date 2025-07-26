@@ -34,7 +34,7 @@ export default function ShippingDelivery() {
         <p>
           <strong>Shop by Craft:</strong>{" "}
           <span className="text-gray-700">
-            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
+             SPIRAL STYLE FASHION PRIVATE LIMITED | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
           </span>
         </p>
         <p>

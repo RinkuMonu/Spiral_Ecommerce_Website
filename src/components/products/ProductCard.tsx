@@ -95,7 +95,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.discount && (
             <div
               className="absolute top-3 left-3 text-white text-xs font-bold px-2 py-1 rounded-full z-10"
-              style={{ background: "rgb(157 48 137)" }}
+              style={{ background: "#6aa1c1" }}
             >
               {product.discount}% OFF
             </div>
@@ -110,7 +110,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <button
               onClick={handleAddToCart}
               className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
-              style={{ color: "rgb(157 48 137)" }}
+              style={{ color: "#6aa1c1" }}
               title="Add to Cart"
             >
               <ShoppingCart size={16} />
@@ -118,7 +118,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <button
               onClick={handleAddToWishlist}
               className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
-              style={{ color: "rgb(157 48 137)" }}
+              style={{ color: "#6aa1c1" }}
               title="Add to Wishlist"
             >
               <Heart size={16} />
@@ -126,7 +126,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <Link
               to={`/product/${product._id}`}
               className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
-              style={{ color: "rgb(157 48 137)" }}
+              style={{ color: "#6aa1c1" }}
               title="Quick View"
             >
               <Eye size={16} />
@@ -142,7 +142,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <button
               onClick={handleAddToCart}
               className="w-full text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
-              style={{ background: "rgb(157 48 137)" }}
+              style={{ background: "#6aa1c1" }}
             >
               ADD TO CART
             </button>
@@ -169,7 +169,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Price */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-lg font-bold" style={{ color: "rgb(157 48 137)" }}>
+              <span className="text-lg font-bold" style={{ color: "#6aa1c1" }}>
                 ₹{product.actualPrice.toLocaleString()}
               </span>
               {product.price && product.price !== product.actualPrice && (

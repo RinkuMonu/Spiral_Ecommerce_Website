@@ -3,7 +3,7 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import QRCode from "react-qr-code"
 import { ChevronLeft, Wallet, Check, CreditCard, Clock, Shield } from "lucide-react"
-import logo from "../assest/logo.jpg"
+import logo from "../assest/logo.png"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
@@ -304,7 +304,7 @@ function AddressShipping({ cartItems }) {
                       className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       value={selectedAddress}
                       onChange={handleAddressChange}
-                      style={{ focusRingColor: "rgb(157 48 137)" }}
+                      style={{ focusRingColor: "#6aa1c1" }}
                     >
                       <option value="">Select Address</option>
                       <option value="new">Add new address...</option>
@@ -440,7 +440,7 @@ function AddressShipping({ cartItems }) {
                         checked={selectedShipping === method.id}
                         onChange={(e) => setSelectedShipping(e.target.value)}
                         className="h-4 w-4 text-purple-600 focus:ring-purple-500"
-                        style={{ accentColor: "rgb(157 48 137)" }}
+                        style={{ accentColor: "#6aa1c1" }}
                       />
                       <div className="ml-3">
                         <span className="block font-medium text-gray-900">
@@ -466,7 +466,7 @@ function AddressShipping({ cartItems }) {
                       checked={selectedPayment === "upi1"}
                       onChange={(e) => setSelectedPayment(e.target.value)}
                       className="h-4 w-4 text-purple-600 focus:ring-purple-500"
-                      style={{ accentColor: "rgb(157 48 137)" }}
+                      style={{ accentColor: "#6aa1c1" }}
                     />
                     <div className="ml-3">
                       <span className="block font-medium text-gray-900">UPI Gateway 1</span>
@@ -481,7 +481,7 @@ function AddressShipping({ cartItems }) {
                       checked={selectedPayment === "upi2"}
                       onChange={(e) => setSelectedPayment(e.target.value)}
                       className="h-4 w-4 text-purple-600 focus:ring-purple-500"
-                      style={{ accentColor: "rgb(157 48 137)" }}
+                      style={{ accentColor: "#6aa1c1" }}
                     />
                     <div className="ml-3">
                       <span className="block font-medium text-gray-900">UPI Gateway 2</span>
@@ -515,7 +515,7 @@ function AddressShipping({ cartItems }) {
                 ) : (
                   <button
                     className="flex items-center justify-center gap-2 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
-                    style={{ background: "rgb(157 48 137)" }}
+                    style={{ background: "#6aa1c1" }}
                     onClick={handlePayment}
                     disabled={isloading}
                   >
@@ -548,22 +548,22 @@ function AddressShipping({ cartItems }) {
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Clock className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
-                  <span className="text-lg font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                  <Clock className="w-5 h-5" style={{ color: "#6aa1c1" }} />
+                  <span className="text-lg font-semibold" style={{ color: "#6aa1c1" }}>
                     Time remaining: {formatTime(timeLeft)}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <Shield className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                    <Shield className="w-6 h-6 mx-auto mb-1" style={{ color: "#6aa1c1" }} />
                     <p className="text-sm font-medium text-gray-900">Secure</p>
                   </div>
                   <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <CreditCard className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                    <CreditCard className="w-6 h-6 mx-auto mb-1" style={{ color: "#6aa1c1" }} />
                     <p className="text-sm font-medium text-gray-900">UPI Payment</p>
                   </div>
                   <div className="text-center p-3 bg-gray-50 rounded-lg">
-                    <Check className="w-6 h-6 mx-auto mb-1" style={{ color: "rgb(157 48 137)" }} />
+                    <Check className="w-6 h-6 mx-auto mb-1" style={{ color: "#6aa1c1" }} />
                     <p className="text-sm font-medium text-gray-900">Instant</p>
                   </div>
                 </div>
@@ -622,7 +622,7 @@ function AddressShipping({ cartItems }) {
                     <div key={coupon.code} className="border border-gray-200 rounded-lg p-3">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                          <span className="font-medium" style={{ color: "#6aa1c1" }}>
                             {coupon.discount} OFF
                           </span>
                           <p className="text-sm text-gray-500">{coupon.description}</p>
@@ -630,8 +630,8 @@ function AddressShipping({ cartItems }) {
                         <button
                           className="text-sm font-medium px-3 py-1 rounded-md border transition-colors"
                           style={{
-                            color: "rgb(157 48 137)",
-                            borderColor: "rgb(157 48 137)",
+                            color: "#6aa1c1",
+                            borderColor: "#6aa1c1",
                           }}
                         >
                           Apply
@@ -647,7 +647,7 @@ function AddressShipping({ cartItems }) {
                 <button
                   onClick={() => setShowCouponInput(!showCouponInput)}
                   className="text-sm font-medium mt-3"
-                  style={{ color: "rgb(157 48 137)" }}
+                  style={{ color: "#6aa1c1" }}
                 >
                   {showCouponInput ? "Hide coupon input" : "Have a coupon code?"}
                 </button>
@@ -660,7 +660,7 @@ function AddressShipping({ cartItems }) {
                     />
                     <button
                       className="px-4 py-2 text-white rounded-lg text-sm font-medium"
-                      style={{ background: "rgb(157 48 137)" }}
+                      style={{ background: "#6aa1c1" }}
                     >
                       Apply
                     </button>

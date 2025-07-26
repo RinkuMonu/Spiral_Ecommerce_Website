@@ -42,11 +42,11 @@ const Wishlist = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-8 border-b border-gray-200">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2 leading-tight flex items-center gap-3 text-gray-900">
-              <Heart className="fill-current" style={{ color: "rgb(157 48 137)" }} size={32} />
+              <Heart className="fill-current" style={{ color: "#6aa1c1" }} size={32} />
               Your Wishlist
             </h1>
             <p className="text-gray-600">
-              <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
+              <span className="font-semibold" style={{ color: "#6aa1c1" }}>
                 {wishlistItems.length}
               </span>{" "}
               {wishlistItems.length === 1 ? "item" : "items"} saved for later
@@ -89,7 +89,7 @@ const Wishlist = () => {
             <Link
               to="/"
               className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
-              style={{ background: "rgb(157 48 137)" }}
+              style={{ background: "#6aa1c1" }}
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Continue Shopping</span>
@@ -118,7 +118,7 @@ const Wishlist = () => {
                       {item.product.discount && (
                         <div
                           className="absolute top-3 left-3 text-white text-xs font-medium px-2 py-1 rounded-md"
-                          style={{ background: "rgb(157 48 137)" }}
+                          style={{ background: "#6aa1c1" }}
                         >
                           {item.product.discount}% OFF
                         </div>
@@ -145,7 +145,7 @@ const Wishlist = () => {
 
                         {/* Price */}
                         <div className="flex items-center mb-4">
-                          <span className="text-2xl font-bold mr-2" style={{ color: "rgb(157 48 137)" }}>
+                          <span className="text-2xl font-bold mr-2" style={{ color: "#6aa1c1" }}>
                             ₹{item.product.actualPrice}
                           </span>
                           {item.product.price && item.product.price !== item.product.actualPrice && (
@@ -156,7 +156,7 @@ const Wishlist = () => {
                         {/* Category */}
                         <div className="mb-4">
                           <span className="text-sm text-gray-600">Category: </span>
-                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                          <span className="font-medium" style={{ color: "#6aa1c1" }}>
                             {item.product.category?.name || "Traditional Wear"}
                           </span>
                         </div>
@@ -166,7 +166,7 @@ const Wishlist = () => {
                           <Link
                             to={`/product/${item.product._id}`}
                             className="flex-1 flex items-center justify-center gap-2 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
-                            style={{ background: "rgb(157 48 137)" }}
+                            style={{ background: "#6aa1c1" }}
                           >
                             <Eye size={16} />
                             <span>View Product</span>
@@ -204,7 +204,7 @@ const Wishlist = () => {
               <Link
                 to="/products"
                 className="inline-flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
-                style={{ background: "rgb(157 48 137)" }}
+                style={{ background: "#6aa1c1" }}
               >
                 <ShoppingBag className="h-4 w-4" />
                 <span>Explore More</span>

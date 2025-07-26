@@ -140,7 +140,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
         {/* Simple Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
-            Latest <span style={{ color: "rgb(157 48 137)" }}>Arrivals</span>
+            Latest <span style={{ color: "#6aa1c1" }}>Arrivals</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover our newest collection of authentic traditional wear
@@ -155,16 +155,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -ml-6"
             style={{
               background: "white",
-              border: "2px solid rgb(157 48 137)",
-              color: "rgb(157 48 137)",
+              border: "2px solid #6aa1c1",
+              color: "#6aa1c1",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.background = "#6aa1c1"
               e.currentTarget.style.color = "white"
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "white"
-              e.currentTarget.style.color = "rgb(157 48 137)"
+              e.currentTarget.style.color = "#6aa1c1"
             }}
           >
             <ChevronLeft size={20} />
@@ -175,16 +175,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center -mr-6"
             style={{
               background: "white",
-              border: "2px solid rgb(157 48 137)",
-              color: "rgb(157 48 137)",
+              border: "2px solid #6aa1c1",
+              color: "#6aa1c1",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.background = "#6aa1c1"
               e.currentTarget.style.color = "white"
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "white"
-              e.currentTarget.style.color = "rgb(157 48 137)"
+              e.currentTarget.style.color = "#6aa1c1"
             }}
           >
             <ChevronRight size={20} />
@@ -240,7 +240,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           {product.discount && (
                             <div
                               className="absolute top-4 left-4 text-white text-xs font-bold px-3 py-2 rounded-full z-10"
-                              style={{ background: "rgb(157 48 137)" }}
+                              style={{ background: "#6aa1c1" }}
                             >
                               {product.discount}% OFF
                             </div>
@@ -252,10 +252,10 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                               onClick={() => handleAddToCart(product)}
                               className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
                               style={{
-                                color: "rgb(157 48 137)",
+                                color: "#6aa1c1",
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "rgb(157 48 137)"
+                                e.currentTarget.style.background = "#6aa1c1"
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = "white"
@@ -267,10 +267,10 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                               onClick={() => openProductModal(product)}
                               className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
                               style={{
-                                color: "rgb(157 48 137)",
+                                color: "#6aa1c1",
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "rgb(157 48 137)"
+                                e.currentTarget.style.background = "#6aa1c1"
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = "white"
@@ -282,10 +282,10 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                               onClick={() => handleAddToWishlist(product)}
                               className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
                               style={{
-                                color: hoveredProduct === product._id ? "#ef4444" : "rgb(157 48 137)",
+                                color: hoveredProduct === product._id ? "#ef4444" : "#6aa1c1",
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.background = "rgb(157 48 137)"
+                                e.currentTarget.style.background = "#6aa1c1"
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.background = "white"
@@ -303,7 +303,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                                 ? "translate-y-0 opacity-100"
                                 : "translate-y-full opacity-0"
                             }`}
-                            style={{ background: "rgb(157 48 137)" }}
+                            style={{ background: "#6aa1c1" }}
                           >
                             ADD TO CART
                           </button>
@@ -327,7 +327,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           {/* Price */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                              <span className="text-xl font-bold" style={{ color: "rgb(157 48 137)" }}>
+                              <span className="text-xl font-bold" style={{ color: "#6aa1c1" }}>
                                 ₹{product.actualPrice}
                               </span>
                               {product.price && product.price !== product.actualPrice && (
@@ -352,7 +352,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                 onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index ? "w-8" : ""}`}
                 style={{
-                  background: currentSlide === index ? "rgb(157 48 137)" : "rgba(157, 48, 137, 0.3)",
+                  background: currentSlide === index ? "#6aa1c1" : "rgba(157, 48, 137, 0.3)",
                 }}
               />
             ))}
@@ -365,16 +365,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
             to="/products"
             className="inline-flex items-center px-8 py-4 rounded-full font-semibold transition-all duration-300 border-2 hover:shadow-lg"
             style={{
-              color: "rgb(157 48 137)",
-              borderColor: "rgb(157 48 137)",
+              color: "#6aa1c1",
+              borderColor: "#6aa1c1",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgb(157 48 137)"
+              e.currentTarget.style.background = "#6aa1c1"
               e.currentTarget.style.color = "white"
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = "transparent"
-              e.currentTarget.style.color = "rgb(157 48 137)"
+              e.currentTarget.style.color = "#6aa1c1"
             }}
           >
             View All Products
@@ -422,7 +422,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                     <span className="text-sm text-gray-500">(Reviews)</span>
                   </div>
                   <div className="flex items-center mb-6">
-                    <span className="text-3xl font-bold mr-3" style={{ color: "rgb(157 48 137)" }}>
+                    <span className="text-3xl font-bold mr-3" style={{ color: "#6aa1c1" }}>
                       ��{selectedProduct.actualPrice}
                     </span>
                     {selectedProduct.price && selectedProduct.price !== selectedProduct.actualPrice && (
@@ -463,7 +463,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                   <button
                     onClick={() => handleAddToCart(selectedProduct)}
                     className="flex-1 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 hover:shadow-lg"
-                    style={{ background: "rgb(157 48 137)" }}
+                    style={{ background: "#6aa1c1" }}
                   >
                     <ShoppingCart size={18} />
                     <span>Add to Cart</span>

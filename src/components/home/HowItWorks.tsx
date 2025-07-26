@@ -4,19 +4,19 @@ import { Search, Palette, ShoppingBag } from "lucide-react"
 const HowItWorks = () => {
   const steps = [
     {
-      icon: <Search className="text-4xl" style={{ color: "rgb(157 48 137)" }} />,
+      icon: <Search className="text-4xl" style={{ color: "#6aa1c1" }} />,
       title: "Discover Heritage",
       description:
         "Explore our authentic collections of traditional wear, handcrafted with centuries-old techniques and timeless designs.",
     },
     {
-      icon: <Palette className="text-4xl" style={{ color: "rgb(157 48 137)" }} />,
+      icon: <Palette className="text-4xl" style={{ color: "#6aa1c1" }} />,
       title: "Choose Your Style",
       description:
         "Select from our curated range of ethnic wear with detailed craftsmanship guides and cultural significance for each piece.",
     },
     {
-      icon: <ShoppingBag className="text-4xl" style={{ color: "rgb(157 48 137)" }} />,
+      icon: <ShoppingBag className="text-4xl" style={{ color: "#6aa1c1" }} />,
       title: "Embrace Tradition",
       description:
         "Complete your purchase with confidence, knowing each piece carries the essence of our rich cultural heritage.",
@@ -31,7 +31,7 @@ const HowItWorks = () => {
           className="h-full w-full"
           style={{
             background:
-              "linear-gradient(90deg, rgb(157 48 137) 0%, #A13C78 25%, #872D67 50%, #681853 75%, rgb(157 48 137) 100%)",
+              "linear-gradient(90deg, #6aa1c1 0%, #A13C78 25%, #872D67 50%, #681853 75%, #6aa1c1 100%)",
           }}
         />
       </div>
@@ -44,17 +44,17 @@ const HowItWorks = () => {
             <div className="flex items-center space-x-3">
               <div
                 className="w-12 h-0.5 rounded-full"
-                style={{ background: "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, #6aa1c1, transparent)" }}
               />
               <div
                 className="w-8 h-8 rounded-full border-2 flex items-center justify-center"
-                style={{ borderColor: "rgb(157 48 137)", background: "rgba(157, 48, 137, 0.1)" }}
+                style={{ borderColor: "#6aa1c1", background: "rgba(157, 48, 137, 0.1)" }}
               >
-                <div className="w-3 h-3 rounded-full" style={{ background: "rgb(157 48 137)" }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: "#6aa1c1" }} />
               </div>
               <div
                 className="w-12 h-0.5 rounded-full"
-                style={{ background: "linear-gradient(90deg, transparent, rgb(157 48 137), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, #6aa1c1, transparent)" }}
               />
             </div>
           </div>
@@ -64,11 +64,11 @@ const HowItWorks = () => {
             {/* Traditional text decoration */}
             <div
               className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 rounded-full opacity-30"
-              style={{ background: "linear-gradient(90deg, rgb(157 48 137), #A13C78, rgb(157 48 137))" }}
+              style={{ background: "linear-gradient(90deg, #6aa1c1, #A13C78, #6aa1c1)" }}
             />
           </h2>
 
-          <p className="text-xl font-semibold tracking-wide mb-2" style={{ color: "rgb(157 48 137)" }}>
+          <p className="text-xl font-semibold tracking-wide mb-2" style={{ color: "#6aa1c1" }}>
             ✦ Discover • Select • Celebrate ✦
           </p>
 
@@ -88,7 +88,7 @@ const HowItWorks = () => {
                 boxShadow: "0 4px 20px rgba(157, 48, 137, 0.1)",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgb(157 48 137)"
+                e.currentTarget.style.borderColor = "#6aa1c1"
                 e.currentTarget.style.boxShadow = "0 20px 40px rgba(157, 48, 137, 0.2)"
               }}
               onMouseLeave={(e) => {
@@ -101,7 +101,7 @@ const HowItWorks = () => {
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg"
                   style={{
-                    background: "linear-gradient(135deg, rgb(157 48 137), rgba(135, 45, 103))",
+                    background: "linear-gradient(135deg, #6aa1c1, rgba(135, 45, 103))",
                   }}
                 >
                   {index + 1}
@@ -146,7 +146,7 @@ const HowItWorks = () => {
                       key={i}
                       className="w-2 h-2 rounded-full transition-all duration-300 group-hover:scale-125"
                       style={{
-                        background: i === 2 ? "rgb(157 48 137)" : "rgba(157, 48, 137, 0.3)",
+                        background: i === 2 ? "#6aa1c1" : "rgba(157, 48, 137, 0.3)",
                       }}
                     />
                   ))}
@@ -160,12 +160,12 @@ const HowItWorks = () => {
                     className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                     style={{
                       background: "white",
-                      border: "2px solid rgb(157 48 137)",
+                      border: "2px solid #6aa1c1",
                     }}
                   >
                     <svg
                       className="w-4 h-4"
-                      style={{ color: "rgb(157 48 137)" }}
+                      style={{ color: "#6aa1c1" }}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -185,7 +185,7 @@ const HowItWorks = () => {
             className="text-center px-8 py-4 rounded-full border-2 bg-white shadow-lg"
             style={{
               borderColor: "rgba(157, 48, 137, 0.3)",
-              color: "rgb(157 48 137)",
+              color: "#6aa1c1",
             }}
           >
             <p className="text-sm font-semibold">✨ Crafted with Love • Delivered with Care • Worn with Pride ✨</p>

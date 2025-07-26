@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 text-gray-800">
       <h1 className="text-4xl font-extrabold text-[#9d3089] mb-4 text-center border-b-slate-200">Privacy Policy</h1>
-      <p className="text-md text-gray-600 text-center" >Please read our Privacy Policy carefully before using Jajam Block Print services.</p>
+      <p className="text-md text-gray-600 text-center" >Please read our Privacy Policy carefully before using  SPIRAL STYLE FASHION PRIVATE LIMITED services.</p>
 
 
       {privacySections.map((section, index) => (
@@ -26,7 +26,7 @@ export default function PrivacyPolicy() {
         <p>
           <strong>Shop by Craft:</strong>{" "}
           <span className="text-gray-700">
-            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
+             SPIRAL STYLE FASHION PRIVATE LIMITED | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
           </span>
         </p>
         <p>
@@ -44,15 +44,15 @@ const privacySections = [
   {
     title: "INTRODUCTION",
     content: [
-      "We are jajamblockprint.com., a service provided by From, Jaipur Rajasthan, India.",
-      "We Jajam Block Print are registered business category and not for any other services, we are from jaipur rajasthan our official address is jogiyon ka mohalla, Jajam Block Print jaipur rajasthan and pin code is 303007 and the registered gst no. is 08BHIPC7034G1ZI."
+      "We are spiral.fashion, a service provided by From, Jaipur Rajasthan, India.",
+      "We  SPIRAL STYLE FASHION PRIVATE LIMITED are registered business category and not for any other services, we are from jaipur rajasthan our official address isSHOP NO F-5 227/228, MANGLAM TOWER, JAGNATHPURI, KANTA CHORAHA KALWAD ROAD, JHOTWARA JAIPUR, RAJASTHAN, 302012, and the registered gst no. is 08ABOCS5097H1ZN."
     ]
   },
   {
     title: "YOUR INFORMATION",
     content: [
       "In this Privacy Policy, references to “you” mean any person submitting any data to us or our agent or the Site.",
-      "If you have any comments or suggestions, we would be pleased to receive them at our Jaipur address or by emailing us at jajamblockprint3@gmail.com.",
+      "If you have any comments or suggestions, we would be pleased to receive them at our Jaipur address or by emailing us at info@spiral.fashion.",
       "Data protection is a matter of trust and your privacy is important to us. We shall therefore only use your name and other information which relates to you in the manner set out in this Privacy Policy."
     ]
   },
@@ -101,14 +101,14 @@ const privacySections = [
     title: "OPT OUT POLICY",
     content: [
       "We provide all users with the opportunity to opt-out of receiving non-essential (promotional, marketing-related) communications from us on behalf of our partners, and from us in general, after setting up an account.",
-      "If you no longer wish to receive any information from us please drop us an email at jajamblockprint3@gmail.com."
+      "If you no longer wish to receive any information from us please drop us an email at info@spiral.fashion."
     ]
   },
   {
     title: "CHANGES TO PRIVACY POLICY",
     content: [
       "If we decide to change our privacy policy, we will post those changes on this page so that you are always aware of what information we collect, how we use it, and under what circumstances we disclose it.",
-      "If you still have any query about our privacy policy kindly drop us an email at jajamblockprint3@gmail.com, we will reply you within 1-2 working days."
+      "If you still have any query about our privacy policy kindly drop us an email at info@spiral.fashion, we will reply you within 1-2 working days."
     ]
   }
 ];

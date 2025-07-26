@@ -231,7 +231,7 @@ const OrderHistory = () => {
         {/* Header Section */}
         <div className="text-center mb-12 pb-8 border-b border-gray-200">
           <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
-            Order <span style={{ color: "rgb(157 48 137)" }}>History</span>
+            Order <span style={{ color: "#6aa1c1" }}>History</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">Track and manage all your orders in one place</p>
         </div>
@@ -240,7 +240,7 @@ const OrderHistory = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
             <div className="flex items-center gap-3">
-              <Filter className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
+              <Filter className="w-5 h-5" style={{ color: "#6aa1c1" }} />
               <h2 className="text-lg font-semibold text-gray-900">Filter Orders</h2>
             </div>
 
@@ -307,7 +307,7 @@ const OrderHistory = () => {
             <Link
               to="/"
               className="inline-flex items-center space-x-2 text-white px-6 py-3 rounded-lg transition-colors font-medium"
-              style={{ background: "rgb(157 48 137)" }}
+              style={{ background: "#6aa1c1" }}
             >
               <Package className="h-4 w-4" />
               <span>Start Shopping</span>
@@ -344,7 +344,7 @@ const OrderHistory = () => {
 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       <div className="text-right">
-                        <p className="text-2xl font-bold" style={{ color: "rgb(157 48 137)" }}>
+                        <p className="text-2xl font-bold" style={{ color: "#6aa1c1" }}>
                           ₹{order.total.toLocaleString()}
                         </p>
                         <p className="text-sm text-gray-500">{order.items.length} item(s)</p>
@@ -411,7 +411,7 @@ const OrderHistory = () => {
                     {order.status === "delivered" && (
                       <button
                         className="flex items-center gap-2 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                        style={{ background: "rgb(157 48 137)" }}
+                        style={{ background: "#6aa1c1" }}
                       >
                         <RefreshCw className="w-4 h-4" />
                         <span>Reorder</span>
@@ -440,7 +440,7 @@ const OrderHistory = () => {
                                 <p className="text-sm text-gray-500 mb-2">{item.category}</p>
                                 <div className="flex justify-between items-center">
                                   <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
-                                  <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                                  <span className="font-medium" style={{ color: "#6aa1c1" }}>
                                     ₹{item.price.toLocaleString()}
                                   </span>
                                 </div>
@@ -529,7 +529,7 @@ const OrderHistory = () => {
                 className="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full"
                 style={{ background: "rgba(157, 48, 137, 0.1)" }}
               >
-                <span className="text-lg font-bold" style={{ color: "rgb(157 48 137)" }}>
+                <span className="text-lg font-bold" style={{ color: "#6aa1c1" }}>
                   ₹
                 </span>
               </div>

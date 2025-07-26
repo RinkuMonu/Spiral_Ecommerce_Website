@@ -58,7 +58,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
         text: "You need to login before proceeding to checkout.",
         icon: "warning",
         confirmButtonText: "Go to Login",
-        confirmButtonColor: "rgb(157 48 137)",
+        confirmButtonColor: "#6aa1c1",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
@@ -95,7 +95,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                 className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{ background: "rgba(157, 48, 137, 0.1)" }}
               >
-                <ShoppingCart className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
+                <ShoppingCart className="w-5 h-5" style={{ color: "#6aa1c1" }} />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Shopping Cart</h2>
@@ -119,14 +119,14 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                   className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
                   style={{ background: "rgba(157, 48, 137, 0.1)" }}
                 >
-                  <ShoppingCart className="w-10 h-10" style={{ color: "rgb(157 48 137)" }} />
+                  <ShoppingCart className="w-10 h-10" style={{ color: "#6aa1c1" }} />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
                 <p className="text-gray-500 mb-6">Add some items to get started!</p>
                 <button
                   onClick={onClose}
                   className="flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
-                  style={{ background: "rgb(157 48 137)" }}
+                  style={{ background: "#6aa1c1" }}
                 >
                   Continue Shopping
                   <ArrowRight className="w-4 h-4" />
@@ -154,7 +154,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                       <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">{item.name}</h3>
                       {item.category && <p className="text-xs text-gray-500 mb-2">{item.category}</p>}
                       <div className="flex items-center justify-between">
-                        <span className="font-bold" style={{ color: "rgb(157 48 137)" }}>
+                        <span className="font-bold" style={{ color: "#6aa1c1" }}>
                           ₹{item.price.toLocaleString()}
                         </span>
                         <button
@@ -223,7 +223,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                 <button
                   onClick={handleCheckout}
                   className="w-full flex items-center justify-center gap-2 text-white py-3 px-4 rounded-lg font-semibold transition-colors hover:shadow-lg"
-                  style={{ background: "rgb(157 48 137)" }}
+                  style={{ background: "#6aa1c1" }}
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-4 h-4" />

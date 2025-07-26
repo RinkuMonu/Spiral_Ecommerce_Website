@@ -42,7 +42,7 @@ export default function ExchangeReturn() {
         </p>
 
         <p className="text-justify text-gray-700 leading-relaxed">
-          Every suit material at Jajam Block Print goes through 3–4 levels of stringent quality checks. Any mischievous act of damaging the product by the customer will result in forfeiting the claim for both exchange and return.
+          Every suit material at  SPIRAL STYLE FASHION PRIVATE LIMITED goes through 3–4 levels of stringent quality checks. Any mischievous act of damaging the product by the customer will result in forfeiting the claim for both exchange and return.
         </p>
 
         <p className="text-justify text-gray-700 leading-relaxed">
@@ -60,7 +60,7 @@ export default function ExchangeReturn() {
         </p>
 
         <p className="text-justify text-gray-700 leading-relaxed">
-          Late or missing refunds (if applicable): If you haven’t received a refund yet, please check with your bank or credit card provider. If you've done this and still haven’t received the refund, please contact us at <a href="mailto:jajamblockprint@gmail.com" className="text-blue-600">jajamblockprint@gmail.com</a>.
+          Late or missing refunds (if applicable): If you haven’t received a refund yet, please check with your bank or credit card provider. If you've done this and still haven’t received the refund, please contact us at <a href="mailto:info@spiral.fashion" className="text-blue-600">info@spiral.fashion</a>.
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export default function ExchangeReturn() {
         <p>
           <strong>Shop by Craft:</strong>{" "}
           <span className="text-gray-700">
-            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
+             SPIRAL STYLE FASHION PRIVATE LIMITED | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
           </span>
         </p>
         <p>
