@@ -70,8 +70,9 @@ export default function Home({ addToCart, onCartClick }: HomeProps) {
       <Banner />
       <TrendingProducts addToCart={addToCart} /> {/* Pass addToCart here */}
       <Arrivals addToCart={addToCart} />
-      <HowItWorks />
       <TopCategories />
+
+      <HowItWorks />
       <DeliveryFeatures />
       {/* <Newsletter /> */}
     </>

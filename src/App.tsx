@@ -31,6 +31,7 @@ import VendorVerificationForm from './pages/VerdorVerification';
 import OrderHistory from './pages/order-history';
 import TrackOrder from './pages/track-order';
 import Products from './pages/Products';
+import WhatsAppButton from './pages/WhatsAppButton';
 
 
 
@@ -139,6 +140,7 @@ function App() {
         </main>
         <Cart isOpen={isCartOpen} onClose={toggleCart} cartItems={cartItems} />
         {!shouldHide && <Footer />}
+        <WhatsAppButton />
       </div>
     
   );

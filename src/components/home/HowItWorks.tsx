@@ -139,7 +139,7 @@ const HowItWorks = () => {
               <p className="text-gray-600 text-base leading-relaxed mb-6">{step.description}</p>
 
               {/* Traditional bottom accent */}
-              <div className="flex justify-center">
+              {/* <div className="flex justify-center">
                 <div className="flex items-center space-x-2">
                   {[...Array(5)].map((_, i) => (
                     <div
@@ -151,10 +151,10 @@ const HowItWorks = () => {
                     />
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Connecting arrow for desktop */}
-              {index < steps.length - 1 && (
+              {/* {index < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
@@ -174,7 +174,7 @@ const HowItWorks = () => {
                     </svg>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           ))}
         </div>

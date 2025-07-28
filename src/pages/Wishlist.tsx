@@ -47,12 +47,12 @@ const Wishlist = () => {
             </h1>
             <p className="text-gray-600">
               <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
-                {wishlistItems.length}
+                {wishlistItems?.length || 0}
               </span>{" "}
-              {wishlistItems.length === 1 ? "item" : "items"} saved for later
+              {wishlistItems?.length === 1 ? "item" : "items"} saved for later
             </p>
           </div>
-          {wishlistItems.length > 0 && (
+          {wishlistItems?.length > 0 && (
             <div className="mt-4 md:mt-0">
               <button
                 onClick={handleClear}
@@ -77,7 +77,7 @@ const Wishlist = () => {
         )}
 
         {/* Empty State */}
-        {!loading && wishlistItems.length === 0 && (
+        {!loading && (!wishlistItems || wishlistItems.length === 0) && (
           <div className="bg-gray-50 rounded-lg p-12 text-center">
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
               <Heart className="w-10 h-10" />
@@ -98,98 +98,109 @@ const Wishlist = () => {
         )}
 
         {/* Wishlist Items */}
-        {!loading && wishlistItems.length > 0 && (
+        {!loading && wishlistItems && wishlistItems.length > 0 && (
           <div className="space-y-6">
-            {wishlistItems.map((item: any) => (
-              <div
-                key={item.product._id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 p-6"
-              >
-                <div className="flex flex-col lg:flex-row gap-6">
-                  {/* Product Image */}
-                  <div className="flex-shrink-0">
-                    <div className="relative w-full lg:w-48 h-48 rounded-lg overflow-hidden bg-gray-50 p-3">
-                      <img
-                        // src={item.product.images?.[0] || "/placeholder.svg?height=300&width=300"}
-                        src={`http://api.jajamblockprints.com${item.product.images}`}
-                        alt={item.product.productName}
-                        className="w-full h-full object-contain rounded-md"
-                      />
-                      {item.product.discount && (
-                        <div
-                          className="absolute top-3 left-3 text-white text-xs font-medium px-2 py-1 rounded-md"
-                          style={{ background: "rgb(157 48 137)" }}
-                        >
-                          {item.product.discount}% OFF
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Product Details */}
-                  <div className="flex-grow">
-                    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
-                      <div className="flex-grow">
-                        <h3 className="text-xl font-bold mb-2 text-gray-900">{item.product.productName}</h3>
-
-                        <p className="text-gray-600 mb-3 line-clamp-2">
-                          {item.product.description ||
-                            "Premium quality traditional wear crafted with authentic techniques and finest materials."}
-                        </p>
-
-                        {/* Rating */}
-                        <div className="flex items-center mb-3">
-                          <div className="flex mr-2">{renderStars(item.product.rating || 4)}</div>
-                          <span className="text-sm text-gray-500">(Reviews)</span>
-                        </div>
-
-                        {/* Price */}
-                        <div className="flex items-center mb-4">
-                          <span className="text-2xl font-bold mr-2" style={{ color: "rgb(157 48 137)" }}>
-                            ₹{item.product.actualPrice}
-                          </span>
-                          {item.product.price && item.product.price !== item.product.actualPrice && (
-                            <span className="text-base text-gray-400 line-through">₹{item.product.price}</span>
-                          )}
-                        </div>
-
-                        {/* Category */}
-                        <div className="mb-4">
-                          <span className="text-sm text-gray-600">Category: </span>
-                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
-                            {item.product.category?.name || "Traditional Wear"}
-                          </span>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Link
-                            to={`/product/${item.product._id}`}
-                            className="flex-1 flex items-center justify-center gap-2 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+            {wishlistItems
+              .filter((item: any) => item?.product) // skip null product
+              .map((item: any) => (
+                <div
+                  key={item?.product?._id}
+                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 p-6"
+                >
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Product Image */}
+                    <div className="flex-shrink-0">
+                      <div className="relative w-full lg:w-48 h-48 rounded-lg overflow-hidden bg-gray-50 p-3">
+                        <img
+                          src={
+                            item?.product?.images?.[0]
+                              ? `http://api.jajamblockprints.com${item.product.images[0]}`
+                              : "/placeholder.svg"
+                          }
+                          alt={item?.product?.productName || "No image"}
+                          className="w-full h-full object-contain rounded-md"
+                        />
+                        {item?.product?.discount && (
+                          <div
+                            className="absolute top-3 left-3 text-white text-xs font-medium px-2 py-1 rounded-md"
                             style={{ background: "rgb(157 48 137)" }}
                           >
-                            <Eye size={16} />
-                            <span>View Product</span>
-                          </Link>
-                          <button
-                            onClick={() => handleRemove(item.product._id)}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-300 rounded-lg font-medium transition-colors text-red-600 hover:bg-red-50"
-                          >
-                            <Trash2 size={16} />
-                            <span>Remove</span>
-                          </button>
+                            {item.product.discount}% OFF
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Product Details */}
+                    <div className="flex-grow">
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                        <div className="flex-grow">
+                          <h3 className="text-xl font-bold mb-2 text-gray-900">
+                            {item?.product?.productName || "Unnamed Product"}
+                          </h3>
+
+                          <p className="text-gray-600 mb-3 line-clamp-2">
+                            {item?.product?.description ||
+                              "Premium quality traditional wear crafted with authentic techniques and finest materials."}
+                          </p>
+
+                          {/* Rating */}
+                          <div className="flex items-center mb-3">
+                            <div className="flex mr-2">
+                              {renderStars(item?.product?.rating || 4)}
+                            </div>
+                            <span className="text-sm text-gray-500">(Reviews)</span>
+                          </div>
+
+                          {/* Price */}
+                          <div className="flex items-center mb-4">
+                            <span className="text-2xl font-bold mr-2" style={{ color: "rgb(157 48 137)" }}>
+                              ₹{item?.product?.actualPrice || "N/A"}
+                            </span>
+                            {item?.product?.price && item?.product?.price !== item?.product?.actualPrice && (
+                              <span className="text-base text-gray-400 line-through">
+                                ₹{item.product.price}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Category */}
+                          <div className="mb-4">
+                            <span className="text-sm text-gray-600">Category: </span>
+                            <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                              {item?.product?.category?.name || "Traditional Wear"}
+                            </span>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Link
+                              to={`/product/${item?.product?._id}`}
+                              className="flex-1 flex items-center justify-center gap-2 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
+                              style={{ background: "rgb(157 48 137)" }}
+                            >
+                              <Eye size={16} />
+                              <span>View Product</span>
+                            </Link>
+                            <button
+                              onClick={() => handleRemove(item?.product?._id)}
+                              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-300 rounded-lg font-medium transition-colors text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 size={16} />
+                              <span>Remove</span>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
 
         {/* Bottom Navigation */}
-        {!loading && wishlistItems.length > 0 && (
+        {!loading && wishlistItems && wishlistItems.length > 0 && (
           <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 p-6 rounded-lg">
             <Link
               to="/"

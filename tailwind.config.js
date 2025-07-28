@@ -11,6 +11,9 @@ export default {
           '100%': { strokeDashoffset: '350' }, // Define the keyframe for the animation
         },
       },
+      screens: {
+        'xs': '320px',  // Custom breakpoint for 320px
+      },
     },
   },
   plugins: [],
