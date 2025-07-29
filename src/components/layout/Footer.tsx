@@ -58,8 +58,8 @@ export default function Footer() {
           }}
         ></div>
 
-        <div className="container mx-auto px-4 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-16">
+        <div className="container mx-auto px-4 py-2 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-8">
             {/* Brand Section - Enhanced */}
             <div className="lg:col-span-1 space-y-8">
               <Link to="/" className="inline-block group">
