@@ -111,7 +111,7 @@ export default function Login() {
         <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex justify-end mb-4">
-              <button className="text-sm text-gray-500 hover:text-indigo-600" onClick={() => navigate("/")}>← Back to home</button>
+              {/* <button className="text-sm text-gray-500 hover:text-indigo-600" onClick={() => navigate("/")}>← Back to home</button> */}
             </div>
 
             <AnimatePresence mode="wait">
