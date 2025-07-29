@@ -99,27 +99,33 @@ export default function Footer() {
                         icon: <Facebook className="h-5 w-5" />,
                         label: "Facebook",
                         color: "#1877F2",
+                        link: "#", 
                       },
                       {
                         icon: <Twitter className="h-5 w-5" />,
                         label: "Twitter",
                         color: "#1DA1F2",
+                        link: "#",
                       },
                       {
                         icon: <Instagram className="h-5 w-5" />,
                         label: "Instagram",
                         color: "#E4405F",
+                        link: "https://www.instagram.com/jajamblockprints/",
                       },
                       {
                         icon: <Youtube className="h-5 w-5" />,
                         label: "YouTube",
                         color: "#FF0000",
+                        link: "#",
                       },
                     ].map((social, index) => (
                       <a
                         key={index}
-                        href="#"
-                        className="group relative h-12 w-12 flex items-center justify-center rounded-full border-2 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
+                        href={social.link || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative h-12 w-12 flex items-center justify-center rounded-full border-2 transition-all duration-300 hover:shadow-xl"
                         style={{
                           borderColor: "rgba(157, 48, 137, 0.3)",
                           color: "rgb(157 48 137)",
@@ -142,9 +148,9 @@ export default function Footer() {
                         aria-label={social.label}
                       >
                         {social.icon}
-                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {/* <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           {social.label}
-                        </div>
+                        </div> */}
                       </a>
                     ))}
                   </div>
