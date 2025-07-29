@@ -11,6 +11,7 @@ import LoginModal from "../components/loginModal/LoginModal";
 // import Login from "../pages/Login";
 import { addItemToCart } from "../reduxslice/CartSlice"
 import Login from "./Login"
+import { X } from "react-feather"
 // Define Product type directly in this file as requested
 interface Product {
   _id: string
@@ -44,6 +45,13 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const { id } = useParams()
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+
+
+    // Popup States
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [addedProduct, setAddedProduct] = useState<any>(null);
+  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
+  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -109,7 +117,14 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         price: product.actualPrice,
         quantity: 1,
       })
-    )
+      
+    );
+      setAddedProduct(product);
+    setIsPopupVisible(true);
+
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
   } else {
     console.warn("Product is undefined")
   }
@@ -463,7 +478,22 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <Login />
         </LoginModal>
       )}
-
+ {isPopupVisible && addedProduct && (
+        <div
+          className="fixed top-4 right-4 bg-green-100 text-green-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
+          style={{
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span className="text-[12px]">Product Added to Cart</span>
+            <button onClick={() => setIsPopupVisible(false)}>
+              <X size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-[12px]">{addedProduct.productName}</p>
+        </div>
+      )}
       {/* Related Products Section */}
       {/* <div className="mt-20">
         <div className="text-center mb-16">

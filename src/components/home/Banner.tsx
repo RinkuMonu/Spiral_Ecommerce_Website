@@ -72,8 +72,8 @@ const Banner: React.FC = () => {
                 />
 
                 {/* Overlay Content */}
-                <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4 sm:px-6 lg:px-16">
-                  <div className="w-full max-w-3xl space-y-4 sm:space-y-6">
+                <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4 sm:px-6 lg:px-16 sm:mt-64">
+                  <div className="w-full max-w-3xl space-y-4 sm:space-y-6]">
                     {/* Badge */}
                     {/* <div>
                       <span className="inline-block px-2 py-1 sm:px-6 sm:py-2 text-xs sm:text-sm font-semibold border-2 border-white/30 backdrop-blur-sm rounded-full bg-white/20">
