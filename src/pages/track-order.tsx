@@ -1,6 +1,6 @@
-"use client"
-import { useEffect, useState } from "react"
-import { useParams, useSearchParams } from "react-router-dom"
+"use client";
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import {
   Package,
   Truck,
@@ -16,49 +16,49 @@ import {
   CreditCard,
   RefreshCw,
   XCircle,
-} from "lucide-react"
-import { Link } from "react-router-dom"
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface TrackingEvent {
-  id: string
-  status: string
-  description: string
-  location: string
-  timestamp: string
-  isCompleted: boolean
+  id: string;
+  status: string;
+  description: string;
+  location: string;
+  timestamp: string;
+  isCompleted: boolean;
 }
 
 interface OrderItem {
-  id: string
-  name: string
-  image: string
-  price: number
-  quantity: number
-  category: string
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+  category: string;
 }
 
 interface OrderDetails {
-  id: string
-  orderNumber: string
-  trackingNumber?: string
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled"
-  orderDate: string
-  estimatedDelivery?: string
-  actualDelivery?: string
-  total: number
-  items: OrderItem[]
+  id: string;
+  orderNumber: string;
+  trackingNumber?: string;
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  orderDate: string;
+  estimatedDelivery?: string;
+  actualDelivery?: string;
+  total: number;
+  items: OrderItem[];
   shippingAddress: {
-    name: string
-    phone: string
-    email: string
-    address: string
-    city: string
-    state: string
-    pincode: string
-  }
-  paymentMethod: string
-  courierPartner?: string
-  trackingEvents: TrackingEvent[]
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+  paymentMethod: string;
+  courierPartner?: string;
+  trackingEvents: TrackingEvent[];
 }
 
 // Updated dummy data matching order-history page
@@ -97,7 +97,8 @@ const dummyOrdersData: OrderDetails[] = [
       {
         id: "1",
         status: "Order Placed",
-        description: "Your order has been successfully placed and payment confirmed",
+        description:
+          "Your order has been successfully placed and payment confirmed",
         location: "Online",
         timestamp: "2024-01-15T10:30:00Z",
         isCompleted: true,
@@ -113,7 +114,8 @@ const dummyOrdersData: OrderDetails[] = [
       {
         id: "3",
         status: "Packed",
-        description: "Your order has been carefully packed and ready for pickup",
+        description:
+          "Your order has been carefully packed and ready for pickup",
         location: "Jaipur Warehouse",
         timestamp: "2024-01-16T09:45:00Z",
         isCompleted: true,
@@ -185,7 +187,8 @@ const dummyOrdersData: OrderDetails[] = [
       {
         id: "1",
         status: "Order Placed",
-        description: "Your order has been successfully placed and payment confirmed",
+        description:
+          "Your order has been successfully placed and payment confirmed",
         location: "Online",
         timestamp: "2024-01-20T14:15:00Z",
         isCompleted: true,
@@ -201,7 +204,8 @@ const dummyOrdersData: OrderDetails[] = [
       {
         id: "3",
         status: "Packed",
-        description: "Your order has been carefully packed and ready for pickup",
+        description:
+          "Your order has been carefully packed and ready for pickup",
         location: "Jaipur Warehouse",
         timestamp: "2024-01-21T11:20:00Z",
         isCompleted: true,
@@ -273,7 +277,8 @@ const dummyOrdersData: OrderDetails[] = [
       {
         id: "1",
         status: "Order Placed",
-        description: "Your order has been successfully placed and payment confirmed",
+        description:
+          "Your order has been successfully placed and payment confirmed",
         location: "Online",
         timestamp: "2024-01-22T09:45:00Z",
         isCompleted: true,
@@ -414,132 +419,141 @@ const dummyOrdersData: OrderDetails[] = [
       },
     ],
   },
-]
+];
 
 const TrackOrder = () => {
-  const { orderNumber } = useParams()
-  const [searchParams] = useSearchParams()
-  const trackingNumber = searchParams.get("tracking")
+  const { orderNumber } = useParams();
+  const [searchParams] = useSearchParams();
+  const trackingNumber = searchParams.get("tracking");
 
-  const [orderData, setOrderData] = useState<OrderDetails | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [orderData, setOrderData] = useState<OrderDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
-      let foundOrder = null
+      let foundOrder = null;
 
       // If we have URL parameters, try to find the order
       if (orderNumber || trackingNumber) {
         foundOrder = dummyOrdersData.find(
-          (order) => order.orderNumber === orderNumber || order.trackingNumber === trackingNumber,
-        )
+          (order) =>
+            order.orderNumber === orderNumber ||
+            order.trackingNumber === trackingNumber
+        );
       } else {
         // For demo purposes, show the first order if no parameters are provided
-        foundOrder = dummyOrdersData[0]
+        foundOrder = dummyOrdersData[0];
       }
 
       if (foundOrder) {
-        setOrderData(foundOrder)
+        setOrderData(foundOrder);
       } else {
-        setError("Order not found. Please check your order number or tracking number.")
+        setError(
+          "Order not found. Please check your order number or tracking number."
+        );
       }
-      setLoading(false)
-    }, 1500)
-  }, [orderNumber, trackingNumber])
+      setLoading(false);
+    }, 1500);
+  }, [orderNumber, trackingNumber]);
 
   const getStatusIcon = (status: string, isCompleted: boolean) => {
     if (!isCompleted) {
-      return <Clock className="w-5 h-5 text-gray-400" />
+      return <Clock className="w-5 h-5 text-gray-400" />;
     }
 
     switch (status.toLowerCase()) {
       case "order placed":
       case "order confirmed":
       case "order confirmation":
-        return <CheckCircle className="w-5 h-5 text-green-500" />
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "packed":
       case "processing":
       case "quality check":
-        return <Package className="w-5 h-5 text-blue-500" />
+        return <Package className="w-5 h-5 text-blue-500" />;
       case "shipped":
       case "in transit":
       case "out for delivery":
-        return <Truck className="w-5 h-5 text-purple-500" />
+        return <Truck className="w-5 h-5 text-purple-500" />;
       case "delivered":
-        return <CheckCircle className="w-5 h-5 text-green-500" />
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "payment verification":
-        return <CreditCard className="w-5 h-5 text-blue-500" />
+        return <CreditCard className="w-5 h-5 text-blue-500" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-400" />
+        return <Clock className="w-5 h-5 text-gray-400" />;
     }
-  }
+  };
 
   const getProgressPercentage = () => {
-    if (!orderData) return 0
-    const completedEvents = orderData.trackingEvents.filter((event) => event.isCompleted).length
-    return (completedEvents / orderData.trackingEvents.length) * 100
-  }
+    if (!orderData) return 0;
+    const completedEvents = orderData.trackingEvents.filter(
+      (event) => event.isCompleted
+    ).length;
+    return (completedEvents / orderData.trackingEvents.length) * 100;
+  };
 
   const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedField(field)
-    setTimeout(() => setCopiedField(null), 2000)
-  }
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return "Pending"
+    if (!dateString) return "Pending";
     return new Date(dateString).toLocaleDateString("en-IN", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "processing":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       case "shipped":
-        return "bg-purple-100 text-purple-800 border-purple-200"
+        return "bg-purple-100 text-purple-800 border-purple-200";
       case "delivered":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "cancelled":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const getStatusDisplayName = (status: string) => {
     switch (status) {
       case "pending":
-        return "Order Pending"
+        return "Order Pending";
       case "processing":
-        return "Processing"
+        return "Processing";
       case "shipped":
-        return "Shipped"
+        return "Shipped";
       case "delivered":
-        return "Delivered"
+        return "Delivered";
       case "cancelled":
-        return "Cancelled"
+        return "Cancelled";
       default:
-        return status.charAt(0).toUpperCase() + status.slice(1)
+        return status.charAt(0).toUpperCase() + status.slice(1);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto py-12 px-4">
         {/* Header Section */}
         <div className="text-center mb-12 pb-8 border-b border-gray-200">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#1B2E4F" }}>
+          <h1
+            className="text-4xl md:text-5xl font-bold mb-4"
+            style={{ color: "#1B2E4F" }}
+          >
             Track Your <span style={{ color: "rgb(157 48 137)" }}>Order</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -549,24 +563,32 @@ const TrackOrder = () => {
 
         {/* Demo Order Selection - Remove in production */}
         <div className="mb-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-blue-800 mb-3">Demo: Select an order to track</h3>
+          <h3 className="text-sm font-medium text-blue-800 mb-3">
+            Demo: Select an order to track
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
             {dummyOrdersData.map((order) => (
               <button
                 key={order.id}
                 onClick={() => {
-                  setLoading(true)
+                  setLoading(true);
                   setTimeout(() => {
-                    setOrderData(order)
-                    setError(null)
-                    setLoading(false)
-                  }, 500)
+                    setOrderData(order);
+                    setError(null);
+                    setLoading(false);
+                  }, 500);
                 }}
                 className="text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
               >
-                <div className="font-medium text-blue-900">{order.orderNumber}</div>
-                <div className="text-xs text-blue-600 capitalize">{order.status}</div>
-                <div className="text-xs text-blue-500">₹{order.total.toLocaleString()}</div>
+                <div className="font-medium text-blue-900">
+                  {order.orderNumber}
+                </div>
+                <div className="text-xs text-blue-600 capitalize">
+                  {order.status}
+                </div>
+                <div className="text-xs text-blue-500">
+                  ₹{order.total.toLocaleString()}
+                </div>
               </button>
             ))}
           </div>
@@ -589,8 +611,12 @@ const TrackOrder = () => {
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100">
               <RefreshCw className="w-10 h-10 text-gray-400 animate-spin" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Loading tracking information...</h3>
-            <p className="text-gray-600">Please wait while we fetch your order details</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              Loading tracking information...
+            </h3>
+            <p className="text-gray-600">
+              Please wait while we fetch your order details
+            </p>
           </div>
         )}
 
@@ -600,7 +626,9 @@ const TrackOrder = () => {
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-red-100">
               <XCircle className="w-10 h-10 text-red-500" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Order Not Found</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              Order Not Found
+            </h3>
             <p className="text-gray-600 mb-6">{error}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -633,10 +661,15 @@ const TrackOrder = () => {
                     className="w-16 h-16 rounded-full flex items-center justify-center"
                     style={{ background: "rgba(157, 48, 137, 0.1)" }}
                   >
-                    <Package className="w-8 h-8" style={{ color: "rgb(157 48 137)" }} />
+                    <Package
+                      className="w-8 h-8"
+                      style={{ color: "rgb(157 48 137)" }}
+                    />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{orderData.orderNumber}</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {orderData.orderNumber}
+                    </h2>
                     <p className="text-gray-600 flex items-center gap-2 mt-1">
                       <Calendar className="w-4 h-4" />
                       Ordered on {formatDate(orderData.orderDate)}
@@ -646,13 +679,20 @@ const TrackOrder = () => {
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="text-right">
-                    <p className="text-3xl font-bold" style={{ color: "rgb(157 48 137)" }}>
+                    <p
+                      className="text-3xl font-bold"
+                      style={{ color: "rgb(157 48 137)" }}
+                    >
                       ₹{orderData.total.toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500">{orderData.items.length} item(s)</p>
+                    <p className="text-sm text-gray-500">
+                      {orderData.items.length} item(s)
+                    </p>
                   </div>
                   <span
-                    className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(orderData.status)}`}
+                    className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(
+                      orderData.status
+                    )}`}
                   >
                     {getStatusDisplayName(orderData.status)}
                   </span>
@@ -662,8 +702,12 @@ const TrackOrder = () => {
               {/* Progress Bar */}
               <div className="mt-6">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Order Progress</span>
-                  <span className="text-sm text-gray-500">{Math.round(getProgressPercentage())}% Complete</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    Order Progress
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {Math.round(getProgressPercentage())}% Complete
+                  </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
@@ -682,10 +726,14 @@ const TrackOrder = () => {
               {/* Tracking Number */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-900">Tracking Number</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    Tracking Number
+                  </h3>
                   {orderData.trackingNumber && (
                     <button
-                      onClick={() => copyToClipboard(orderData.trackingNumber!, "tracking")}
+                      onClick={() =>
+                        copyToClipboard(orderData.trackingNumber!, "tracking")
+                      }
                       className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                       title="Copy tracking number"
                     >
@@ -695,58 +743,91 @@ const TrackOrder = () => {
                 </div>
                 {orderData.trackingNumber ? (
                   <>
-                    <p className="font-mono text-lg font-bold" style={{ color: "rgb(157 48 137)" }}>
+                    <p
+                      className="font-mono text-lg font-bold"
+                      style={{ color: "rgb(157 48 137)" }}
+                    >
                       {orderData.trackingNumber}
                     </p>
-                    {copiedField === "tracking" && <p className="text-xs text-green-600 mt-1">Copied to clipboard!</p>}
+                    {copiedField === "tracking" && (
+                      <p className="text-xs text-green-600 mt-1">
+                        Copied to clipboard!
+                      </p>
+                    )}
                   </>
                 ) : (
-                  <p className="text-gray-500 italic">Tracking number will be assigned once shipped</p>
+                  <p className="text-gray-500 italic">
+                    Tracking number will be assigned once shipped
+                  </p>
                 )}
               </div>
 
               {/* Courier Partner */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Truck className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
-                  <h3 className="font-semibold text-gray-900">Courier Partner</h3>
+                  <Truck
+                    className="w-5 h-5"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
+                  <h3 className="font-semibold text-gray-900">
+                    Courier Partner
+                  </h3>
                 </div>
                 {orderData.courierPartner ? (
                   <>
-                    <p className="text-lg font-medium text-gray-800">{orderData.courierPartner}</p>
-                    <p className="text-sm text-gray-500 mt-1">Express Delivery Service</p>
+                    <p className="text-lg font-medium text-gray-800">
+                      {orderData.courierPartner}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Express Delivery Service
+                    </p>
                   </>
                 ) : (
-                  <p className="text-gray-500 italic">Courier partner will be assigned once shipped</p>
+                  <p className="text-gray-500 italic">
+                    Courier partner will be assigned once shipped
+                  </p>
                 )}
               </div>
 
               {/* Estimated Delivery */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Clock className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
+                  <Clock
+                    className="w-5 h-5"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                   <h3 className="font-semibold text-gray-900">
-                    {orderData.status === "delivered" ? "Delivered On" : "Expected Delivery"}
+                    {orderData.status === "delivered"
+                      ? "Delivered On"
+                      : "Expected Delivery"}
                   </h3>
                 </div>
                 {orderData.estimatedDelivery ? (
                   <>
                     <p className="text-lg font-medium text-gray-800">
-                      {formatDate(orderData.actualDelivery || orderData.estimatedDelivery)}
+                      {formatDate(
+                        orderData.actualDelivery || orderData.estimatedDelivery
+                      )}
                     </p>
                     <p className="text-sm text-gray-500 mt-1">
-                      {orderData.status === "delivered" ? "Successfully Delivered" : "Estimated"}
+                      {orderData.status === "delivered"
+                        ? "Successfully Delivered"
+                        : "Estimated"}
                     </p>
                   </>
                 ) : (
-                  <p className="text-gray-500 italic">Delivery date will be updated once order is confirmed</p>
+                  <p className="text-gray-500 italic">
+                    Delivery date will be updated once order is confirmed
+                  </p>
                 )}
               </div>
             </div>
 
             {/* Tracking Timeline */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Tracking Timeline</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">
+                Tracking Timeline
+              </h3>
               <div className="space-y-6">
                 {orderData.trackingEvents.map((event, index) => (
                   <div key={event.id} className="flex gap-4">
@@ -756,34 +837,65 @@ const TrackOrder = () => {
                         className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
                           event.isCompleted
                             ? "border-green-500 bg-green-50"
-                            : index === orderData.trackingEvents.findIndex((e) => !e.isCompleted)
-                              ? "border-purple-500 bg-purple-50 animate-pulse"
-                              : "border-gray-300 bg-gray-50"
+                            : index ===
+                              orderData.trackingEvents.findIndex(
+                                (e) => !e.isCompleted
+                              )
+                            ? "border-purple-500 bg-purple-50 animate-pulse"
+                            : "border-gray-300 bg-gray-50"
                         }`}
                       >
                         {getStatusIcon(event.status, event.isCompleted)}
                       </div>
                       {index < orderData.trackingEvents.length - 1 && (
-                        <div className={`w-0.5 h-12 mt-2 ${event.isCompleted ? "bg-green-300" : "bg-gray-200"}`} />
+                        <div
+                          className={`w-0.5 h-12 mt-2 ${
+                            event.isCompleted ? "bg-green-300" : "bg-gray-200"
+                          }`}
+                        />
                       )}
                     </div>
 
                     {/* Timeline Content */}
                     <div className="flex-1 pb-8">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                        <h4 className={`font-semibold ${event.isCompleted ? "text-gray-900" : "text-gray-500"}`}>
+                        <h4
+                          className={`font-semibold ${
+                            event.isCompleted
+                              ? "text-gray-900"
+                              : "text-gray-500"
+                          }`}
+                        >
                           {event.status}
                         </h4>
-                        <span className={`text-sm ${event.isCompleted ? "text-gray-600" : "text-gray-400"}`}>
-                          {event.isCompleted && event.timestamp ? formatDate(event.timestamp) : "Pending"}
+                        <span
+                          className={`text-sm ${
+                            event.isCompleted
+                              ? "text-gray-600"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          {event.isCompleted && event.timestamp
+                            ? formatDate(event.timestamp)
+                            : "Pending"}
                         </span>
                       </div>
-                      <p className={`text-sm mb-2 ${event.isCompleted ? "text-gray-600" : "text-gray-400"}`}>
+                      <p
+                        className={`text-sm mb-2 ${
+                          event.isCompleted ? "text-gray-600" : "text-gray-400"
+                        }`}
+                      >
                         {event.description}
                       </p>
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-gray-400" />
-                        <span className={`text-sm ${event.isCompleted ? "text-gray-500" : "text-gray-400"}`}>
+                        <span
+                          className={`text-sm ${
+                            event.isCompleted
+                              ? "text-gray-500"
+                              : "text-gray-400"
+                          }`}
+                        >
                           {event.location}
                         </span>
                       </div>
@@ -797,21 +909,35 @@ const TrackOrder = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Order Items */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Order Items</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">
+                  Order Items
+                </h3>
                 <div className="space-y-4">
                   {orderData.items.map((item) => (
-                    <div key={item.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex gap-4 p-4 bg-gray-50 rounded-lg"
+                    >
                       <img
                         src={item.image || "/placeholder.svg"}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 mb-1">{item.name}</h4>
-                        <p className="text-sm text-gray-500 mb-2">{item.category}</p>
+                        <h4 className="font-medium text-gray-900 mb-1">
+                          {item.name}
+                        </h4>
+                        <p className="text-sm text-gray-500 mb-2">
+                          {item.category}
+                        </p>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Qty: {item.quantity}</span>
-                          <span className="font-medium" style={{ color: "rgb(157 48 137)" }}>
+                          <span className="text-sm text-gray-600">
+                            Qty: {item.quantity}
+                          </span>
+                          <span
+                            className="font-medium"
+                            style={{ color: "rgb(157 48 137)" }}
+                          >
                             ₹{item.price.toLocaleString()}
                           </span>
                         </div>
@@ -826,28 +952,40 @@ const TrackOrder = () => {
                 {/* Shipping Address */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <MapPin className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
-                    <h3 className="text-lg font-bold text-gray-900">Shipping Address</h3>
+                    <MapPin
+                      className="w-5 h-5"
+                      style={{ color: "rgb(157 48 137)" }}
+                    />
+                    <h3 className="text-lg font-bold text-gray-900">
+                      Shipping Address
+                    </h3>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-gray-400" />
-                      <span className="font-medium text-gray-900">{orderData.shippingAddress.name}</span>
+                      <span className="font-medium text-gray-900">
+                        {orderData.shippingAddress.name}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-600">{orderData.shippingAddress.phone}</span>
+                      <span className="text-gray-600">
+                        {orderData.shippingAddress.phone}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-600">{orderData.shippingAddress.email}</span>
+                      <span className="text-gray-600">
+                        {orderData.shippingAddress.email}
+                      </span>
                     </div>
                     <div className="flex items-start gap-2 mt-3">
                       <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
                       <div className="text-gray-600">
                         <p>{orderData.shippingAddress.address}</p>
                         <p>
-                          {orderData.shippingAddress.city}, {orderData.shippingAddress.state}
+                          {orderData.shippingAddress.city},{" "}
+                          {orderData.shippingAddress.state}
                         </p>
                         <p>PIN: {orderData.shippingAddress.pincode}</p>
                       </div>
@@ -858,17 +996,27 @@ const TrackOrder = () => {
                 {/* Payment Information */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <CreditCard className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
-                    <h3 className="text-lg font-bold text-gray-900">Payment Details</h3>
+                    <CreditCard
+                      className="w-5 h-5"
+                      style={{ color: "rgb(157 48 137)" }}
+                    />
+                    <h3 className="text-lg font-bold text-gray-900">
+                      Payment Details
+                    </h3>
                   </div>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Payment Method</span>
-                      <span className="font-medium text-gray-900">{orderData.paymentMethod}</span>
+                      <span className="font-medium text-gray-900">
+                        {orderData.paymentMethod}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Order Total</span>
-                      <span className="font-bold text-xl" style={{ color: "rgb(157 48 137)" }}>
+                      <span
+                        className="font-bold text-xl"
+                        style={{ color: "rgb(157 48 137)" }}
+                      >
                         ₹{orderData.total.toLocaleString()}
                       </span>
                     </div>
@@ -900,22 +1048,50 @@ const TrackOrder = () => {
 
             {/* Help Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Need Help?</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Need Help?
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Phone className="w-8 h-8 mx-auto mb-2" style={{ color: "rgb(157 48 137)" }} />
-                  <h4 className="font-semibold text-gray-900 mb-1">Call Support</h4>
-                  <p className="text-sm text-gray-600">+91 9116131960</p>
+                  <Phone
+                    className="w-8 h-8 mx-auto mb-2"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Call Support
+                  </h4>
+                  <p className="text-gray-600">
+                    <a href="tel:9116131960" className="hover:underline">
+                      9116131960
+                    </a>
+                  </p>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Mail className="w-8 h-8 mx-auto mb-2" style={{ color: "rgb(157 48 137)" }} />
+                  <Mail
+                    className="w-8 h-8 mx-auto mb-2"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                   <h4 className="font-semibold text-gray-900 mb-1">Email Us</h4>
-                  <p className="text-sm text-gray-600">shreeshyamblockprints.1@gmail.com</p>
+                  <p className="text-gray-600 text-sm">
+                    <a
+                      href="mailto:shreeshyamblockprints.1@gmail.com"
+                      className="hover:underline"
+                    >
+                      shreeshyamblockprints.1@gmail.com
+                    </a>
+                  </p>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <Package className="w-8 h-8 mx-auto mb-2" style={{ color: "rgb(157 48 137)" }} />
-                  <h4 className="font-semibold text-gray-900 mb-1">Track Issues</h4>
-                  <p className="text-sm text-gray-600">Report delivery problems</p>
+                  <Package
+                    className="w-8 h-8 mx-auto mb-2"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Track Issues
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Report delivery problems
+                  </p>
                 </div>
               </div>
             </div>
@@ -923,7 +1099,7 @@ const TrackOrder = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TrackOrder
+export default TrackOrder;

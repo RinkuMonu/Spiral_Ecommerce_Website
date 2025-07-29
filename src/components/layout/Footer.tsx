@@ -1,7 +1,16 @@
-"use client"
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Heart } from "lucide-react"
-import { Link } from "react-router-dom"
-import footerLogo from "../../assest/footerLogo.jpg"
+"use client";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Mail,
+  Phone,
+  MapPin,
+  Heart,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import footerLogo from "../../assest/footerLogo.jpg";
 
 export default function Footer() {
   return (
@@ -48,7 +57,10 @@ export default function Footer() {
               <div className="space-y-6">
                 <p className="text-gray-700 text-lg leading-relaxed max-w-sm">
                   ✨ Your premium destination for{" "}
-                  <span className="font-semibold" style={{ color: "rgb(157 48 137)" }}>
+                  <span
+                    className="font-semibold"
+                    style={{ color: "rgb(157 48 137)" }}
+                  >
                     authentic traditional wear
                   </span>{" "}
                   and modern fashion solutions.
@@ -56,15 +68,34 @@ export default function Footer() {
 
                 {/* Enhanced social media */}
                 <div className="space-y-4">
-                  <h4 className="text-lg font-bold" style={{ color: "#1B2E4F" }}>
+                  <h4
+                    className="text-lg font-bold"
+                    style={{ color: "#1B2E4F" }}
+                  >
                     Follow Our Journey
                   </h4>
                   <div className="flex space-x-4">
                     {[
-                      { icon: <Facebook className="h-5 w-5" />, label: "Facebook", color: "#1877F2" },
-                      { icon: <Twitter className="h-5 w-5" />, label: "Twitter", color: "#1DA1F2" },
-                      { icon: <Instagram className="h-5 w-5" />, label: "Instagram", color: "#E4405F" },
-                      { icon: <Youtube className="h-5 w-5" />, label: "YouTube", color: "#FF0000" },
+                      {
+                        icon: <Facebook className="h-5 w-5" />,
+                        label: "Facebook",
+                        color: "#1877F2",
+                      },
+                      {
+                        icon: <Twitter className="h-5 w-5" />,
+                        label: "Twitter",
+                        color: "#1DA1F2",
+                      },
+                      {
+                        icon: <Instagram className="h-5 w-5" />,
+                        label: "Instagram",
+                        color: "#E4405F",
+                      },
+                      {
+                        icon: <Youtube className="h-5 w-5" />,
+                        label: "YouTube",
+                        color: "#FF0000",
+                      },
                     ].map((social, index) => (
                       <a
                         key={index}
@@ -75,16 +106,19 @@ export default function Footer() {
                           color: "rgb(157 48 137)",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = social.color
-                          e.currentTarget.style.color = "white"
-                          e.currentTarget.style.borderColor = social.color
-                          e.currentTarget.style.transform = "translateY(-8px) scale(1.1)"
+                          e.currentTarget.style.background = social.color;
+                          e.currentTarget.style.color = "white";
+                          e.currentTarget.style.borderColor = social.color;
+                          e.currentTarget.style.transform =
+                            "translateY(-8px) scale(1.1)";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "transparent"
-                          e.currentTarget.style.color = "rgb(157 48 137)"
-                          e.currentTarget.style.borderColor = "rgba(157, 48, 137, 0.3)"
-                          e.currentTarget.style.transform = "translateY(0) scale(1)"
+                          e.currentTarget.style.background = "transparent";
+                          e.currentTarget.style.color = "rgb(157 48 137)";
+                          e.currentTarget.style.borderColor =
+                            "rgba(157, 48, 137, 0.3)";
+                          e.currentTarget.style.transform =
+                            "translateY(0) scale(1)";
                         }}
                         aria-label={social.label}
                       >
@@ -102,12 +136,21 @@ export default function Footer() {
             {/* Shop Categories - Enhanced */}
             <div className="space-y-8">
               <div>
-                <h3 className="text-3xl font-bold mb-2" style={{ color: "#1B2E4F" }}>
+                <h3
+                  className="text-3xl font-bold mb-2"
+                  style={{ color: "#1B2E4F" }}
+                >
                   Shop Categories
                 </h3>
                 <div className="flex items-center space-x-2 mb-6">
-                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
-                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div
+                    className="w-16 h-1 rounded-full"
+                    style={{ background: "rgb(157 48 137)" }}
+                  ></div>
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: "rgb(157 48 137)" }}
+                  ></div>
                 </div>
               </div>
 
@@ -121,17 +164,23 @@ export default function Footer() {
                       background: "rgba(157, 48, 137, 0.05)",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(157, 48, 137, 0.1)"
-                      e.currentTarget.style.transform = "translateX(8px)"
+                      e.currentTarget.style.background =
+                        "rgba(157, 48, 137, 0.1)";
+                      e.currentTarget.style.transform = "translateX(8px)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(157, 48, 137, 0.05)"
-                      e.currentTarget.style.transform = "translateX(0)"
+                      e.currentTarget.style.background =
+                        "rgba(157, 48, 137, 0.05)";
+                      e.currentTarget.style.transform = "translateX(0)";
                     }}
                   >
                     <div
                       className="w-3 h-3 rounded-full mr-4 transition-all duration-300 group-hover:scale-125"
-                      style={{ background: `rgb(${157 + index * 10} ${48 + index * 5} ${137 - index * 10})` }}
+                      style={{
+                        background: `rgb(${157 + index * 10} ${
+                          48 + index * 5
+                        } ${137 - index * 10})`,
+                      }}
                     ></div>
                     <span className="text-lg font-semibold text-gray-700 group-hover:text-purple-800 transition-colors">
                       {item}
@@ -152,44 +201,81 @@ export default function Footer() {
             {/* Contact Info - Enhanced */}
             <div className="space-y-8">
               <div>
-                <h3 className="text-3xl font-bold mb-2" style={{ color: "#1B2E4F" }}>
+                <h3
+                  className="text-3xl font-bold mb-2"
+                  style={{ color: "#1B2E4F" }}
+                >
                   Get In Touch
                 </h3>
                 <div className="flex items-center space-x-2 mb-6">
-                  <div className="w-16 h-1 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
-                  <div className="w-2 h-2 rounded-full" style={{ background: "rgb(157 48 137)" }}></div>
+                  <div
+                    className="w-16 h-1 rounded-full"
+                    style={{ background: "rgb(157 48 137)" }}
+                  ></div>
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: "rgb(157 48 137)" }}
+                  ></div>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="flex items-start space-x-4  ">
-                  <MapPin className="h-6 w-6 mt-1 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <MapPin
+                    className="h-6 w-6 mt-1 flex-shrink-0"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                   <div>
-                    <h5 className="font-semibold text-gray-800 mb-1">Our Location</h5>
+                    <h5 className="font-semibold text-gray-800 mb-1">
+                      Our Location
+                    </h5>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA COLONY-2, SANGANER, JAIPUR-302029
+                      JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA
+                      COLONY-2, SANGANER, JAIPUR-302029
                     </p>
-                    <p className="text-gray-500 text-xs mt-1">LANDMARK: BEHIND SPARSH HOSPITAL</p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      LANDMARK: BEHIND SPARSH HOSPITAL
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4   ">
-                  <Phone className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <Phone
+                    className="h-6 w-6 flex-shrink-0"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                   <div>
-                    <h5 className="font-semibold text-gray-800 mb-1">Call Us</h5>
-                    <p className="text-gray-600">9116131960</p>
+                    <h5 className="font-semibold text-gray-800 mb-1">
+                      Call Us
+                    </h5>
+                    <p className="text-gray-600">
+                      <a href="tel:9116131960" className="hover:underline">
+                        9116131960
+                      </a>
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-4   ">
-                  <Mail className="h-6 w-6 flex-shrink-0" style={{ color: "rgb(157 48 137)" }} />
+                  <Mail
+                    className="h-6 w-6 flex-shrink-0"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                   <div>
-                    <h5 className="font-semibold text-gray-800 mb-1">Email Us</h5>
-                    <p className="text-gray-600 text-sm">shreeshyamblockprints.1@gmail.com</p>
+                    <h5 className="font-semibold text-gray-800 mb-1">
+                      Email Us
+                    </h5>
+                    <p className="text-gray-600 text-sm">
+                      <a
+                        href="mailto:shreeshyamblockprints.1@gmail.com"
+                        className="hover:underline"
+                      >
+                        shreeshyamblockprints.1@gmail.com
+                      </a>
+                    </p>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -199,13 +285,15 @@ export default function Footer() {
           className="border-t-2 py-8"
           style={{
             borderColor: "rgba(157, 48, 137, 0.2)",
-            background: "linear-gradient(135deg, rgba(157, 48, 137, 0.05), rgba(161, 60, 120, 0.05))",
+            background:
+              "linear-gradient(135deg, rgba(157, 48, 137, 0.05), rgba(161, 60, 120, 0.05))",
           }}
         >
           <div className="container mx-auto px-4">
             <div className="text-center space-y-6">
               <p className="text-gray-700 text-lg font-medium">
-                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE LIMITED. All rights reserved.
+                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE
+                LIMITED. All rights reserved.
               </p>
 
               {/* Customer Support Links with dividers */}
@@ -213,7 +301,10 @@ export default function Footer() {
                 {[
                   { title: "Terms of Service", path: "/terms" },
                   { title: "Privacy Policy", path: "/privacy" },
-                  { title: "Terams And Conditions", path: "/termsandcondition" },
+                  {
+                    title: "Terams And Conditions",
+                    path: "/termsandcondition",
+                  },
                   { title: "Shipping Policy", path: "/shipping" },
                   { title: "Returns & Exchanges", path: "/refund" },
                   // { title: "Cancellation Policy", path: "/cancellation_policy" },
@@ -234,11 +325,10 @@ export default function Footer() {
                   </div>
                 ))}
               </div>
-
             </div>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
