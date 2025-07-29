@@ -1,46 +1,45 @@
-"use client"
-import type React from "react"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Autoplay, Pagination, Navigation } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/pagination"
-import "swiper/css/navigation"
-import "swiper/css/autoplay"
-import { ArrowRight } from "lucide-react"
+"use client";
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css/autoplay";
+import { ArrowRight } from "lucide-react";
 
 // Images
-import jajam1 from "../../assest/jajam1.jpg"
-import jajam2 from "../../assest/jajam2.jpg"
-import jajam3 from "../../assest/jajam3.jpg"
-import jajam4 from "../../assest/jajam4.jpg"
+import jajam1 from "../../assest/jajam1.jpg";
+import jajam2 from "../../assest/jajam2.jpg";
+import jajam3 from "../../assest/jajam3.jpg";
+import jajam4 from "../../assest/jajam4.jpg";
 
 const bannerData = [
   {
     image: jajam1,
-    link: "/category/sarees",
+    link: "/products",
     buttonText: "Explore Collection",
   },
   {
     image: jajam2,
-    link: "/category/fabrics",
+    link: "/products",
     buttonText: "View Collection",
   },
   {
     image: jajam3,
-    link: "/category/sarees",
+    link: "/products",
     buttonText: "Shop Now",
   },
   {
     image: jajam4,
-    link: "/category/suits",
+    link: "/products",
     buttonText: "Discover Now",
   },
-]
+];
 
 const Banner: React.FC = () => {
   return (
-    <section className="relative">
-      {/* Full-width Banner Slider */}
+    <section className="relative w-full">
       <div className="relative overflow-hidden">
         <Swiper
           slidesPerView={1}
@@ -50,69 +49,61 @@ const Banner: React.FC = () => {
             clickable: true,
             dynamicBullets: true,
           }}
-          navigation={true}
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          }}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
           }}
           modules={[Autoplay, Pagination, Navigation]}
-          className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-[90vh]"
+          className="w-full h-auto sm:h-auto md:h-auto lg:h-auto xl:h-auto"
         >
           {bannerData.map((item, idx) => (
             <SwiperSlide key={idx}>
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-auto">
                 {/* Background Image */}
                 <img
                   src={item.image || "/placeholder.svg"}
                   alt={item.buttonText}
-                  className="w-full h-full object-cover md:object-fill"
+                  className="w-full h-auto object-fill"
+                  loading="eager"
                 />
 
-
-                {/* Gradient Overlay */}
-                {/* <div className="absolute inset-0 bg-gradient-to-t from-black opacity-50"></div> */}
-
-                {/* Content */}
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <div className="max-w-4xl mx-auto px-8 md:px-16 text-center text-white">
-                    {/* Subtitle */}
-                    <div className="mb-6">
-                      <span
-                        className="inline-block px-6 py-3 rounded-full text-sm font-semibold border-2 border-white/30 backdrop-blur-sm"
-                        style={{ background: "rgba(255, 255, 255, 0.15)" }}
-                      >
+                {/* Overlay Content */}
+                <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4 sm:px-6 lg:px-16">
+                  <div className="w-full max-w-3xl space-y-4 sm:space-y-6">
+                    {/* Badge */}
+                    {/* <div>
+                      <span className="inline-block px-2 py-1 sm:px-6 sm:py-2 text-xs sm:text-sm font-semibold border-2 border-white/30 backdrop-blur-sm rounded-full bg-white/20">
                         ✨ {item.buttonText} ✨
                       </span>
-                    </div>
-
-                    {/* Main Title */}
-                    {/* <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">{item.buttonText}</h1> */}
+                    </div> */}
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                    <div className="flex flex-row sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6">
+                      {/* Primary Button */}
                       <a
                         href={item.link}
-                        className="group inline-flex items-center justify-center gap-3 py-2 px-6 bg-white text-black font-bold rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 text-md"
+                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6  sm:text-base text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgb(157 48 137)"
-                          e.currentTarget.style.color = "white"
+                          e.currentTarget.style.background = "rgb(157 48 137)";
+                          e.currentTarget.style.color = "white";
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "white"
-                          e.currentTarget.style.color = "black"
+                          e.currentTarget.style.background = "white";
+                          e.currentTarget.style.color = "black";
                         }}
                       >
                         <span>{item.buttonText}</span>
-                        <ArrowRight size={22} className="transition-transform duration-300 group-hover:translate-x-1" />
+                        <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                       </a>
 
+                      {/* Secondary Button */}
                       <a
                         href="/products"
-                        className="group inline-flex items-center justify-center gap-3 py-2 px-6 font-bold rounded-full transition-all duration-300 border-2 border-white/50 backdrop-blur-sm hover:bg-white/20 text-md"
-                        style={{
-                          background: "rgba(255, 255, 255, 0.1)",
-                          color: "white",
-                        }}
+                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6 text-sm sm:text-base font-bold rounded-full transition-all duration-300 border-2 border-white/50 backdrop-blur-sm hover:bg-white/20 bg-white/10 text-white"
                       >
                         <span>View All Products</span>
                       </a>
@@ -122,61 +113,64 @@ const Banner: React.FC = () => {
               </div>
             </SwiperSlide>
           ))}
+
+          {/* Navigation Buttons */}
+          <div className="swiper-button-prev hidden sm:flex" />
+          <div className="swiper-button-next hidden sm:flex" />
         </Swiper>
 
-        {/* Custom Styles */}
-        <style jsx>{`
+        {/* Custom Swiper Styles */}
+        <style jsx global>{`
           .swiper-pagination {
-            bottom: 40px !important;
+            bottom: 20px !important;
           }
 
           .swiper-pagination-bullet {
-            width: 14px !important;
-            height: 14px !important;
-            background: rgba(255, 255, 255, 0.4) !important;
-            border: 2px solid rgba(255, 255, 255, 0.6) !important;
-            border-radius: 50% !important;
-            margin: 0 8px !important;
-            transition: all 0.3s ease !important;
-            opacity: 1 !important;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            margin: 0 6px;
+            opacity: 1;
+            transition: all 0.3s ease;
           }
 
           .swiper-pagination-bullet-active {
-            width: 40px !important;
-            background: white !important;
-            border-radius: 7px !important;
-            border-color: white !important;
+            width: 30px;
+            background: white;
+            border-radius: 7px;
+            border-color: white;
           }
 
           .swiper-button-next,
           .swiper-button-prev {
-            width: 60px !important;
-            height: 60px !important;
-            background: rgba(157, 48, 137, 0.8) !important;
-            border-radius: 50% !important;
-            border: 3px solid rgba(255, 255, 255, 0.3) !important;
-            backdrop-filter: blur(15px) !important;
-            transition: all 0.3s ease !important;
+            width: 50px;
+            height: 50px;
+            background: rgba(157, 48, 137, 0.8);
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
           }
 
           .swiper-button-next:hover,
           .swiper-button-prev:hover {
-            background: rgb(157, 48, 137) !important;
-            border-color: white !important;
-            transform: scale(1.1) !important;
-            display: none ;
+            background: rgb(157, 48, 137);
+            border-color: white;
+            transform: scale(1.1);
           }
 
           .swiper-button-next:after,
           .swiper-button-prev:after {
-            font-size: 20px !important;
-            color: white !important;
-            font-weight: bold !important;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
           }
         `}</style>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Banner
+export default Banner;

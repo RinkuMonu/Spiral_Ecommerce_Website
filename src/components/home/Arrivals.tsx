@@ -13,7 +13,8 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-
+import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
+import Login from "../../pages/Login";
 const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
@@ -22,6 +23,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [products, setProducts] = useState<any[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const dispatch = useDispatch();
 
   // Popup States
@@ -87,6 +89,12 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
   const handleAddToCart = (product: any) => {
+      const isUserLoggedIn = !!localStorage.getItem("token");
+
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true); // Trigger login modal
+      return;
+    }
     dispatch(
       addItemToCart({
         id: product._id,
@@ -594,8 +602,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
           </div>
         </div>
       )}
+       {showLoginModal && (
+              <LoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+              >
+                <Login />
+              </LoginModal>
+            )}
     </section>
   );
-};
+}; 
 
 export default Arrivals;

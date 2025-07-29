@@ -7,7 +7,8 @@ import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
 import { addItemToCart } from "../../reduxslice/CartSlice"
-
+import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
+import Login from "../../pages/Login";
 interface Product {
   _id: string
   productName: string
@@ -26,16 +27,23 @@ interface Product {
 }
 
 interface ProductCardProps {
-  product: Product
+  product: Product 
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
+    const [showLoginModal, setShowLoginModal] = useState(false);
   const dispatch = useDispatch()
-
+   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+      const isUserLoggedIn = !!localStorage.getItem("token");
+
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true); // Trigger login modal
+      return;
+    }
     dispatch(
       addItemToCart({
         id: product._id,
@@ -65,7 +73,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   }
 
   return (
-    <Link to={`/product/${product._id}`} className="group block">
+   <>
+       <Link to={`/product/${product._id}`} className="group block">
       <div
         className="bg-white rounded-xl shadow-sm overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-100"
         onMouseEnter={() => setIsHovered(true)}
@@ -181,7 +190,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       </div>
     </Link>
+     {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <Login />
+        </LoginModal>
+      )}
+   </>
   )
 }
 
-export default ProductCard
+export default ProductCard;

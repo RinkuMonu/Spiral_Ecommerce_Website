@@ -6,7 +6,7 @@ import ProductCard from "../components/products/ProductCard"
 
 export default function CategoryPage() {
   let initialMinPrice = 0
-  let initialMaxPrice = 10000
+  let initialMaxPrice = 50000
   const { category } = useParams()
   const catagory1 = category?.replace("-", " ")
   const [products, setProducts] = useState<any[]>([])
@@ -215,6 +215,7 @@ const handleSizeChange = (size: string) => {
                       min={initialMinPrice}
                       max={initialMaxPrice}
                       value={priceRange[0]}
+                      readOnly
                       onChange={(e) => {
                         const value = Math.min(Number(e.target.value), priceRange[1] - 1)
                         setPriceRange([value, priceRange[1]])
@@ -272,7 +273,7 @@ const handleSizeChange = (size: string) => {
 
                   
      
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             {sizeOptions.map((size) => (
               <label key={size} className="flex items-center space-x-3 cursor-pointer group">
                 <div className="relative">
@@ -303,7 +304,7 @@ const handleSizeChange = (size: string) => {
                 <span className="text-sm text-gray-700 group-hover:text-gray-900">{size}</span>
               </label>
             ))}
-          </div>
+          </div> */}
         
 
             <button

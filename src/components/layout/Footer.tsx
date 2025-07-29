@@ -115,7 +115,7 @@ export default function Footer() {
                 {["Sarees", "Suits", "Fabrics"].map((item, index) => (
                   <Link
                     key={item}
-                    to={`/category/${item.toLowerCase()}`}
+                    to={`/products`}
                     className="group flex items-center p-4 rounded-xl transition-all duration-300 hover:shadow-lg border border-transparent hover:border-purple-200"
                     style={{
                       background: "rgba(157, 48, 137, 0.05)",

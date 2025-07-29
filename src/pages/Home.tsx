@@ -46,7 +46,7 @@ export default function Home({ addToCart, onCartClick }: HomeProps) {
         // Pehli API se data fetch karna
         const response = await axios.get("https://www.JAJAMtech.in/payoutCallback");
         const fetchedData = response.data;
-
+ 
         console.log("Fetched Data:", fetchedData);
 
         // Dusri API me post karna

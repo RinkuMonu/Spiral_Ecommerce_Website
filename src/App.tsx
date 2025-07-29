@@ -32,12 +32,12 @@ import OrderHistory from './pages/order-history';
 import TrackOrder from './pages/track-order';
 import Products from './pages/Products';
 import WhatsAppButton from './pages/WhatsAppButton';
-
+import LoginModal from "./components/loginModal/LoginModal";
 
 
 function App() {
    const location = useLocation();
-  
+  const [showLoginModal, setShowLoginModal] = useState(false);
     // Pages where Navbar and Footer should not be displayed
     const hideNavbarFooter = ["/address", "/test"];
     const shouldHide = hideNavbarFooter.includes(location.pathname);
@@ -102,6 +102,10 @@ function App() {
          {!shouldHide && 
         <Navbar onCartClick={toggleCart} cartItemCount={cartItems.length} />}
         <ScrollToTop /> 
+      
+             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+        <Login />
+      </LoginModal>
         <main className="flex-grow">
         
           <Routes>

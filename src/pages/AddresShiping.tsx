@@ -582,13 +582,13 @@ function AddressShipping({ cartItems }) {
                   <div key={item.id} className="flex gap-3">
                     <img
                       // src={item.image || "/placeholder.svg"}
-                      src={`http://api.jajamblockprints.com${item.images}`}
-                      alt={item.name}
+                      src={`http://api.jajamblockprints.com${item?.images}`}
+                      alt={item?.name}
                       className="w-16 h-16 object-cover rounded-lg"
                     />
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 text-sm">{item.name}</h4>
-                      <p className="text-gray-500 text-sm">Qty: {item.quantity}</p>
+                      <h4 className="font-medium text-gray-900 text-sm">{item?.name}</h4>
+                      <p className="text-gray-500 text-sm">Qty: {item?.quantity}</p>
                       <p className="font-medium text-gray-900">₹{(item.price * item.quantity).toLocaleString()}</p>
                     </div>
                   </div>

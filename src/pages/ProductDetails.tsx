@@ -6,7 +6,11 @@ import { useParams } from "react-router-dom"
 import { ShoppingCart, Star } from "lucide-react"
 import { FaFacebookF, FaTwitter, FaPinterestP, FaLinkedinIn, FaWhatsapp, FaEnvelope, FaRegCopy } from "react-icons/fa"
 import Arrivals from "../components/home/Arrivals"
-
+import { useDispatch } from "react-redux"
+import LoginModal from "../components/loginModal/LoginModal"; 
+// import Login from "../pages/Login";
+import { addItemToCart } from "../reduxslice/CartSlice"
+import Login from "./Login"
 // Define Product type directly in this file as requested
 interface Product {
   _id: string
@@ -35,8 +39,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<"description" | "reviews">("description")
   const [mainImage, setMainImage] = useState<string>("") // Re-introducing mainImage state
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const dispatch = useDispatch()
   const { id } = useParams()
-
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
 
@@ -79,10 +84,46 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   // const handleAddToWishlist = (product: any) => {
   //     dispatch(addItemToWishlist(product._id))
   //   }
+  const handleAddToCart = (e: React.MouseEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+
+   const isUserLoggedIn = !!localStorage.getItem("token");
+
+
+
+  if (!isUserLoggedIn) {
+    
+    setShowLoginModal(true)
+    return
+  }
+
+  if (product) {
+   
+    dispatch(
+      addItemToCart({
+        id: product._id,
+        name: product.productName,
+        image: product.images?.[0] || "",
+        category: product.category?.name || "Uncategorized",
+        price: product.actualPrice,
+        quantity: 1,
+      })
+    )
+  } else {
+    console.warn("Product is undefined")
+  }
+}
+
 
   const handleBuyNow = () => {
+  const isUserLoggedIn = !!localStorage.getItem("token");
+  if (!isUserLoggedIn) {
+    
+    setShowLoginModal(true)
+    return
+  }
     if (product) {
-
       addToCart({
         id: product._id,
         name: product.productName,
@@ -90,9 +131,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         category: product.category?.name || "Uncategorized",
         price: product.actualPrice || product.price,
         quantity,
-      });
+      })
     }
-  };
+  }
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
@@ -287,13 +328,13 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {" "}
             {/* Reduced gap */}
             <button
-              onClick={handleBuyNow}
+              onClick={handleAddToCart}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
               style={{ background: "rgb(157 48 137)" }}
             >
               <ShoppingCart size={20} /> Add to Cart
             </button>
-            <button
+            <button 
               onClick={handleBuyNow}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:bg-gray-900 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
             >
@@ -414,7 +455,14 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           )}
         </div>
       </div>
-
+           {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <Login />
+        </LoginModal>
+      )}
 
       {/* Related Products Section */}
       {/* <div className="mt-20">
