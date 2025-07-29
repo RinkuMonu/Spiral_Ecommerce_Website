@@ -292,13 +292,13 @@ const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
               <div className="text-center">Action</div>
             </div>
             
-            <div className="divide-y">
+            <div className="divide-y"> 
               {cartItems.map((item) => (
                 <div key={item.id} className="grid grid-cols-1 md:grid-cols-6 gap-4 p-6">
                   <div className="md:col-span-2 flex items-center">
                     <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
                       <img
-                        src={item.image}
+                          src={`http://api.jajamblockprints.com/${item?.image}`}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />

@@ -142,6 +142,12 @@ const TrendingProducts = ({
   };
 
   const handleAddToWishlist = (product: any) => {
+     const isUserLoggedIn = !!localStorage.getItem("token");
+
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true); // Trigger login modal
+      return;
+    }
     dispatch(addItemToWishlist(product._id));
     setWishlistProduct(product);
     setIsWishlistPopupVisible(true);
