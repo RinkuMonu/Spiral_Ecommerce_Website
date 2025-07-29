@@ -82,11 +82,11 @@ const Banner: React.FC = () => {
                     </div> */}
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-row sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6">
+                    <div className="hidden sm:flex flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6">
                       {/* Primary Button */}
                       <a
                         href={item.link}
-                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6  sm:text-base text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6 sm:text-base text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = "rgb(157 48 137)";
                           e.currentTarget.style.color = "white";
