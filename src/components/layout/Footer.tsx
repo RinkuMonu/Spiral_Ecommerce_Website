@@ -11,8 +11,27 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import footerLogo from "../../assest/footerLogo.jpg";
+import { useEffect, useState } from "react";
 
 export default function Footer() {
+  const [categories, setCategories] = useState<string[]>([]);
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
+        const data = await res.json();
+        if (Array.isArray(data.website?.categories)) {
+          setCategories(data.website.categories.map((cat: any) => cat.name));
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, [baseUrl, referenceWebsite]);
   return (
     <footer className="relative overflow-hidden">
       {/* Decorative background pattern */}
@@ -134,6 +153,7 @@ export default function Footer() {
             </div>
 
             {/* Shop Categories - Enhanced */}
+            {/* Shop Categories - Enhanced */}
             <div className="space-y-8">
               <div>
                 <h3
@@ -154,28 +174,28 @@ export default function Footer() {
                 </div>
               </div>
 
-              <div className="space-y-5">
-                {["Sarees", "Suits", "Fabrics"].map((item, index) => (
+              <div className="space-y-0">
+                {categories.slice(0, 8).map((item, index) => (
                   <Link
                     key={item}
-                    to={`/products`}
-                    className="group flex items-center p-4 rounded-xl transition-all duration-300 hover:shadow-lg border border-transparent hover:border-purple-200"
-                    style={{
-                      background: "rgba(157, 48, 137, 0.05)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background =
-                        "rgba(157, 48, 137, 0.1)";
-                      e.currentTarget.style.transform = "translateX(8px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background =
-                        "rgba(157, 48, 137, 0.05)";
-                      e.currentTarget.style.transform = "translateX(0)";
-                    }}
+                    to={`/products?category=${encodeURIComponent(item)}`}
+                    className="group flex items-center p-1  duration-300 "
+                    // style={{
+                    //   background: "rgba(157, 48, 137, 0.05)",
+                    // }}
+                    // onMouseEnter={(e) => {
+                    //   e.currentTarget.style.background =
+                    //     "rgba(157, 48, 137, 0.1)";
+                    //   e.currentTarget.style.transform = "translateX(8px)";
+                    // }}
+                    // onMouseLeave={(e) => {
+                    //   e.currentTarget.style.background =
+                    //     "rgba(157, 48, 137, 0.05)";
+                    //   e.currentTarget.style.transform = "translateX(0)";
+                    // }}
                   >
                     <div
-                      className="w-3 h-3 rounded-full mr-4 transition-all duration-300 group-hover:scale-125"
+                      className="w-2 h-2 rounded-full mr-4 transition-all duration-300 group-hover:scale-125"
                       style={{
                         background: `rgb(${157 + index * 10} ${
                           48 + index * 5
@@ -185,14 +205,6 @@ export default function Footer() {
                     <span className="text-lg font-semibold text-gray-700 group-hover:text-purple-800 transition-colors">
                       {item}
                     </span>
-                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center"
-                        style={{ background: "rgb(157 48 137)" }}
-                      >
-                        <span className="text-white text-xs">→</span>
-                      </div>
-                    </div>
                   </Link>
                 ))}
               </div>

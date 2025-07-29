@@ -26,10 +26,12 @@ export default function LoginModal({ isOpen, onClose, children }) {
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-5 right-5 text-gray-500 hover:text-black text-xl bg-gray-100 rounded-full h-10 w-10 flex items-center justify-center"
+                className="absolute top-7 right-2 sm:top-5 z-50 sm:right-5 text-gray-500 hover:text-black text-lg sm:text-xl bg-gray-100 hover:bg-gray-200 rounded-full h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center transition-all duration-200"
+                aria-label="Close"
               >
                 ×
               </button>
+
               {children}
             </div>
           </motion.div>
