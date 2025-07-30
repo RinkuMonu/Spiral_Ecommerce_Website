@@ -105,14 +105,15 @@ export default function TopCategories() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center justify-center mb-6">
             <span
-              className="text-sm font-semibold px-6 py-3 rounded-full inline-flex items-center gap-2 border"
-              style={{
-                color: "rgb(157 48 137)",
-                borderColor: "rgb(157 48 137)",
-              }}
+              className="text-sm font-semibold px-6 py-3 underline inline-flex items-center gap-2 "
+              // style={{
+              //   color: "rgb(157 48 137)",
+              //   borderColor: "rgb(157 48 137)",
+              // }}
             >
               <Sparkles className="w-4 h-4" />
               Heritage Collections
+               <Sparkles className="w-4 h-4" />
             </span>
           </div>
 

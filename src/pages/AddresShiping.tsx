@@ -40,6 +40,14 @@ interface CouponCode {
   description: string
 }
 
+interface FormErrors {
+  name?: string
+  email?: string
+  phone?: string
+  pinCode?: string
+  address?: string
+}
+
 const addresses: Address[] = [
   {
     id: "1",
@@ -87,6 +95,11 @@ function AddressShipping({ cartItems }) {
   const [pinCode, setPinCode] = useState("")
   const [state, setState] = useState("")
   const [city, setCity] = useState("")
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({})
+
+  const token = "zsdfgyxchh"
+
   const [userdata, setUserData] = useState({
     name: "",
     email: "",
@@ -96,16 +109,72 @@ function AddressShipping({ cartItems }) {
     address: "",
   })
 
-  const token = "zsdfgyxchh"
-
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shipping = shippingMethods.find((m) => m.id === selectedShipping)?.price || 0
   const total = subtotal + shipping
+
+  // Validation functions
+  const validateField = (fieldName: string, value: string) => {
+    let error = ''
+    
+    switch(fieldName) {
+      case 'name':
+        if (!value.trim()) error = 'Full name is required'
+        else if (value.length < 3) error = 'Name must be at least 3 characters'
+        break
+        
+      case 'email':
+        if (!value.trim()) error = 'Email is required'
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Please enter a valid email'
+        break
+        
+      case 'phone':
+        if (!value.trim()) error = 'Phone number is required'
+        else if (!/^\d{10}$/.test(value)) error = 'Phone must be 10 digits'
+        break
+        
+      case 'pinCode':
+        if (!value.trim()) error = 'PIN code is required'
+        else if (!/^\d{6}$/.test(value)) error = 'PIN code must be 6 digits'
+        break
+        
+      case 'address':
+        if (!value.trim()) error = 'Address is required'
+        else if (value.length < 10) error = 'Address must be at least 10 characters'
+        break
+    }
+    
+    setErrors(prev => ({ ...prev, [fieldName]: error }))
+    return !error
+  }
+
+  const validateForm = () => {
+    const fieldsToValidate = isNewAddress ? 
+      ['name', 'email', 'phone', 'pinCode', 'address'] : 
+      ['email', 'phone'] // Basic validation if not new address
+    
+    const validationResults = fieldsToValidate.map(field => {
+      const value = field === 'pinCode' ? pinCode : userdata[field]
+      return validateField(field, value)
+    })
+    
+    return validationResults.every(valid => valid)
+  }
+
+  const handleBlur = (fieldName: string) => {
+    setTouchedFields(prev => ({ ...prev, [fieldName]: true }))
+    const value = fieldName === 'pinCode' ? pinCode : userdata[fieldName]
+    validateField(fieldName, value)
+  }
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
     setIsNewAddress(value === "new")
     setSelectedAddress(value)
+    // Reset errors when changing address type
+    if (value !== "new") {
+      setErrors({})
+    }
   }
 
   const generateReferenceNumber = () => {
@@ -115,10 +184,15 @@ function AddressShipping({ cartItems }) {
   }
 
   const handlePayment = async () => {
-    if (!userdata.name || !userdata.phone || !userdata.email) {
-      alert("Please fill all required shipping fields.")
+    if (!validateForm()) {
+      // Mark all fields as touched to show errors
+      const allFields = isNewAddress ? 
+        ['name', 'email', 'phone', 'pinCode', 'address'] : 
+        ['email', 'phone']
+      setTouchedFields(allFields.reduce((acc, field) => ({ ...acc, [field]: true }), {}))
       return
     }
+
     setIsLoading(true)
     const newRef = generateReferenceNumber()
     setReference(newRef)
@@ -188,9 +262,24 @@ function AddressShipping({ cartItems }) {
     }
   }
 
-  const handleonChange = (e) => {
+  const handleonChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setUserData({ ...userdata, [name]: value })
+    setUserData(prev => ({ ...prev, [name]: value }))
+    
+    // Validate field if it's been touched before
+    if (touchedFields[name]) {
+      validateField(name, value)
+    }
+  }
+
+  const handlePinCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 6)
+    setPinCode(val)
+    
+    // Validate if touched
+    if (touchedFields.pinCode) {
+      validateField('pinCode', val)
+    }
   }
 
   useEffect(() => {
@@ -199,7 +288,7 @@ function AddressShipping({ cartItems }) {
     }
   }, [pinCode])
 
-  const fetchLocation = async (pin) => {
+  const fetchLocation = async (pin: string) => {
     try {
       const response = await axios.get(`https://api.postalpincode.in/pincode/${pin}`)
       console.log("API Response:", response.data)
@@ -207,9 +296,19 @@ function AddressShipping({ cartItems }) {
         const location = response.data[0].PostOffice[0]
         setState(location.State)
         setCity(location.District)
+        setUserData(prev => ({
+          ...prev,
+          state: location.State,
+          city: location.District
+        }))
       } else {
         setState("")
         setCity("")
+        setUserData(prev => ({
+          ...prev,
+          state: "",
+          city: ""
+        }))
         console.warn("Invalid PIN code")
       }
     } catch (error) {
@@ -217,6 +316,7 @@ function AddressShipping({ cartItems }) {
     }
   }
 
+  // Payment status check effect (unchanged from your original code)
   let totalTime = 0
   useEffect(() => {
     if (!reference) return
@@ -314,60 +414,90 @@ function AddressShipping({ cartItems }) {
                   {/* New Address Form */}
                   {isNewAddress && (
                     <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                      {/* Error summary */}
+                      {Object.values(errors).some(error => error) && (
+                        <div className="bg-red-50 border-l-4 border-red-500 p-4">
+                          <div className="flex">
+                            <div className="flex-shrink-0">
+                              <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            <div className="ml-3">
+                              <h3 className="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                              <div className="mt-2 text-sm text-red-700">
+                                <ul className="list-disc pl-5 space-y-1">
+                                  {errors.name && <li>{errors.name}</li>}
+                                  {errors.email && <li>{errors.email}</li>}
+                                  {errors.phone && <li>{errors.phone}</li>}
+                                  {errors.pinCode && <li>{errors.pinCode}</li>}
+                                  {errors.address && <li>{errors.address}</li>}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                           <input
                             type="text"
                             name="name"
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            className={`w-full rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                             value={userdata.name}
                             onChange={handleonChange}
+                            onBlur={() => handleBlur('name')}
                             placeholder="Enter your name"
-                            required
                           />
+                          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
                           <input
                             type="tel"
                             name="phone"
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            className={`w-full rounded-lg border ${errors.phone ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                             value={userdata.phone}
-                            onChange={handleonChange}
+                            onChange={(e) => {
+                              const val = e.target.value.replace(/\D/g, "").slice(0, 10)
+                              handleonChange({ target: { name: 'phone', value: val } })
+                              if (touchedFields.phone) validateField('phone', val)
+                            }}
+                            onBlur={() => handleBlur('phone')}
                             placeholder="Enter phone number"
-                            required
                           />
+                          {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                         <input
                           type="email"
                           name="email"
-                          className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          className={`w-full rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                           value={userdata.email}
                           onChange={handleonChange}
+                          onBlur={() => handleBlur('email')}
                           placeholder="Enter email address"
-                          required
                         />
+                        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">PIN Code</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">PIN Code *</label>
                           <input
                             type="text"
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            className={`w-full rounded-lg border ${errors.pinCode ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                             value={pinCode}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/\D/g, "").slice(0, 6)
-                              setPinCode(val)
-                            }}
+                            onChange={handlePinCodeChange}
+                            onBlur={() => handleBlur('pinCode')}
                             placeholder="Enter PIN code"
-                            required
                           />
+                          {errors.pinCode && <p className="mt-1 text-sm text-red-600">{errors.pinCode}</p>}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
@@ -392,12 +522,17 @@ function AddressShipping({ cartItems }) {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
                         <textarea
-                          className="w-full rounded-lg border border-gray-300 px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                          name="address"
+                          className={`w-full rounded-lg border ${errors.address ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500`}
                           rows={3}
-                          placeholder="Enter complete address"
+                          value={userdata.address}
+                          onChange={handleonChange}
+                          onBlur={() => handleBlur('address')}
+                          placeholder="Enter complete address (House no, Building, Street, Area)"
                         />
+                        {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
                       </div>
                     </div>
                   )}
@@ -517,7 +652,7 @@ function AddressShipping({ cartItems }) {
                     className="flex items-center justify-center gap-2 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
                     style={{ background: "rgb(157 48 137)" }}
                     onClick={handlePayment}
-                    disabled={isloading}
+                    disabled={isloading || (isNewAddress && Object.values(errors).some(error => error))}
                   >
                     {isloading ? (
                       <DotLottieReact
@@ -578,17 +713,13 @@ function AddressShipping({ cartItems }) {
 
               {/* Order Items */}
               <div className="space-y-4 mb-6">
-               
-               
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-3">
                     <img
-                      // src={item.image || "/placeholder.svg"}
                       src={`http://api.jajamblockprints.com/${item?.image}`}
                       alt={item?.name}
                       className="w-16 h-16 object-cover rounded-lg"
                     />
-
                     <div className="flex-1">
                       <h4 className="font-medium text-gray-900 text-sm">{item?.name}</h4>
                       <p className="text-gray-500 text-sm">Qty: {item?.quantity}</p>

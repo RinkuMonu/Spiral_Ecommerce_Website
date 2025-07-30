@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Lock, User, Phone, Mail, Eye, EyeOff, ChevronRight } from "lucide-react";
 import axios from "axios";
@@ -16,17 +15,164 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    password: ''
+  });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
   const navigate = useNavigate();
-
-  // const referenceWebsite = "686dfb954c94536bd845047f"; // You can get this dynamically too
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
+  // Validation functions
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validateName = (name) => {
+    const re = /^[A-Za-z]+$/;
+    return re.test(name);
+  };
+
+  const validateMobile = (mobile) => {
+    const re = /^[0-9]{10}$/;
+    return re.test(mobile);
+  };
+
+  const validatePassword = (password) => {
+    const hasMinLength = password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    return hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+  };
+
+  // Form validation
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      mobile: '',
+      password: ''
+    };
+
+    if (!isLogin) {
+      if (!firstName.trim()) {
+        newErrors.firstName = 'First name is required';
+        valid = false;
+      } else if (!validateName(firstName)) {
+        newErrors.firstName = 'First name should contain only alphabets';
+        valid = false;
+      }
+
+      if (!lastName.trim()) {
+        newErrors.lastName = 'Last name is required';
+        valid = false;
+      } else if (!validateName(lastName)) {
+        newErrors.lastName = 'Last name should contain only alphabets';
+        valid = false;
+      }
+
+      if (mobile && !validateMobile(mobile)) {
+        newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+        valid = false;
+      }
+    }
+
+    if (!email) {
+      newErrors.email = 'Email is required';
+      valid = false;
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Please enter a valid email address';
+      valid = false;
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required';
+      valid = false;
+    } else if (!validatePassword(password)) {
+      newErrors.password = 'Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  // Handle blur events for real-time validation
+  const handleBlur = (field) => {
+    const newErrors = {...errors};
+    
+    switch(field) {
+      case 'firstName':
+        if (!firstName.trim()) {
+          newErrors.firstName = 'First name is required';
+        } else if (!validateName(firstName)) {
+          newErrors.firstName = 'First name should contain only alphabets';
+        } else {
+          newErrors.firstName = '';
+        }
+        break;
+        
+      case 'lastName':
+        if (!lastName.trim()) {
+          newErrors.lastName = 'Last name is required';
+        } else if (!validateName(lastName)) {
+          newErrors.lastName = 'Last name should contain only alphabets';
+        } else {
+          newErrors.lastName = '';
+        }
+        break;
+        
+      case 'email':
+        if (!email) {
+          newErrors.email = 'Email is required';
+        } else if (!validateEmail(email)) {
+          newErrors.email = 'Please enter a valid email address';
+        } else {
+          newErrors.email = '';
+        }
+        break;
+        
+      case 'mobile':
+        if (mobile && !validateMobile(mobile)) {
+          newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+        } else {
+          newErrors.mobile = '';
+        }
+        break;
+        
+      case 'password':
+        if (!password) {
+          newErrors.password = 'Password is required';
+        } else if (!validatePassword(password)) {
+          newErrors.password = 'Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char';
+        } else {
+          newErrors.password = '';
+        }
+        break;
+    }
+    
+    setErrors(newErrors);
+  };
 
   // LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) return;
+    
     setIsLoading(true);
 
     try {
@@ -43,7 +189,7 @@ export default function Login() {
         localStorage.setItem("token", data.accessToken);  
         Swal.fire("Login Successful", "", "success");
         navigate("/");
-        window.location.reload(); // Then force reload
+        window.location.reload();
       } else {
         Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
       }
@@ -57,6 +203,9 @@ export default function Login() {
   // REGISTER
   const handleRegister = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) return;
+    
     setIsLoading(true);
 
     try {
@@ -85,11 +234,53 @@ export default function Login() {
     setIsLoading(false);
   };
 
+  // FORGOT PASSWORD
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    if (!forgotPasswordEmail) {
+      Swal.fire("Error", "Please enter your email address", "error");
+      return;
+    }
+    
+    if (!validateEmail(forgotPasswordEmail)) {
+      Swal.fire("Error", "Please enter a valid email address", "error");
+      return;
+    }
+    
+    setForgotPasswordLoading(true);
+
+    try {
+      const res = await axios.post(`${baseUrl}/auth/forgot-password`, {
+        email: forgotPasswordEmail,
+        referenceWebsite
+      });
+
+      Swal.fire(
+        "Password Reset Sent",
+        "If an account exists with this email, you'll receive a password reset link shortly.",
+        "success"
+      );
+      setShowForgotPassword(false);
+      setForgotPasswordEmail("");
+    } catch (err) {
+      Swal.fire(
+        "Request Sent",
+        "If an account exists with this email, you'll receive a password reset link shortly.",
+        "success"
+      );
+      setShowForgotPassword(false);
+      setForgotPasswordEmail("");
+    }
+
+    setForgotPasswordLoading(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#e6f0ff] ">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#e6f0ff] p-2">
       <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
         {/* Left Side - Visual Panel */}
-        <div className="w-full md:w-1/2 bg-gradient-to-br from-purple-950 to-purple-400 p-8 md:p-12 flex flex-col justify-between relative overflow-hidden">
+        <div className="w-full md:w-1/2 bg-gradient-to-br from-purple-950 to-purple-400 p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
           <motion.div className="max-w-md">
             <h2 className="text-4xl font-bold text-white mb-4">
               {isLogin ? "Welcome back!" : "Create your account"}
@@ -108,77 +299,241 @@ export default function Login() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white">
+        <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto" style={{height:"calc(100vh - 30px)"}}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex justify-end mb-4">
               {/* <button className="text-sm text-gray-500 hover:text-indigo-600" onClick={() => navigate("/")}>← Back to home</button> */}
             </div>
 
             <AnimatePresence mode="wait">
-              <motion.div key={isLogin ? "login" : "register"} initial={{ opacity: 0, x: isLogin ? -20 : 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: isLogin ? 20 : -20 }}>
-                <h3 className="text-3xl font-bold text-gray-800 mb-6">{isLogin ? "Sign in to your account" : "Create new account"}</h3>
-
-                <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-6">
-                  {!isLogin && (
-                    <>
-                      <div>
-                        <label className="text-sm font-medium text-gray-700">First Name</label>
-                        <input className="w-full p-3 rounded-xl border" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+              {showForgotPassword ? (
+                <motion.div 
+                  key="forgot-password"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-3xl font-bold text-gray-800 mb-6">Reset Password</h3>
+                  <p className="text-gray-600 mb-6">
+                    Enter your email address and we'll send you a link to reset your password.
+                  </p>
+                  
+                  <form onSubmit={handleForgotPassword}>
+                    <div className="mb-6">
+                      <label className="text-sm font-medium text-gray-700">Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <input
+                          className="w-full p-3 pl-10 rounded-xl border border-gray-200"
+                          type="email"
+                          value={forgotPasswordEmail}
+                          onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          required
+                        />
                       </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-700">Last Name</label>
-                        <input className="w-full p-3 rounded-xl border" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
-                      </div>
-                    </>
-                  )}
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
-                    <input className="w-full p-3 rounded-xl border" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    </div>
+                    
+                    <button
+                      type="submit"
+                      disabled={forgotPasswordLoading}
+                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${forgotPasswordLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"}`}
+                    >
+                      {forgotPasswordLoading ? "Sending..." : "Send Reset Link"}
+                    </button>
+                  </form>
+                  
+                  <div className="mt-6 text-center">
+                    <button 
+                      onClick={() => setShowForgotPassword(false)}
+                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
+                    >
+                      ← Back to {isLogin ? "Sign In" : "Sign Up"}
+                    </button>
                   </div>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key={isLogin ? "login" : "register"} 
+                  initial={{ opacity: 0, x: isLogin ? -20 : 20 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
+                >
+                  <h3 className="text-3xl font-bold text-gray-800 mb-6">{isLogin ? "Sign in to your account" : "Create new account"}</h3>
 
-                  {!isLogin && (
+                  <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-6">
+                    {!isLogin && (
+                      <>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">First Name</label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                            <input 
+                              className={`w-full p-3 pl-10 rounded-xl border ${errors.firstName ? 'border-red-500' : 'border-gray-200'}`}
+                              value={firstName} 
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '' || /^[A-Za-z]+$/.test(value)) {
+                                  setFirstName(value);
+                                  if (errors.firstName) {
+                                    setErrors({...errors, firstName: ''});
+                                  }
+                                }
+                              }}
+                              onBlur={() => handleBlur('firstName')}
+                              required 
+                            />
+                          </div>
+                          {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Last Name</label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                            <input 
+                              className={`w-full p-3 pl-10 rounded-xl border ${errors.lastName ? 'border-red-500' : 'border-gray-200'}`}
+                              value={lastName} 
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === '' || /^[A-Za-z]+$/.test(value)) {
+                                  setLastName(value);
+                                  if (errors.lastName) {
+                                    setErrors({...errors, lastName: ''});
+                                  }
+                                }
+                              }}
+                              onBlur={() => handleBlur('lastName')}
+                              required 
+                            />
+                          </div>
+                          {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+                        </div>
+                      </>
+                    )}
+
                     <div>
-                      <label className="text-sm font-medium text-gray-700">Mobile</label>
-                      <input className="w-full p-3 rounded-xl border" type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                      <label className="text-sm font-medium text-gray-700">Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <input
+                          className={`w-full p-3 pl-10 rounded-xl border ${errors.email ? 'border-red-500' : 'border-gray-200'}`}
+                          type="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (errors.email) {
+                              setErrors({...errors, email: ''});
+                            }
+                          }}
+                          onBlur={() => handleBlur('email')}
+                          placeholder="your@email.com"
+                          required
+                        />
+                      </div>
+                      {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                     </div>
-                  )}
 
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Password</label>
-                    <div className="relative">
-                      <input
-                        className="w-full p-3 pr-10 rounded-xl border"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                      <button type="button" className="absolute right-3 top-3" onClick={() => setShowPassword(!showPassword)}>
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                      </button>
+                    {!isLogin && (
+                      <div>
+                        <label className="text-sm font-medium text-gray-700">Mobile</label>
+                        <div className="relative">
+                          <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                          <input
+                            className={`w-full p-3 pl-10 rounded-xl border ${errors.mobile ? 'border-red-500' : 'border-gray-200'}`}
+                            type="tel"
+                            value={mobile}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || /^[0-9]*$/.test(value)) {
+                                setMobile(value);
+                                if (errors.mobile) {
+                                  setErrors({...errors, mobile: ''});
+                                }
+                              }
+                            }}
+                            onBlur={() => handleBlur('mobile')}
+                            placeholder="1234567890"
+                            maxLength="10"
+                          />
+                        </div>
+                        {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>}
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">Password</label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <input
+                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-200'}`}
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            if (errors.password) {
+                              setErrors({...errors, password: ''});
+                            }
+                          }}
+                          onBlur={() => handleBlur('password')}
+                          required
+                        />
+                        <button 
+                          type="button" 
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <Eye size={20} />:<EyeOff size={20} />}
+                        </button>
+                      </div>
+                      {errors.password && (
+                        <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                      )}
+                      {!isLogin && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          Password must contain:
+                          <ul className="list-disc pl-5">
+                            <li className={password.length >= 8 ? 'text-green-500' : ''}>At least 8 characters</li>
+                            <li className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>One uppercase letter</li>
+                            <li className={/[a-z]/.test(password) ? 'text-green-500' : ''}>One lowercase letter</li>
+                            <li className={/[0-9]/.test(password) ? 'text-green-500' : ''}>One number</li>
+                            <li className={/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-green-500' : ''}>One special character</li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
+
+                    {isLogin && (
+                      <div className="flex justify-end">
+                        <button 
+                          type="button" 
+                          onClick={() => setShowForgotPassword(true)}
+                          className="text-sm text-indigo-600 hover:text-indigo-800"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isLoading || Object.values(errors).some(error => error) || !email || !password || (!isLogin && (!firstName || !lastName))}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${isLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"}`}
+                    >
+                      {isLoading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 text-center">
+                    <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center">
+                      {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </button>
                   </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${isLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
-                      }`}
-                  >
-                    {isLoading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
-                  </button>
-                </form>
-
-                <div className="mt-6 text-center">
-                  <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center">
-                    {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </button>
-                </div>
-              </motion.div>
+                </motion.div>
+              )}
             </AnimatePresence>
           </motion.div>
         </div>

@@ -22,7 +22,7 @@
 //       <section className="tp-page-area pb-80 pt-50">
 //         <div className="container">
 //           <div className="ck-content">
-//             <h1 className="section-heading"><strong>Cookie Policy for JAJAM BLOCK PRINTS PRIVATE LIMITED Pvt Ltd</strong></h1>
+//             <h1 className="section-heading"><strong>Cookie Policy for JAJAM BLOCK PRINTS</strong></h1>
 //             <p>Last updated: Feb, 20, 2024</p>
 
 //             <h3 className="section-heading"><strong>What Are Cookies</strong></h3>
@@ -226,7 +226,7 @@ const Cookies = () => {
                     </div>
                   </div>
                   <p className="text-indigo-100 mt-4 max-w-3xl">
-                    This policy explains how JAJAM BLOCK PRINTS PRIVATE LIMITED uses cookies and similar technologies to recognize you when you visit our websites.
+                    This policy explains how JAJAM BLOCK PRINTS  uses cookies and similar technologies to recognize you when you visit our websites.
                   </p>
                 </div>
                 

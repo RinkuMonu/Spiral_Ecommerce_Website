@@ -26,8 +26,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const navigate = useNavigate();
 
   // State management
-  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [categories, setCategories] = useState<string[]>([]);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -789,7 +789,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 >
-                  <span className="relative z-10 text-[13px]">{item}</span>
+                  <span className="relative z-10 text-[12px]">{item}</span>
                   <div
                     className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
                     style={{
@@ -888,7 +888,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                               }}
                               onClick={() => handleCategorySelect(item)}
                             >
-                              <div className="flex items-center justify-between">
+                              <div className="flex items-center justify-between text-xs">
                                 <span>{item}</span>
                                 <svg
                                   className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity"
@@ -909,7 +909,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                         </div>
                       </div>
 
-                      <div
+                      {/* <div
                         className="px-6 py-3 border-t"
                         style={{ borderColor: "rgba(157, 48, 137, 0.2)" }}
                       >
@@ -929,7 +929,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                             ))}
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   )}
                 </div>

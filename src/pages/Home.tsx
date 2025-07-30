@@ -14,7 +14,7 @@ interface HomeProps {
   onCartClick: () => void;
 }
 
-export default function Home({ addToCart, onCartClick }: HomeProps) {
+export default function   Home({ addToCart, onCartClick }: HomeProps) {
   // const [loading2, setLoading2] = useState(false);
 
   // const data = {

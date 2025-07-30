@@ -1,4 +1,3 @@
-// Full code with complete Privacy Policy content injected and styled like Terms of Service
 "use client";
 
 import React from "react";
@@ -6,9 +5,12 @@ import React from "react";
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-extrabold text-[#9d3089] mb-4 text-center border-b-slate-200">Privacy Policy</h1>
-      <p className="text-md text-gray-600 text-center" >Please read our Privacy Policy carefully before using Jajam Block Print services.</p>
-
+      <h1 className="text-4xl font-extrabold text-[#9d3089] mb-4 text-center border-b-slate-200">
+        Privacy Policy
+      </h1>
+      <p className="text-md text-gray-600 text-center">
+        Please read our Privacy Policy carefully before using Bagru Hastkala services.
+      </p>
 
       {privacySections.map((section, index) => (
         <div
@@ -17,7 +19,9 @@ export default function PrivacyPolicy() {
         >
           <h2 className="text-2xl font-semibold mb-4 text-[#9d3089]">{section.title}</h2>
           {section.content.map((para, idx) => (
-            <p key={idx} className="mb-3 text-justify text-gray-700 leading-relaxed">{para}</p>
+            <p key={idx} className="mb-3 text-justify text-gray-700 leading-relaxed">
+              {para}
+            </p>
           ))}
         </div>
       ))}
@@ -26,7 +30,7 @@ export default function PrivacyPolicy() {
         <p>
           <strong>Shop by Craft:</strong>{" "}
           <span className="text-gray-700">
-            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tine And Dye Print | Black And White Print
+            Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tie And Dye Print | Black And White Print
           </span>
         </p>
         <p>
@@ -42,73 +46,55 @@ export default function PrivacyPolicy() {
 
 const privacySections = [
   {
-    title: "INTRODUCTION",
+    title: "Personal Information",
     content: [
-      "We are jajamblockprint.com., a service provided by From, Jaipur Rajasthan, India.",
-      "We Jajam Block Print are registered business category and not for any other services, we are from jaipur rajasthan our official address is jogiyon ka mohalla, Jajam Block Print jaipur rajasthan and pin code is 303007 and the registered gst no. is 08BHIPC7034G1ZI."
+      "www.bagruhastkala.com DOES NOT trade or sell your personal information in any manner, except as specified herein or if you express your consent towards the same.",
+      "Personal Information provided by you is used only:",
+      "(a) To facilitate your use of the website;",
+      "(b) To respond to your concerns, inquiries or address your requests for information about the various services we offer;",
+      "(c) To provide you with information about Company’s services/products and send you information, materials and offers from the Company;",
+      "(d) To send you important information regarding the website, changes to Company’s Terms of Service and various policies and/or other miscellaneous information;",
+      "(e) To send you surveys and marketing communications that the Company believes may be of interest to you;",
+      "(f) To personalize your experience on our website;",
+      "(g) If you purchase any content or avail of any service from the website, to complete and fulfill Your purchase, for example, to have your payments processed, communicate with you regarding Your purchase and provide you with related customer service;",
+      "(h) To administer product downloads;",
+      "(i) To conduct internal reviews and data analysis for the Website (e.g., to determine the number of visitors to specific pages within the website);",
+      "(j) To improve the services, content and advertising on the website;",
+      "(k) To protect the integrity of the website; and",
+      "(l) To comply with legal requirements and disclosures provided under the laws of India."
     ]
   },
   {
-    title: "YOUR INFORMATION",
+    title: "Security",
     content: [
-      "In this Privacy Policy, references to “you” mean any person submitting any data to us or our agent or the Site.",
-      "If you have any comments or suggestions, we would be pleased to receive them at our Jaipur address or by emailing us at jajamblockprint3@gmail.com.",
-      "Data protection is a matter of trust and your privacy is important to us. We shall therefore only use your name and other information which relates to you in the manner set out in this Privacy Policy."
+      "The security of your personal information is very important to the Company. We have aligned physical, administrative and technical safeguards designed to protect your personal information from unauthorized access.",
+      "In addition, the Company uses standard security protocols and mechanisms to exchange the transmission of sensitive data such as credit card details.",
+      "In the event of any breach of your personal information, the Company will notify you of it by email or fax and will restore the integrity of the data system."
     ]
   },
   {
-    title: "COLLECTION OF INFORMATION",
+    title: "Advertising",
     content: [
-      "If you browse through this site without providing us with any personal information, we will gather and store some information about your visit, such as IP address, type of browser and operating system used, date and time you access our site, pages you visit, and if you linked to our website from another website, the address of that website. This information will not identify you personally and will not be linked back to you.",
-      "There will be times, such as when you submit an auto lead request to a dealer or fill out our contact form, when we will need to obtain personally identifiable information from you or about you. Such personally identifiable information may include your name, address, e-mail address, telephone number and identification number.",
-      "We may automatically track certain information about you based upon your behaviour on our Website. We use this information to do internal research on our users' demographics, interests, and behaviour to better understand, protect and serve our users."
+      "The Company uses some third parties to administer a limited set of advertisements on our website and portals.",
+      "During this process, no personal information is leaked. However, aggregate profile information, such as user community, may be used in the selection of advertising to make sure that it has relevance to the user.",
+      "On some banner ads, an embedded pixel may be present, and while it does not associate with a cookie or other personal profile information, it may return session connection information that allows advertisers to better determine how many individual users have clicked on the ad banner."
     ]
   },
   {
-    title: "SHARING OF INFORMATION",
+    title: "User Discretion",
     content: [
-      "Under no circumstances do we rent, trade or share the personally identifiable information that we have collected from you, with any other company for their marketing purposes, without your consent.",
-      "We reserve the right to communicate Your Information to any third party that makes a legally-compliant request for its disclosure.",
-      "We use third-party service providers to serve advertisements on our behalf across the internet and sometimes on this website."
+      "You can always choose not to provide information and in such cases, if the information required is mandatory, you will not be able to avail those services, features or contents.",
+      "You can add or update your personal information on a regular basis. When you update information, the Company will keep a copy of the prior version for its records.",
+      "The Company may, if you prefer, send direct advertisement mailers to you at the address given by you.",
+      "You have the option to opt-out of this direct mailer by clicking at the unsubscribed link option attached to e-mail.",
+      "The Company respects your privacy and if you do not want to receive any kind of communications from www.bagruhastkala.com or have any grievances to share, please report to: shreeshyamblockprints.1@gmail.com"
     ]
   },
   {
-    title: "COOKIES",
+    title: "Important Disclaimer",
     content: [
-      "From time to time, we may place 'cookies' on your personal computer. 'Cookies' are small identifiers sent from a web server and stored on your computer's hard drive, that help us to recognize you if you visit our website again.",
-      "You have the ability to accept or decline cookies. Most web browsers automatically accept cookies, but you can usually modify your browser setting to decline cookies if you prefer."
-    ]
-  },
-  {
-    title: "LINKS TO OTHER SITES",
-    content: [
-      "Our Website links to other websites that may collect personally identifiable information about you. We are not responsible for the privacy practices or the content of those linked websites."
-    ]
-  },
-  {
-    title: "SECURITY",
-    content: [
-      "We safeguard your privacy using known security standards and procedures and comply with applicable privacy laws."
-    ]
-  },
-  {
-    title: "CREDIT CHECK AND FRAUD PREVENTION",
-    content: [
-      "We use standard and authorized payment services and our Credit Check and Fraud Prevention policies are aligned to these companies. All disputes would be handled by Jaipur Courts."
-    ]
-  },
-  {
-    title: "OPT OUT POLICY",
-    content: [
-      "We provide all users with the opportunity to opt-out of receiving non-essential (promotional, marketing-related) communications from us on behalf of our partners, and from us in general, after setting up an account.",
-      "If you no longer wish to receive any information from us please drop us an email at jajamblockprint3@gmail.com."
-    ]
-  },
-  {
-    title: "CHANGES TO PRIVACY POLICY",
-    content: [
-      "If we decide to change our privacy policy, we will post those changes on this page so that you are always aware of what information we collect, how we use it, and under what circumstances we disclose it.",
-      "If you still have any query about our privacy policy kindly drop us an email at jajamblockprint3@gmail.com, we will reply you within 1-2 working days."
+      "Although the Company provides full security and secrecy to your personal information, we urge you to be careful with very sensitive information and do not share it with any third party claiming to be related to the Company on separate emails/phone calls etc.",
+      "The Company disclaims any and all liabilities towards any such claims that have arisen due to your own negligence or willful misconduct and the Company takes no responsibility of the same."
     ]
   }
 ];

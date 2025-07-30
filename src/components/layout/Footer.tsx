@@ -8,6 +8,7 @@ import {
   Phone,
   MapPin,
   Heart,
+  Workflow,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import footerLogo from "../../assest/footerLogo.jpg";
@@ -17,6 +18,7 @@ export default function Footer() {
   const [categories, setCategories] = useState<string[]>([]);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+  
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -32,6 +34,7 @@ export default function Footer() {
     };
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
+
   return (
     <footer className="relative overflow-hidden">
       {/* Decorative background pattern */}
@@ -184,7 +187,7 @@ export default function Footer() {
                 {categories.slice(0, 8).map((item, index) => (
                   <Link
                     key={item}
-                    to={`/products?category=${encodeURIComponent(item)}`}
+                    to={`/category/${encodeURIComponent(item).toLowerCase()}`}
                     className="group flex items-center p-1  duration-300 "
                     // style={{
                     //   background: "rgba(157, 48, 137, 0.05)",
@@ -256,7 +259,21 @@ export default function Footer() {
                     </p>
                   </div>
                 </div>
-
+                 <div className="flex items-center space-x-4   ">
+                  <Workflow
+                    className="h-6 w-6 flex-shrink-0"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
+                  <div>
+                    <h5 className="font-semibold text-gray-800 mb-1">
+                      Working Hours
+                    </h5>
+                    <p className="text-gray-600">
+                     <p>Mon-sat</p>
+                     <p>09:30AM-06:00PM</p>
+                    </p>
+                  </div>
+                </div>
                 <div className="flex items-center space-x-4   ">
                   <Phone
                     className="h-6 w-6 flex-shrink-0"
@@ -264,11 +281,11 @@ export default function Footer() {
                   />
                   <div>
                     <h5 className="font-semibold text-gray-800 mb-1">
-                      Call Us
+                      Contact Us
                     </h5>
                     <p className="text-gray-600">
                       <a href="tel:9116131960" className="hover:underline">
-                        9116131960
+                       +91-9116131960
                       </a>
                     </p>
                   </div>
@@ -281,7 +298,7 @@ export default function Footer() {
                   />
                   <div>
                     <h5 className="font-semibold text-gray-800 mb-1">
-                      Email Us
+                      Email Address
                     </h5>
                     <p className="text-gray-600 text-sm">
                       <a
@@ -310,8 +327,7 @@ export default function Footer() {
           <div className="container mx-auto px-4">
             <div className="text-center space-y-6">
               <p className="text-gray-700 text-lg font-medium">
-                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS PRIVATE
-                LIMITED. All rights reserved.
+                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS . All rights reserved.
               </p>
 
               {/* Customer Support Links with dividers */}
@@ -320,7 +336,7 @@ export default function Footer() {
                   { title: "Terms of Service", path: "/terms" },
                   { title: "Privacy Policy", path: "/privacy" },
                   {
-                    title: "Terams And Conditions",
+                    title: "Terms And Conditions",
                     path: "/termsandcondition",
                   },
                   { title: "Shipping Policy", path: "/shipping" },
