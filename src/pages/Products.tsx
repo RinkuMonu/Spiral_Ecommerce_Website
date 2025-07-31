@@ -124,13 +124,13 @@ const handleSizeChange = (size: string) => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
+            {/* <button
               onClick={resetFilters}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors font-medium px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 hover:bg-white"
             >
               <X className="h-4 w-4" />
               <span>Reset</span>
-            </button>
+            </button> */}
             <button
               onClick={() => {}}
               className="flex items-center space-x-2 text-white px-6 py-2.5 rounded-lg transition-colors font-medium"
@@ -308,13 +308,13 @@ const handleSizeChange = (size: string) => {
                 <p className="text-gray-600 mb-6 max-w-md mx-auto">
                   Try adjusting your filters or explore other categories to find your perfect piece.
                 </p>
-                <button
+                {/* <button
                   onClick={resetFilters}
                   className="px-6 py-3 text-white rounded-lg font-medium transition-colors hover:shadow-lg"
                   style={{ background: "rgb(157 48 137)" }}
                 >
                   Reset All Filters
-                </button>
+                </button> */}
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

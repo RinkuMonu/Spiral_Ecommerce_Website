@@ -82,10 +82,10 @@ const sectionContents = [
   [
     "We do not guarantee, represent or warrant that your use of our Service will be uninterrupted, timely, secure or error-free.",
     "You expressly agree that your use of, or inability to use, the Service is at your sole risk. All products and services delivered to you through the Service are provided 'as is' and 'as available', without any representation or warranties.",
-    "In no case shall Bagru Hastkala Printers, our directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers or licensors be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind.",
+    "In no case shall jajamblockprints , our directors, officers, employees, affiliates, agents, contractors, interns, suppliers, service providers or licensors be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind.",
   ],
   [
-    "You agree to indemnify, defend and hold harmless Bagru Hastkala Printers and our affiliates from any claim or demand made by any third-party due to your breach of these Terms of Service or your violation of any law or the rights of a third-party.",
+    "You agree to indemnify, defend and hold harmless jajamblockprints  and our affiliates from any claim or demand made by any third-party due to your breach of these Terms of Service or your violation of any law or the rights of a third-party.",
   ],
   [
     "If any provision of these Terms of Service is found to be unlawful, void or unenforceable, that provision shall still be enforceable to the fullest extent permitted, and the unenforceable portion shall be severed from these Terms.",

@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
         Privacy Policy
       </h1>
       <p className="text-md text-gray-600 text-center">
-        Please read our Privacy Policy carefully before using Bagru Hastkala services.
+        Please read our Privacy Policy carefully before using jajamblockprints services.
       </p>
 
       {privacySections.map((section, index) => (
@@ -48,7 +48,7 @@ const privacySections = [
   {
     title: "Personal Information",
     content: [
-      "www.bagruhastkala.com DOES NOT trade or sell your personal information in any manner, except as specified herein or if you express your consent towards the same.",
+      "https://jajamblockprints.com DOES NOT trade or sell your personal information in any manner, except as specified herein or if you express your consent towards the same.",
       "Personal Information provided by you is used only:",
       "(a) To facilitate your use of the website;",
       "(b) To respond to your concerns, inquiries or address your requests for information about the various services we offer;",
@@ -87,7 +87,7 @@ const privacySections = [
       "You can add or update your personal information on a regular basis. When you update information, the Company will keep a copy of the prior version for its records.",
       "The Company may, if you prefer, send direct advertisement mailers to you at the address given by you.",
       "You have the option to opt-out of this direct mailer by clicking at the unsubscribed link option attached to e-mail.",
-      "The Company respects your privacy and if you do not want to receive any kind of communications from www.bagruhastkala.com or have any grievances to share, please report to: shreeshyamblockprints.1@gmail.com"
+      "The Company respects your privacy and if you do not want to receive any kind of communications from https://jajamblockprints.com or have any grievances to share, please report to: shreeshyamblockprints.1@gmail.com"
     ]
   },
   {

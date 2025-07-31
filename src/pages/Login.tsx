@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Lock, User, Phone, Mail, Eye, EyeOff, ChevronRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  Lock,
+  User,
+  Phone,
+  Mail,
+  Eye,
+  EyeOff,
+  ChevronRight,
+} from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -16,21 +24,39 @@ export default function Login() {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
-    password: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    password: "",
   });
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetToken, setResetToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [resetPasswordLoading, setResetPasswordLoading] = useState(false);
   const navigate = useNavigate();
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
-  // Validation functions
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const token = queryParams.get("token");
+
+    if (token) {
+      setResetToken(token);
+      setShowResetPassword(true);
+      setIsLogin(false);
+      setShowForgotPassword(false);
+    }
+  }, []);
+
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
@@ -52,57 +78,63 @@ export default function Login() {
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
-    return hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
+
+    return (
+      hasMinLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    );
   };
 
-  // Form validation
   const validateForm = () => {
     let valid = true;
     const newErrors = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      mobile: '',
-      password: ''
+      firstName: "",
+      lastName: "",
+      email: "",
+      mobile: "",
+      password: "",
     };
 
     if (!isLogin) {
       if (!firstName.trim()) {
-        newErrors.firstName = 'First name is required';
+        newErrors.firstName = "First name is required";
         valid = false;
       } else if (!validateName(firstName)) {
-        newErrors.firstName = 'First name should contain only alphabets';
+        newErrors.firstName = "First name should contain only alphabets";
         valid = false;
       }
 
       if (!lastName.trim()) {
-        newErrors.lastName = 'Last name is required';
+        newErrors.lastName = "Last name is required";
         valid = false;
       } else if (!validateName(lastName)) {
-        newErrors.lastName = 'Last name should contain only alphabets';
+        newErrors.lastName = "Last name should contain only alphabets";
         valid = false;
       }
 
       if (mobile && !validateMobile(mobile)) {
-        newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+        newErrors.mobile = "Please enter a valid 10-digit mobile number";
         valid = false;
       }
     }
 
     if (!email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
       valid = false;
     } else if (!validateEmail(email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
       valid = false;
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
       valid = false;
     } else if (!validatePassword(password)) {
-      newErrors.password = 'Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char';
+      newErrors.password =
+        "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char";
       valid = false;
     }
 
@@ -110,83 +142,81 @@ export default function Login() {
     return valid;
   };
 
-  // Handle blur events for real-time validation
   const handleBlur = (field) => {
-    const newErrors = {...errors};
-    
-    switch(field) {
-      case 'firstName':
+    const newErrors = { ...errors };
+
+    switch (field) {
+      case "firstName":
         if (!firstName.trim()) {
-          newErrors.firstName = 'First name is required';
+          newErrors.firstName = "First name is required";
         } else if (!validateName(firstName)) {
-          newErrors.firstName = 'First name should contain only alphabets';
+          newErrors.firstName = "First name should contain only alphabets";
         } else {
-          newErrors.firstName = '';
+          newErrors.firstName = "";
         }
         break;
-        
-      case 'lastName':
+      case "lastName":
         if (!lastName.trim()) {
-          newErrors.lastName = 'Last name is required';
+          newErrors.lastName = "Last name is required";
         } else if (!validateName(lastName)) {
-          newErrors.lastName = 'Last name should contain only alphabets';
+          newErrors.lastName = "Last name should contain only alphabets";
         } else {
-          newErrors.lastName = '';
+          newErrors.lastName = "";
         }
         break;
-        
-      case 'email':
+      case "email":
         if (!email) {
-          newErrors.email = 'Email is required';
+          newErrors.email = "Email is required";
         } else if (!validateEmail(email)) {
-          newErrors.email = 'Please enter a valid email address';
+          newErrors.email = "Please enter a valid email address";
         } else {
-          newErrors.email = '';
+          newErrors.email = "";
         }
         break;
-        
-      case 'mobile':
+      case "mobile":
         if (mobile && !validateMobile(mobile)) {
-          newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+          newErrors.mobile = "Please enter a valid 10-digit mobile number";
         } else {
-          newErrors.mobile = '';
+          newErrors.mobile = "";
         }
         break;
-        
-      case 'password':
+      case "password":
         if (!password) {
-          newErrors.password = 'Password is required';
+          newErrors.password = "Password is required";
         } else if (!validatePassword(password)) {
-          newErrors.password = 'Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char';
+          newErrors.password =
+            "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char";
         } else {
-          newErrors.password = '';
+          newErrors.password = "";
         }
         break;
     }
-    
+
     setErrors(newErrors);
   };
 
-  // LOGIN
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
 
     try {
-      const res = await axios.post(`${baseUrl}/auth/login`, {
-        email,
-        password,
-        referenceWebsite,
-      }, { withCredentials: true });
+      const res = await axios.post(
+        `${baseUrl}/auth/login`,
+        {
+          email,
+          password,
+          referenceWebsite,
+        },
+        { withCredentials: true }
+      );
 
       const data = res.data;
-      console.log("dataaa : ", data);
       if (data && data.accessToken) {
         localStorage.setItem("userData", JSON.stringify(data.userData));
-        localStorage.setItem("token", data.accessToken);  
+        localStorage.setItem("token", data.accessToken);
         Swal.fire("Login Successful", "", "success");
         navigate("/");
         window.location.reload();
@@ -194,31 +224,38 @@ export default function Login() {
         Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
       }
     } catch (err) {
-      Swal.fire("Login failed", err.response?.data?.msg || "Something went wrong", "error");
+      Swal.fire(
+        "Login failed",
+        err.response?.data?.msg || "Something went wrong",
+        "error"
+      );
     }
 
     setIsLoading(false);
   };
 
-  // REGISTER
   const handleRegister = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
 
     try {
-      const res = await axios.post(`${baseUrl}/auth/signUp`, {
-        firstName,
-        lastName,
-        email,
-        password,
-        referenceWebsite,
-        mobile,
-        address: "",
-        role: "user"
-      }, { withCredentials: true });
+      const res = await axios.post(
+        `${baseUrl}/auth/signUp`,
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+          referenceWebsite,
+          mobile,
+          address: "",
+          role: "user",
+        },
+        { withCredentials: true }
+      );
 
       const data = res.data;
       if (data && data.accessToken) {
@@ -228,58 +265,115 @@ export default function Login() {
         Swal.fire("Failed", data?.msg || "Something went wrong", "error");
       }
     } catch (err) {
-      Swal.fire("Registration failed", err.response?.data?.msg || "Something went wrong", "error");
+      Swal.fire(
+        "Registration failed",
+        err.response?.data?.msg || "Something went wrong",
+        "error"
+      );
     }
 
     setIsLoading(false);
   };
 
-  // FORGOT PASSWORD
-  const handleForgotPassword = async (e) => {
+  const handleRequestReset = async (e) => {
     e.preventDefault();
-    
+
     if (!forgotPasswordEmail) {
       Swal.fire("Error", "Please enter your email address", "error");
       return;
     }
-    
+
     if (!validateEmail(forgotPasswordEmail)) {
       Swal.fire("Error", "Please enter a valid email address", "error");
       return;
     }
-    
+
     setForgotPasswordLoading(true);
 
     try {
-      const res = await axios.post(`${baseUrl}/auth/forgot-password`, {
+      const res = await axios.post(`${baseUrl}/auth/request-reset`, {
         email: forgotPasswordEmail,
-        referenceWebsite
+        referenceWebsite,
       });
 
-      Swal.fire(
-        "Password Reset Sent",
-        "If an account exists with this email, you'll receive a password reset link shortly.",
-        "success"
-      );
+      Swal.fire({
+        title: "Verification Email Sent",
+        text: res?.data?.msg,
+        icon: "success",
+      });
+
+      // 👇 Automatically move to password reset form
       setShowForgotPassword(false);
+      setShowResetPassword(true);
+      setResetToken(res?.data?.resetToken);
       setForgotPasswordEmail("");
     } catch (err) {
       Swal.fire(
-        "Request Sent",
-        "If an account exists with this email, you'll receive a password reset link shortly.",
-        "success"
+        "Error",
+        err.response?.data?.msg || "Failed to send reset link",
+        "error"
       );
-      setShowForgotPassword(false);
-      setForgotPasswordEmail("");
     }
 
     setForgotPasswordLoading(false);
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+
+    if (!newPassword || !confirmNewPassword) {
+      Swal.fire("Error", "Please enter and confirm your new password", "error");
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      Swal.fire("Error", "Passwords don't match", "error");
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      Swal.fire(
+        "Error",
+        "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char",
+        "error"
+      );
+      return;
+    }
+
+    setResetPasswordLoading(true);
+
+    try {
+      const res = await axios.post(`${baseUrl}/auth/reset-password`, {
+        resetToken,
+        newPassword,
+      });
+
+      Swal.fire(
+        "Password Reset Successful",
+        "Your password has been updated successfully. You can now login with your new password.",
+        "success"
+      );
+
+      setShowResetPassword(false);
+      setIsLogin(true);
+      setResetToken("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    } catch (err) {
+      Swal.fire(
+        "Reset Failed",
+        err.response?.data?.msg ||
+          "Password reset failed. The link may have expired.",
+        "error"
+      );
+    }
+
+    setResetPasswordLoading(false);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f4ff] to-[#e6f0ff] p-2">
       <div className="w-full max-w-6xl flex flex-col md:flex-row rounded-3xl overflow-hidden shadow-2xl bg-white">
-        {/* Left Side - Visual Panel */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-purple-950 to-purple-400 p-8 md:p-12 flex flex-col gap-2 relative overflow-hidden">
           <motion.div className="max-w-md">
             <h2 className="text-4xl font-bold text-white mb-4">
@@ -298,54 +392,175 @@ export default function Login() {
           />
         </div>
 
-        {/* Right Side - Form */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto" style={{height:"calc(100vh - 30px)"}}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex justify-end mb-4">
-              {/* <button className="text-sm text-gray-500 hover:text-indigo-600" onClick={() => navigate("/")}>← Back to home</button> */}
-            </div>
-
+        <div
+          className="w-full md:w-1/2 p-6 md:p-10 lg:p-14 bg-white overflow-y-auto"
+          style={{ height: "calc(100vh - 30px)" }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <AnimatePresence mode="wait">
-              {showForgotPassword ? (
-                <motion.div 
+              {showResetPassword ? (
+                <motion.div
+                  key="reset-password"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
+                    Reset Password
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Please enter your new password.
+                  </p>
+
+                  <form onSubmit={handleResetPassword}>
+                    <div className="mb-6">
+                      <label className="text-sm font-medium text-gray-700">
+                        New Password
+                      </label>
+                      <div className="relative">
+                        <Lock
+                          className="absolute left-3 top-3.5 text-gray-400"
+                          size={18}
+                        />
+                        <input
+                          className="w-full p-3 pl-10 pr-10 rounded-xl border border-gray-200"
+                          type={showNewPassword ? "text" : "password"}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="New password"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                        >
+                          {showNewPassword ? (
+                            <Eye size={20} />
+                          ) : (
+                            <EyeOff size={20} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      <label className="text-sm font-medium text-gray-700">
+                        Confirm New Password
+                      </label>
+                      <div className="relative">
+                        <Lock
+                          className="absolute left-3 top-3.5 text-gray-400"
+                          size={18}
+                        />
+                        <input
+                          className="w-full p-3 pl-10 pr-10 rounded-xl border border-gray-200"
+                          type={showConfirmNewPassword ? "text" : "password"}
+                          value={confirmNewPassword}
+                          onChange={(e) =>
+                            setConfirmNewPassword(e.target.value)
+                          }
+                          placeholder="Confirm new password"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                          onClick={() =>
+                            setShowConfirmNewPassword(!showConfirmNewPassword)
+                          }
+                        >
+                          {showConfirmNewPassword ? (
+                            <Eye size={20} />
+                          ) : (
+                            <EyeOff size={20} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={resetPasswordLoading}
+                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                        resetPasswordLoading
+                          ? "bg-indigo-400 cursor-not-allowed"
+                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
+                      }`}
+                    >
+                      {resetPasswordLoading ? "Resetting..." : "Reset Password"}
+                    </button>
+                  </form>
+
+                  <div className="mt-6 text-center">
+                    <button
+                      onClick={() => {
+                        setShowResetPassword(false);
+                        setShowForgotPassword(true);
+                      }}
+                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
+                    >
+                      ← Back to Forgot Password
+                    </button>
+                  </div>
+                </motion.div>
+              ) : showForgotPassword ? (
+                <motion.div
                   key="forgot-password"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-6"
                 >
-                  <h3 className="text-3xl font-bold text-gray-800 mb-6">Reset Password</h3>
+                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
+                    Reset Password
+                  </h3>
                   <p className="text-gray-600 mb-6">
-                    Enter your email address and we'll send you a link to reset your password.
+                    Enter your email address to reset your password.
                   </p>
-                  
-                  <form onSubmit={handleForgotPassword}>
+
+                  <form onSubmit={handleRequestReset}>
                     <div className="mb-6">
-                      <label className="text-sm font-medium text-gray-700">Email</label>
+                      <label className="text-sm font-medium text-gray-700">
+                        Email
+                      </label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <Mail
+                          className="absolute left-3 top-3.5 text-gray-400"
+                          size={18}
+                        />
                         <input
                           className="w-full p-3 pl-10 rounded-xl border border-gray-200"
                           type="email"
                           value={forgotPasswordEmail}
-                          onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                          onChange={(e) =>
+                            setForgotPasswordEmail(e.target.value)
+                          }
                           placeholder="your@email.com"
                           required
                         />
                       </div>
                     </div>
-                    
+
                     <button
                       type="submit"
                       disabled={forgotPasswordLoading}
-                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${forgotPasswordLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"}`}
+                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                        forgotPasswordLoading
+                          ? "bg-indigo-400 cursor-not-allowed"
+                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
+                      }`}
                     >
-                      {forgotPasswordLoading ? "Sending..." : "Send Reset Link"}
+                      {forgotPasswordLoading ? "Sending..." : "Submit"}
                     </button>
                   </form>
-                  
+
                   <div className="mt-6 text-center">
-                    <button 
+                    <button
                       onClick={() => setShowForgotPassword(false)}
                       className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
                     >
@@ -354,150 +569,252 @@ export default function Login() {
                   </div>
                 </motion.div>
               ) : (
-                <motion.div 
-                  key={isLogin ? "login" : "register"} 
-                  initial={{ opacity: 0, x: isLogin ? -20 : 20 }} 
-                  animate={{ opacity: 1, x: 0 }} 
+                <motion.div
+                  key={isLogin ? "login" : "register"}
+                  initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
                 >
-                  <h3 className="text-3xl font-bold text-gray-800 mb-6">{isLogin ? "Sign in to your account" : "Create new account"}</h3>
+                  <h3 className="text-3xl font-bold text-gray-800 mb-6">
+                    {isLogin ? "Sign in to your account" : "Create new account"}
+                  </h3>
 
-                  <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-6">
+                  <form
+                    onSubmit={isLogin ? handleLogin : handleRegister}
+                    className="space-y-6"
+                  >
                     {!isLogin && (
                       <>
                         <div>
-                          <label className="text-sm font-medium text-gray-700">First Name</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            First Name
+                          </label>
                           <div className="relative">
-                            <User className="absolute left-3 top-3.5 text-gray-400" size={18} />
-                            <input 
-                              className={`w-full p-3 pl-10 rounded-xl border ${errors.firstName ? 'border-red-500' : 'border-gray-200'}`}
-                              value={firstName} 
+                            <User
+                              className="absolute left-3 top-3.5 text-gray-400"
+                              size={18}
+                            />
+                            <input
+                              className={`w-full p-3 pl-10 rounded-xl border ${
+                                errors.firstName
+                                  ? "border-red-500"
+                                  : "border-gray-200"
+                              }`}
+                              value={firstName}
                               onChange={(e) => {
                                 const value = e.target.value;
-                                if (value === '' || /^[A-Za-z]+$/.test(value)) {
+                                if (value === "" || /^[A-Za-z]+$/.test(value)) {
                                   setFirstName(value);
                                   if (errors.firstName) {
-                                    setErrors({...errors, firstName: ''});
+                                    setErrors({ ...errors, firstName: "" });
                                   }
                                 }
                               }}
-                              onBlur={() => handleBlur('firstName')}
-                              required 
+                              onBlur={() => handleBlur("firstName")}
+                              required
                             />
                           </div>
-                          {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
+                          {errors.firstName && (
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors.firstName}
+                            </p>
+                          )}
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-gray-700">Last Name</label>
+                          <label className="text-sm font-medium text-gray-700">
+                            Last Name
+                          </label>
                           <div className="relative">
-                            <User className="absolute left-3 top-3.5 text-gray-400" size={18} />
-                            <input 
-                              className={`w-full p-3 pl-10 rounded-xl border ${errors.lastName ? 'border-red-500' : 'border-gray-200'}`}
-                              value={lastName} 
+                            <User
+                              className="absolute left-3 top-3.5 text-gray-400"
+                              size={18}
+                            />
+                            <input
+                              className={`w-full p-3 pl-10 rounded-xl border ${
+                                errors.lastName
+                                  ? "border-red-500"
+                                  : "border-gray-200"
+                              }`}
+                              value={lastName}
                               onChange={(e) => {
                                 const value = e.target.value;
-                                if (value === '' || /^[A-Za-z]+$/.test(value)) {
+                                if (value === "" || /^[A-Za-z]+$/.test(value)) {
                                   setLastName(value);
                                   if (errors.lastName) {
-                                    setErrors({...errors, lastName: ''});
+                                    setErrors({ ...errors, lastName: "" });
                                   }
                                 }
                               }}
-                              onBlur={() => handleBlur('lastName')}
-                              required 
+                              onBlur={() => handleBlur("lastName")}
+                              required
                             />
                           </div>
-                          {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
+                          {errors.lastName && (
+                            <p className="text-red-500 text-xs mt-1">
+                              {errors.lastName}
+                            </p>
+                          )}
                         </div>
                       </>
                     )}
 
                     <div>
-                      <label className="text-sm font-medium text-gray-700">Email</label>
+                      <label className="text-sm font-medium text-gray-700">
+                        Email
+                      </label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <Mail
+                          className="absolute left-3 top-3.5 text-gray-400"
+                          size={18}
+                        />
                         <input
-                          className={`w-full p-3 pl-10 rounded-xl border ${errors.email ? 'border-red-500' : 'border-gray-200'}`}
+                          className={`w-full p-3 pl-10 rounded-xl border ${
+                            errors.email ? "border-red-500" : "border-gray-200"
+                          }`}
                           type="email"
                           value={email}
                           onChange={(e) => {
                             setEmail(e.target.value);
                             if (errors.email) {
-                              setErrors({...errors, email: ''});
+                              setErrors({ ...errors, email: "" });
                             }
                           }}
-                          onBlur={() => handleBlur('email')}
+                          onBlur={() => handleBlur("email")}
                           placeholder="your@email.com"
                           required
                         />
                       </div>
-                      {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     {!isLogin && (
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Mobile</label>
+                        <label className="text-sm font-medium text-gray-700">
+                          Mobile
+                        </label>
                         <div className="relative">
-                          <Phone className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                          <Phone
+                            className="absolute left-3 top-3.5 text-gray-400"
+                            size={18}
+                          />
                           <input
-                            className={`w-full p-3 pl-10 rounded-xl border ${errors.mobile ? 'border-red-500' : 'border-gray-200'}`}
+                            className={`w-full p-3 pl-10 rounded-xl border ${
+                              errors.mobile
+                                ? "border-red-500"
+                                : "border-gray-200"
+                            }`}
                             type="tel"
                             value={mobile}
                             onChange={(e) => {
                               const value = e.target.value;
-                              if (value === '' || /^[0-9]*$/.test(value)) {
+                              if (value === "" || /^[0-9]*$/.test(value)) {
                                 setMobile(value);
                                 if (errors.mobile) {
-                                  setErrors({...errors, mobile: ''});
+                                  setErrors({ ...errors, mobile: "" });
                                 }
                               }
                             }}
-                            onBlur={() => handleBlur('mobile')}
+                            onBlur={() => handleBlur("mobile")}
                             placeholder="1234567890"
                             maxLength="10"
                           />
                         </div>
-                        {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>}
+                        {errors.mobile && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.mobile}
+                          </p>
+                        )}
                       </div>
                     )}
 
                     <div>
-                      <label className="text-sm font-medium text-gray-700">Password</label>
+                      <label className="text-sm font-medium text-gray-700">
+                        Password
+                      </label>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-3.5 text-gray-400" size={18} />
+                        <Lock
+                          className="absolute left-3 top-3.5 text-gray-400"
+                          size={18}
+                        />
                         <input
-                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${errors.password ? 'border-red-500' : 'border-gray-200'}`}
+                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                            errors.password
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
                           type={showPassword ? "text" : "password"}
                           value={password}
                           onChange={(e) => {
                             setPassword(e.target.value);
                             if (errors.password) {
-                              setErrors({...errors, password: ''});
+                              setErrors({ ...errors, password: "" });
                             }
                           }}
-                          onBlur={() => handleBlur('password')}
+                          onBlur={() => handleBlur("password")}
                           required
                         />
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                           onClick={() => setShowPassword(!showPassword)}
                         >
-                          {showPassword ? <Eye size={20} />:<EyeOff size={20} />}
+                          {showPassword ? (
+                            <Eye size={20} />
+                          ) : (
+                            <EyeOff size={20} />
+                          )}
                         </button>
                       </div>
                       {errors.password && (
-                        <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.password}
+                        </p>
                       )}
                       {!isLogin && (
                         <div className="text-xs text-gray-500 mt-1">
                           Password must contain:
                           <ul className="list-disc pl-5">
-                            <li className={password.length >= 8 ? 'text-green-500' : ''}>At least 8 characters</li>
-                            <li className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>One uppercase letter</li>
-                            <li className={/[a-z]/.test(password) ? 'text-green-500' : ''}>One lowercase letter</li>
-                            <li className={/[0-9]/.test(password) ? 'text-green-500' : ''}>One number</li>
-                            <li className={/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-green-500' : ''}>One special character</li>
+                            <li
+                              className={
+                                password.length >= 8 ? "text-green-500" : ""
+                              }
+                            >
+                              At least 8 characters
+                            </li>
+                            <li
+                              className={
+                                /[A-Z]/.test(password) ? "text-green-500" : ""
+                              }
+                            >
+                              One uppercase letter
+                            </li>
+                            <li
+                              className={
+                                /[a-z]/.test(password) ? "text-green-500" : ""
+                              }
+                            >
+                              One lowercase letter
+                            </li>
+                            <li
+                              className={
+                                /[0-9]/.test(password) ? "text-green-500" : ""
+                              }
+                            >
+                              One number
+                            </li>
+                            <li
+                              className={
+                                /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                                  ? "text-green-500"
+                                  : ""
+                              }
+                            >
+                              One special character
+                            </li>
                           </ul>
                         </div>
                       )}
@@ -505,8 +822,8 @@ export default function Login() {
 
                     {isLogin && (
                       <div className="flex justify-end">
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           onClick={() => setShowForgotPassword(true)}
                           className="text-sm text-indigo-600 hover:text-indigo-800"
                         >
@@ -517,18 +834,37 @@ export default function Login() {
 
                     <button
                       type="submit"
-                      disabled={isLoading || Object.values(errors).some(error => error) || !email || !password || (!isLogin && (!firstName || !lastName))}
+                      disabled={
+                        isLoading ||
+                        Object.values(errors).some((error) => error) ||
+                        !email ||
+                        !password ||
+                        (!isLogin && (!firstName || !lastName))
+                      }
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${isLoading ? "bg-indigo-400 cursor-not-allowed" : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"}`}
+                      className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
+                        isLoading
+                          ? "bg-indigo-400 cursor-not-allowed"
+                          : "bg-gradient-to-r from-purple-900 to-purple-400 hover:shadow-xl"
+                      }`}
                     >
-                      {isLoading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+                      {isLoading
+                        ? "Processing..."
+                        : isLogin
+                        ? "Sign In"
+                        : "Create Account"}
                     </button>
                   </form>
 
                   <div className="mt-6 text-center">
-                    <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center">
-                      {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                    <button
+                      onClick={() => setIsLogin(!isLogin)}
+                      className="text-indigo-600 font-medium hover:text-indigo-800 inline-flex items-center"
+                    >
+                      {isLogin
+                        ? "Don't have an account? Sign up"
+                        : "Already have an account? Sign in"}
                       <ChevronRight className="h-4 w-4 ml-1" />
                     </button>
                   </div>

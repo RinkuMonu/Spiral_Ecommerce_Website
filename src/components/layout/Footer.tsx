@@ -184,7 +184,7 @@ export default function Footer() {
               </div>
 
               <div className="space-y-0">
-                {categories.slice(0, 8).map((item, index) => (
+                {categories.slice(0, 10).map((item, index) => (
                   <Link
                     key={item}
                     to={`/category/${encodeURIComponent(item).toLowerCase()}`}

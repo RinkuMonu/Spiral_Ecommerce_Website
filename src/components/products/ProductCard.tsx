@@ -182,7 +182,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 ₹{product.actualPrice.toLocaleString()}
               </span>
               {product.price && product.price !== product.actualPrice && (
-                <span className="text-sm text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
+                // <span className="text-sm text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
+                <span className="text-sm text-gray-400 line-through">₹{product.price.toFixed(0)}</span>
+                
               )}
             </div>
             {product.discount && <span className="text-xs font-medium text-green-600">Save {product.discount}%</span>}

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
@@ -7,37 +7,122 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Images
-import jajam1 from "../../assest/jajam1.jpg";
-import jajam2 from "../../assest/jajam2.jpg";
-import jajam3 from "../../assest/jajam3.jpg";
-import jajam4 from "../../assest/jajam4.jpg";
-
-const bannerData = [
-  {
-    image: jajam1,
-    link: "/products",
-    buttonText: "Explore Collection",
-  },
-  {
-    image: jajam2,
-    link: "/products",
-    buttonText: "View Collection",
-  },
-  {
-    image: jajam3,
-    link: "/products",
-    buttonText: "Shop Now",
-  },
-  {
-    image: jajam4,
-    link: "/products",
-    buttonText: "Discover Now",
-  },
-];
+interface APIBanner {
+  _id: string;
+  bannerName: string;
+  description: string;
+  deviceType: string;
+  images: string[];
+  position: string;
+  // Add these new fields if they exist in your API response
+  heightMobile?: number;
+  heightDesktop?: number;
+}
 
 const Banner: React.FC = () => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+
+  const [banners, setBanners] = useState<APIBanner[]>([]);
+  const [deviceType, setDeviceType] = useState<"mobile" | "desktop">("desktop");
+  const [frameHeight, setFrameHeight] = useState<string>("auto");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [isNewArrival, setIsNewArrival] = useState(false);
+
+  // ✅ Detect "new arrivals" banner
+  useEffect(() => {
+    const hasNewArrivalBanner = banners.some(
+      (banner) => banner.description === "newArrival"
+    );
+    setIsNewArrival(hasNewArrivalBanner);
+  }, [banners]);
+
+  // ✅ Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
+        const data = await res.json();
+        if (Array.isArray(data.website?.categories)) {
+          setCategories(data.website.categories.map((cat: any) => cat.name));
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    fetchCategories();
+  }, [baseUrl, referenceWebsite]);
+
+  // ✅ Correct API call for newArrival
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        let url = `${baseUrl}/products?referenceWebsite=${referenceWebsite}`;
+        if (isNewArrival) {
+          url += `&newArrival=true`; // ✅ correct param
+        }
+        console.log("🟢 Fetching products from:", url);
+        const res = await fetch(url);
+        const data = await res.json();
+        // handle data.products here if needed
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      }
+    };
+
+    fetchProducts();
+  }, [isNewArrival]);
+
+  // ✅ Device type detection
+  useEffect(() => {
+    const checkDevice = () => {
+      const isMobile = window.innerWidth <= 768;
+      setDeviceType(isMobile ? "mobile" : "desktop");
+    };
+
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
+
+  // ✅ Fetch banners based on device and set height
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const endpoint = deviceType === "mobile" ? "mobile" : "desktop";
+        const res = await fetch(
+          `${baseUrl}/banners/${endpoint}?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
+        const filtered = (data.banners || []).filter(
+          (item: APIBanner) => item.deviceType === deviceType
+        );
+        
+        // Set banners first
+        setBanners(filtered);
+        
+        // Then set height based on device type and banner data
+        if (filtered.length > 0) {
+          const firstBanner = filtered[0];
+          // Use banner-specific height if available, otherwise fallback to device-based height
+          const height = deviceType === "mobile" 
+            ? (firstBanner.heightMobile || 300) // Default mobile height 300px
+            : (firstBanner.heightDesktop || 500); // Default desktop height 500px
+            
+          setFrameHeight(`${height}px`);
+        }
+      } catch (err) {
+        console.error("Failed to fetch banners", err);
+      }
+    };
+
+    fetchBanners();
+  }, [deviceType, baseUrl, referenceWebsite]);
+
+  if (banners.length === 0) return null;
+
   return (
     <section className="relative w-full">
       <div className="relative overflow-hidden">
@@ -58,35 +143,30 @@ const Banner: React.FC = () => {
             disableOnInteraction: false,
           }}
           modules={[Autoplay, Pagination, Navigation]}
-          className="w-full h-auto sm:h-auto md:h-auto lg:h-auto xl:h-auto"
+          className="w-full"
+          style={{ height: frameHeight }} // Set the dynamic height here
         >
-          {bannerData.map((item, idx) => (
-            <SwiperSlide key={idx}>
-              <div className="relative w-full h-auto">
-                {/* Background Image */}
+          {banners.map((item) => (
+            <SwiperSlide key={item._id}>
+              <div className="relative w-full h-auto"> {/* Changed to h-full */}
                 <img
-                  src={item.image || "/placeholder.svg"}
-                  alt={item.buttonText}
-                  className="w-full h-auto object-fill"
+                  src={`https://api.jajamblockprints.com${item.images[0]}`}
+                  alt={item.bannerName}
+                  className="w-full h-auto object-fill" // Changed to h-full and object-cover
                   loading="eager"
                 />
-
-                {/* Overlay Content */}
-                <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4 sm:px-6 lg:px-16 sm:mt-64">
-                  <div className="w-full max-w-3xl space-y-4 sm:space-y-6]">
-                    {/* Badge */}
-                    {/* <div>
-                      <span className="inline-block px-2 py-1 sm:px-6 sm:py-2 text-xs sm:text-sm font-semibold border-2 border-white/30 backdrop-blur-sm rounded-full bg-white/20">
-                        ✨ {item.buttonText} ✨
-                      </span>
-                    </div> */}
-
-                    {/* CTA Buttons */}
-                    <div className="hidden sm:flex flex-row justify-center items-center gap-3 sm:gap-4 md:gap-6">
-                      {/* Primary Button */}
-                      <a
-                        href={item.link}
-                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6 sm:text-base text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
+                <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4">
+                  <div className="w-full max-w-3xl space-y-4">
+                    <div className="flex flex-row justify-center items-center gap-3 -mt-16 sm:mt-72">
+                      <Link
+                        to={
+                          item.description?.toLowerCase() === "new arrivals"
+                            ? `/products?newArrival=true`
+                            : `/category/${encodeURIComponent(
+                                item?.description
+                              ).toLowerCase()}`
+                        }
+                        className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-xs font-bold bg-white text-black rounded-full shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background = "rgb(157 48 137)";
                           e.currentTarget.style.color = "white";
@@ -96,14 +176,12 @@ const Banner: React.FC = () => {
                           e.currentTarget.style.color = "black";
                         }}
                       >
-                        <span>{item.buttonText}</span>
+                        <span>Shop {item?.description}</span>
                         <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-                      </a>
-
-                      {/* Secondary Button */}
+                      </Link>
                       <a
                         href="/products"
-                        className="group inline-flex items-center justify-center gap-2 sm:gap-3 py-1 px-4 sm:py-2 sm:px-6 text-sm sm:text-base font-bold rounded-full transition-all duration-300 border-2 border-white/50 backdrop-blur-sm hover:bg-white/20 bg-white/10 text-white"
+                        className="group inline-flex items-center justify-center gap-2 py-1 px-4 text-sm font-bold rounded-full transition-all duration-300 border-2 border-white/50 backdrop-blur-sm hover:bg-white/20 bg-white/10 text-white"
                       >
                         <span>View All Products</span>
                       </a>
@@ -119,7 +197,7 @@ const Banner: React.FC = () => {
           <div className="swiper-button-next hidden sm:flex" />
         </Swiper>
 
-        {/* Custom Swiper Styles */}
+        {/* Swiper Styles */}
         <style jsx global>{`
           .swiper-pagination {
             bottom: 20px !important;
