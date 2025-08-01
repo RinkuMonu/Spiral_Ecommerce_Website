@@ -26,6 +26,17 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     (state: any) => state.wishlist.items.length
   );
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  // For guest users: get items from localStorage, fallback to empty array
+  const cartItemsFromLocalStorage = JSON.parse(
+    localStorage.getItem("addtocart") || "[]"
+  );
+
+  // If logged in, use Redux or server count (assumed as `cartItemCount`); else, use local cart length
+  const totalCart = isLoggedIn
+    ? cartItemCount
+    : cartItemsFromLocalStorage.length;
 
   // State management
   const [searchOpen, setSearchOpen] = useState(false);
@@ -347,7 +358,10 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </button>
             {user ? (
               <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
-                <Link to={"/profile"} className="flex items-center space-x-3 sm:space-x-4 relative z-10">
+                <Link
+                  to={"/profile"}
+                  className="flex items-center space-x-3 sm:space-x-4 relative z-10"
+                >
                   <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white bg-opacity-20 text-white rounded-full border-2 border-white border-opacity-30">
                     <User size={20} className="sm:w-6 sm:h-6" />
                   </div>
@@ -645,14 +659,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                   size={20}
                   className="relative z-10 xl:w-6 xl:h-6"
                 />
-                {cartItemCount > 0 && (
+                {totalCart > 0 && (
                   <span
                     className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-5 h-5 xl:w-6 xl:h-6 flex items-center justify-center border-2 border-white shadow-lg"
                     style={{
                       background: "linear-gradient(135deg, #A13C78, #872D67)",
                     }}
                   >
-                    {cartItemCount}
+                    {totalCart}
                   </span>
                 )}
               </button>
@@ -673,14 +687,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 style={{ color: textColor }}
               >
                 <ShoppingCart size={20} className="sm:w-6 sm:h-6" />
-                {cartItemCount > 0 && (
+                {totalCart > 0 && (
                   <span
                     className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center"
                     style={{
                       background: "linear-gradient(135deg, #A13C78, #872D67)",
                     }}
                   >
-                    {cartItemCount}
+                    {totalCart}
                   </span>
                 )}
               </button>

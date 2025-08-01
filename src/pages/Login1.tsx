@@ -295,44 +295,74 @@ export default function Login1({ redirectPath, onLoginSuccess }) {
   // };
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) return;
-  setIsLoading(true);
+    if (!validateForm()) return;
 
-  try {
-    const res = await axios.post(
-      `${baseUrl}/auth/login`,
-      {
-        email,
-        password,
-        referenceWebsite,
-      },
-      { withCredentials: true }
-    );
+    setIsLoading(true);
 
-    const data = res.data;
-    if (data && data.accessToken) {
-      localStorage.setItem("userData", JSON.stringify(data.userData));
-      localStorage.setItem("token", data.accessToken);
-      Swal.fire("Login Successful", "", "success");
+    try {
+      const res = await axios.post(
+        `${baseUrl}/auth/login`,
+        {
+          email,
+          password,
+          referenceWebsite,
+        },
+        { withCredentials: true }
+      );
 
-      // Use redirectPath if available
-      navigate(redirectPath || "/");
-      onLoginSuccess(); // Close modal
-    } else {
-      Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
+      const data = res.data;
+
+      if (data && data.accessToken) {
+        // ✅ Save login data
+        localStorage.setItem("userData", JSON.stringify(data.userData));
+        localStorage.setItem("token", data.accessToken);
+
+        // ✅ Step 1: Check for guest cart
+        const guestCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+
+        if (guestCart.length > 0) {
+          // ✅ Step 2: Send guest cart items to user's backend cart
+          await Promise.all(
+            guestCart.map((item) =>
+              axios.post(
+                `${baseUrl}/cart/add`,
+                {
+                  productId: item.id,
+                  quantity: item.quantity,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${data.accessToken}`,
+                  },
+                  withCredentials: true,
+                }
+              )
+            )
+          );
+
+          // ✅ Step 3: Clear localStorage guest cart
+          localStorage.removeItem("addtocart");
+        }
+
+        // ✅ Step 4: Notify + redirect
+        Swal.fire("Login Successful", "", "success");
+        navigate("/");
+        window.location.reload(); // Refresh to load Redux cart from server
+      } else {
+        Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
+      }
+    } catch (err) {
+      Swal.fire(
+        "Login failed",
+        err.response?.data?.msg || "Something went wrong",
+        "error"
+      );
     }
-  } catch (err) {
-    Swal.fire(
-      "Login failed",
-      err.response?.data?.msg || "Something went wrong",
-      "error"
-    );
-  }
 
-  setIsLoading(false);
-};
+    setIsLoading(false);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
