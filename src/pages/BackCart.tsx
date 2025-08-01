@@ -225,7 +225,7 @@
 
 
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { removeItemFromCart, updateQuantity } from "../reduxslice/CartSlice";
 import { Link } from "react-router-dom";
 
@@ -234,31 +234,34 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
-  image: string; 
+  image: string;
 }
 
 const ShoppingCart: React.FC<{ cartItems: CartItem[] }> = ({ cartItems }) => {
   const dispatch = useDispatch();
-   const { items } = useSelector(state => state.cart);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   
-const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const totalAfterDiscount = Math.max(0, total - discount);
-
-  const handleIncrement = (id) => {
-    const item = items.find(i => i.id === id);
+  
+  const handleIncrement = (id: string) => {
+    const item = cartItems.find((i) => i.id === id);
     if (item) {
       dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
     }
   };
 
-  const handleDecrement = (id) => {
-    const item = items.find(i => i.id === id);
+  const handleDecrement = (id: string) => {
+    const item = cartItems.find((i) => i.id === id);
     if (item && item.quantity > 1) {
       dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
     }
   };
+
   const handleDelete = (id: string) => {
     dispatch(removeItemFromCart(id));
   };
@@ -349,7 +352,7 @@ const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
               ))}
             </div>
             
-            {/* <div className="p-6 border-t">
+            <div className="p-6 border-t">
               <div className="flex flex-col sm:flex-row gap-4">
                 <input
                   type="text"
@@ -365,7 +368,7 @@ const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
                   Apply Coupon
                 </button>
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
         

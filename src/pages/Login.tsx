@@ -274,12 +274,43 @@ export default function Login() {
       );
 
       const data = res.data;
+
       if (data && data.accessToken) {
+        // ✅ Save login data
         localStorage.setItem("userData", JSON.stringify(data.userData));
         localStorage.setItem("token", data.accessToken);
+
+        // ✅ Step 1: Check for guest cart
+        const guestCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+
+        if (guestCart.length > 0) {
+          // ✅ Step 2: Send guest cart items to user's backend cart
+          await Promise.all(
+            guestCart.map((item) =>
+              axios.post(
+                `${baseUrl}/cart/add`,
+                {
+                  productId: item.id,
+                  quantity: item.quantity,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${data.accessToken}`,
+                  },
+                  withCredentials: true,
+                }
+              )
+            )
+          );
+
+          // ✅ Step 3: Clear localStorage guest cart
+          localStorage.removeItem("addtocart");
+        }
+
+        // ✅ Step 4: Notify + redirect
         Swal.fire("Login Successful", "", "success");
         navigate("/");
-        window.location.reload();
+        window.location.reload(); // Refresh to load Redux cart from server
       } else {
         Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
       }

@@ -1,13 +1,17 @@
 "use client";
-import type React from "react";
+import React, { useEffect, useState } from "react";
 import { X, ShoppingCart, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { removeItemFromCart, updateQuantity } from "../../reduxslice/CartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import LoginModal from "../loginModal/LoginModal";
 import Login1 from "../../pages/Login1";
-import { useState } from "react";
+import {
+  removeItemFromCart,
+  updateQuantity,
+  addItemToCart,
+} from "../../reduxslice/CartSlice";
+
 interface Product {
   id: string;
   name: string;
@@ -24,71 +28,95 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [redirectPath, setRedirectPath] = useState(null);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Total Price Calculation
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
+  const [localCart, setLocalCart] = useState<Product[]>([]);
 
-  // Increment Quantity
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const loadCart = () => {
+        const cartData = localStorage.getItem("addtocart");
+        setLocalCart(cartData ? JSON.parse(cartData) : []);
+      };
+
+      loadCart(); // Load once on mount
+
+      // 👂 Listen for localStorage update
+      window.addEventListener("guestCartUpdated", loadCart);
+
+      return () => {
+        window.removeEventListener("guestCartUpdated", loadCart);
+      };
+    }
+  }, [isLoggedIn]);
+
+  // Helper to update localStorage cart
+  const updateLocalCart = (updated: Product[]) => {
+    setLocalCart(updated);
+    localStorage.setItem("addtocart", JSON.stringify(updated));
+  };
+
+  // Common handlers
   const handleIncrement = (id: string) => {
-    const item = cartItems.find((i) => i.id === id);
-    if (item) {
-      dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
+    if (isLoggedIn) {
+      const item = cartItems.find((i) => i.id === id);
+      if (item) {
+        dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
+      }
+    } else {
+      const updated = localCart.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      updateLocalCart(updated);
     }
   };
 
-  // Decrement Quantity
   const handleDecrement = (id: string) => {
-    const item = cartItems.find((i) => i.id === id);
-    if (item && item.quantity > 1) {
-      dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
+    if (isLoggedIn) {
+      const item = cartItems.find((i) => i.id === id);
+      if (item && item.quantity > 1) {
+        dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
+      }
+    } else {
+      const updated = localCart.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      );
+      updateLocalCart(updated);
     }
   };
 
-  // Remove Item from Cart
   const handleDelete = (id: string) => {
-    dispatch(removeItemFromCart(id));
+    if (isLoggedIn) {
+      dispatch(removeItemFromCart(id));
+    } else {
+      const updated = localCart.filter((item) => item.id !== id);
+      updateLocalCart(updated);
+    }
   };
-
-  // Checkout Logic with Login Check
-  // const handleCheckout = () => {
-  //   const token = localStorage.getItem("userData")
-  //   if (!token) {
-  //     Swal.fire({
-  //       title: "Login Required",
-  //       text: "You need to login before proceeding to checkout.",
-  //       icon: "warning",
-  //       confirmButtonText: "Go to Login",
-  //       confirmButtonColor: "rgb(157 48 137)",
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         navigate("/login")
-  //         onClose()
-  //       }
-  //     })
-  //     return
-  //   }
-  //   navigate("/address")
-  //   onClose()
-  // }
 
   const handleCheckout = () => {
     const token = localStorage.getItem("userData");
     if (!token) {
-      setRedirectPath("/address"); // Save where to go after login
+      setRedirectPath("/address");
       setShowLoginModal(true);
       return;
     }
     navigate("/address");
     onClose();
   };
+
+  const cartToDisplay = isLoggedIn ? cartItems : localCart;
+  const total = cartToDisplay.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <>
@@ -124,7 +152,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                   Shopping Cart
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {cartItems.length} items
+                  {cartToDisplay.length} items
                 </p>
               </div>
             </div>
@@ -139,7 +167,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
           {/* Cart Items */}
           <div className="flex-1 overflow-y-auto p-6">
-            {cartItems.length === 0 ? (
+            {cartToDisplay.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <div
                   className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
@@ -167,22 +195,18 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
               </div>
             ) : (
               <div className="space-y-4">
-                {cartItems.map((item) => (
+                {cartToDisplay.map((item) => (
                   <div
                     key={item.id}
                     className="flex gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
                   >
-                    {/* Product Image */}
                     <div className="flex-shrink-0">
                       <img
-                        // src={item.image || "/placeholder.svg?height=80&width=80"}
                         src={`http://api.jajamblockprints.com${item.image}`}
                         alt={item.name}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
                     </div>
-
-                    {/* Product Details */}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
                         {item.name}
@@ -198,6 +222,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                           style={{ color: "rgb(157 48 137)" }}
                         >
                           ₹{item.price.toLocaleString()}
+                          {/* ₹{item.price.toFixed(0)} */}
                         </span>
                         <button
                           onClick={() => handleDelete(item.id)}
@@ -207,15 +232,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-
-                      {/* Quantity Controls */}
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex items-center border border-gray-300 rounded-lg">
                           <button
                             onClick={() => handleDecrement(item.id)}
                             className="p-2 hover:bg-gray-100 transition-colors disabled:opacity-50"
                             disabled={item.quantity <= 1}
-                            aria-label="Decrease quantity"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
@@ -225,7 +247,6 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                           <button
                             onClick={() => handleIncrement(item.id)}
                             className="p-2 hover:bg-gray-100 transition-colors"
-                            aria-label="Increase quantity"
                           >
                             <Plus className="w-3 h-3" />
                           </button>
@@ -243,12 +264,11 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
           </div>
 
           {/* Footer */}
-          {cartItems.length > 0 && (
+          {cartToDisplay.length > 0 && (
             <div className="border-t border-gray-200 p-6 bg-gray-50">
-              {/* Price Summary */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal ({cartItems.length} items)</span>
+                  <span>Subtotal ({cartToDisplay.length} items)</span>
                   <span>₹{total.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
@@ -260,8 +280,6 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                   <span>₹{total.toLocaleString()}</span>
                 </div>
               </div>
-
-              {/* Action Buttons */}
               <div className="space-y-3">
                 <button
                   onClick={handleCheckout}
@@ -278,8 +296,6 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                   Continue Shopping
                 </button>
               </div>
-
-              {/* Additional Info */}
               <div className="mt-4 text-center">
                 <p className="text-xs text-gray-500">
                   Shipping and taxes calculated at checkout
@@ -289,6 +305,7 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
           )}
         </div>
       </div>
+
       {showLoginModal && (
         <LoginModal
           isOpen={showLoginModal}

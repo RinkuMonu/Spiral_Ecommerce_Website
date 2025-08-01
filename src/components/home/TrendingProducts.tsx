@@ -114,7 +114,54 @@ const TrendingProducts = ({
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
+  const handleAddToCart = (product: any) => {
+  const token = localStorage.getItem("token");
+
+  const cartItem = {
+    id: product._id,
+    name: product.productName,
+    image: product.images?.[0] || "",
+    category: product.category?.name || "Uncategorized",
+    price: product.actualPrice || product.price,
+    quantity,
+  };
+
+  if (!token) {
+    // Get existing cart or initialize empty array
+    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+
+    // Check if product already in cart
+    const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
+
+    if (existingProductIndex !== -1) {
+      // Product exists – increase quantity
+      existingCart[existingProductIndex].quantity += quantity;
+    } else {
+      // New product – add to cart
+      existingCart.push(cartItem);
+    }
+
+    // Save updated cart back to localStorage
+    localStorage.setItem("addtocart", JSON.stringify(existingCart));
+    window.dispatchEvent(new Event("guestCartUpdated"));
+  } else {
+    // User is logged in – use Redux
+    dispatch(addItemToCart(cartItem));
+  }
+
+  // UI feedback
+  setAddedProduct(product);
+  setIsPopupVisible(true);
+  setTimeout(() => {
+    setIsPopupVisible(false);
+  }, 3000);
+
+  closeModal();
+};
+
+
   // const handleAddToCart = (product: any) => {
+    
   //   dispatch(
   //     addItemToCart({
   //       id: product._id,
@@ -134,26 +181,27 @@ const TrendingProducts = ({
 
   //   closeModal();
   // };
-const handleAddToCart = (product: any) => {
-  dispatch(
-    addItemToCart({
-      id: product._id,
-      name: product.productName,
-      image: product.images?.[0] || "",
-      category: product.category?.name || "Uncategorized",
-      price: product.actualPrice || product.price,
-      quantity: quantity || 1 
-    })
-  );
-  setAddedProduct(product);
-  setIsPopupVisible(true);
 
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
+// const handleAddToCart = (product: any) => {
+//   dispatch(
+//     addItemToCart({
+//       id: product._id,
+//       name: product.productName,
+//       image: product.images?.[0] || "",
+//       category: product.category?.name || "Uncategorized",
+//       price: product.actualPrice || product.price,
+//       quantity: quantity || 1 
+//     })
+//   );
+//   setAddedProduct(product);
+//   setIsPopupVisible(true);
 
-  closeModal();
-};
+//   setTimeout(() => {
+//     setIsPopupVisible(false);
+//   }, 3000);
+
+//   closeModal();
+// };
   const handleAddToWishlist = (product: any) => {
     const isUserLoggedIn = !!localStorage.getItem("token");
 
