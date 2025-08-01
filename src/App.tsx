@@ -49,8 +49,11 @@ function App() {
   const hideNavbarFooter = ["/address", "/test"];
   const shouldHide = hideNavbarFooter.includes(location.pathname);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const isLoggedIn = !!localStorage.getItem("token");
+   const cartData = JSON.parse(localStorage.getItem("addtocart") || "[]");
   const cartItems = useSelector((state: RootState) => state.cart.items); // Get cart items from Redux store
-
+  const getCartItem = isLoggedIn? cartItems: cartData;
+  // console.log(getCartItem,"Get Cart Item")
   const toggleCart = () => {
     setIsCartOpen((prev) => !prev);
   };
@@ -143,13 +146,13 @@ function App() {
           <Route
             path="/address"
             element={
-              <ShippingAddress cartItems={cartItems} onClose={toggleCart} />
+              <ShippingAddress cartItems={getCartItem} onClose={toggleCart} />
             }
           />
           <Route path="/orders" element={<Orders />} />
           <Route
             path="/cart"
-            element={<ShoppingCart cartItems={cartItems} />}
+            element={<ShoppingCart cartItems={getCartItem} />}
           />
           <Route path="/paymentstatus" element={<PaymentStatus />} />
           <Route path="/checkout" element={<Checkout />} />

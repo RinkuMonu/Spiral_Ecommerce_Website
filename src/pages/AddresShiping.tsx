@@ -7,7 +7,8 @@ import logo from "../assest/logo.jpg"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
-
+import LoginModal from "../components/loginModal/loginModal"; 
+import Login1 from "../pages/Login1";
 interface Address {
   id: string
   name: string
@@ -81,6 +82,7 @@ const coupons: CouponCode[] = [
 ]
 
 function AddressShipping({ cartItems }) {
+  console.log(cartItems,"cart Item")
   const [isNewAddress, setIsNewAddress] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState<string>("")
   const [selectedShipping, setSelectedShipping] = useState<string>("1")
@@ -97,7 +99,7 @@ function AddressShipping({ cartItems }) {
   const [city, setCity] = useState("")
   const [errors, setErrors] = useState<FormErrors>({})
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({})
-
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const token = "zsdfgyxchh"
 
   const [userdata, setUserData] = useState({
@@ -109,7 +111,7 @@ function AddressShipping({ cartItems }) {
     address: "",
   })
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const subtotal = cartItems?.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shipping = shippingMethods.find((m) => m.id === selectedShipping)?.price || 0
   const total = subtotal + shipping
 
@@ -184,6 +186,17 @@ function AddressShipping({ cartItems }) {
   }
 
   const handlePayment = async () => {
+
+    const isUserLoggedIn = !!localStorage.getItem("token");
+
+    if (!isUserLoggedIn) {
+       navigate(location.pathname, {
+    state: { from: '/address' },
+  });
+      setShowLoginModal(true); 
+      // Trigger login modal
+      return;
+    }
     if (!validateForm()) {
       // Mark all fields as touched to show errors
       const allFields = isNewAddress ? 
@@ -196,7 +209,7 @@ function AddressShipping({ cartItems }) {
     setIsLoading(true)
     const newRef = generateReferenceNumber()
     setReference(newRef)
-
+    
     try {
       const gatewayConfigs = {
         upi1: {
@@ -376,6 +389,7 @@ function AddressShipping({ cartItems }) {
   }
 
   return (
+    <>
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
@@ -806,6 +820,15 @@ function AddressShipping({ cartItems }) {
         </div>
       </div>
     </div>
+     {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <Login1  />
+        </LoginModal>
+      )}
+    </>
   )
 }
 

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Login1({ redirectPath, onLoginSuccess }) {
@@ -45,7 +45,8 @@ export default function Login1({ redirectPath, onLoginSuccess }) {
     confirmNewPassword: "",
   });
   const navigate = useNavigate();
-
+    const location = useLocation();
+console.log(location.state,"loca")
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
@@ -348,7 +349,15 @@ export default function Login1({ redirectPath, onLoginSuccess }) {
 
         // ✅ Step 4: Notify + redirect
         Swal.fire("Login Successful", "", "success");
-        navigate("/");
+        // navigate("/");
+        let intended = location.state;
+        if(intended){
+          navigate(intended.from)
+     
+        }else{
+          navigate("/")
+          
+        }
         window.location.reload(); // Refresh to load Redux cart from server
       } else {
         Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");

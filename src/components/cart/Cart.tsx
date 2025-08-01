@@ -102,12 +102,12 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
   };
 
   const handleCheckout = () => {
-    const token = localStorage.getItem("userData");
-    if (!token) {
-      setRedirectPath("/address");
-      setShowLoginModal(true);
-      return;
-    }
+    // const token = localStorage.getItem("userData");
+    // if (!token) {
+    //   setRedirectPath("/address");
+    //   setShowLoginModal(true);
+    //   return;
+    // }
     navigate("/address");
     onClose();
   };
