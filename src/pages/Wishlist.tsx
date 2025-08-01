@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { removeItemFromWishlist, clearWishlist, fetchWishlist } from "../reduxslice/WishlistSlice"
 import { Trash2, Heart, ArrowLeft, ShoppingBag, Star, Eye } from "lucide-react"
 import { Link } from "react-router-dom"
+import Swal from "sweetalert2"
 
 const Wishlist = () => {
   const { items: wishlistItems, loading } = useSelector((state: any) => state.wishlist)
@@ -20,10 +21,23 @@ const Wishlist = () => {
   }
 
   const handleClear = () => {
-    if (wishlistItems.length > 0 && window.confirm("Are you sure you want to clear your entire wishlist?")) {
-      dispatch(clearWishlist())
-    }
+  if (wishlistItems.length > 0) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to clear your entire wishlist?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, clear it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(clearWishlist());
+        Swal.fire('Cleared!', 'Your wishlist has been cleared.', 'success');
+      }
+    });
   }
+};
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (

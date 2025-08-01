@@ -33,7 +33,7 @@ import TrackOrder from './pages/track-order';
 import Products from './pages/Products';
 import WhatsAppButton from './pages/WhatsAppButton';
 import LoginModal from "./components/loginModal/LoginModal";
-
+import AboutUs from "./pages/AboutUs"
 
 function App() {
    const location = useLocation();
@@ -113,6 +113,7 @@ function App() {
             {/* <Route path="/" element={<Home addToCart={handleAddToCart} />} /> */}
             <Route path="/" element={<Home addToCart={handleAddToCart} onCartClick={toggleCart} />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/about" element={<AboutUs />} />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/product/:id" element={<ProductDetails addToCart={handleAddToCart} />} />
             {/* <Route path="/refund" element={<Refund />} />

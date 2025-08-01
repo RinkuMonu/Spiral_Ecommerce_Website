@@ -1,34 +1,38 @@
 "use client"
-import { Truck, Package, CreditCard, Headphones } from "lucide-react"
+import { Palette, Layers , Leaf, Globe } from "lucide-react";
 
 const DeliveryFeatures = () => {
-  const features = [
-    {
-      icon: <Truck className="text-4xl" />,
-      title: "Free Heritage Delivery",
-      description: "On all Orders Over ₹999",
-      highlight: "Free Shipping",
-    },
-    {
-      icon: <Package className="text-4xl" />,
-      title: "Express Delivery",
-      description: "Delivery within 2-3 Days across India",
-      highlight: "Quick Service",
-    },
-    {
-      icon: <CreditCard className="text-4xl" />,
-      title: "Secure Payments",
-      description: "Multiple Safe Payment Options",
-      highlight: "100% Secure",
-    },
-    {
-      icon: <Headphones className="text-4xl" />,
-      title: "Heritage Support",
-      description: "Expert Guidance & Quick Solutions",
-      highlight: "24/7 Support",
-    },
-  ]
-
+  
+const features = [
+  {
+    icon: <Palette className="text-4xl" />, 
+    title: "Bagru, Dabu, Sanganeri & More",
+    description:
+      "Each fabric tells a story — hand-printed using traditional techniques from Rajasthan & Andhra.",
+    highlight: "Authentic Artisanal Prints",
+  },
+  {
+    icon: <Layers  className="text-4xl" />, 
+    title: "Chanderi, Kota Doriya, Maheshwari, Cotton Malmal",
+    description:
+      "Pure, breathable and elegant – sourced directly from trusted weavers across India.",
+    highlight: "Premium Handloom Fabrics",
+  },
+  {
+    icon: <Leaf className="text-4xl" />, 
+    title: "Natural Dyes. Zero Chemicals.",
+    description:
+      "We use sustainable practices & plant-based colors for safe, eco-friendly fashion.",
+    highlight: "Eco-Conscious & Skin-Friendly",
+  },
+  {
+    icon: <Globe className="text-4xl" />,
+    title: "Pan India Delivery & Support",
+    description:
+      "Seamless ordering, secure payments & dedicated customer service – anywhere in India.",
+    highlight: "Crafted with Legacy & Love",
+  },
+];
   return (
     <section className="py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -38,7 +42,7 @@ const DeliveryFeatures = () => {
             Why Choose <span style={{ color: "rgb(157 48 137)" }}>Our Heritage</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Experience premium service with every traditional wear purchase
+           Experience the richness of India’s finest handloom & print traditions
           </p>
         </div>
 

@@ -78,14 +78,14 @@ export default function Footer() {
 
               <div className="space-y-6">
                 <p className="text-gray-700 text-lg leading-relaxed max-w-sm">
-                  ✨ Your premium destination for{" "}
-                  <span
+                  ✨ Where tradition gracefully meets modern style, bringing you handcrafted elegance inspired by the rich art of block printing. With every piece, Jajam Block Print celebrates culture, craftsmanship, and contemporary fashion in harmony.
+                  {/* <span
                     className="font-semibold"
                     style={{ color: "rgb(157 48 137)" }}
                   >
                     authentic traditional wear
-                  </span>{" "}
-                  and modern fashion solutions.
+                  </span> */}
+                  {/* and modern fashion solutions. */}
                 </p>
 
                 {/* Enhanced social media */}
@@ -333,6 +333,7 @@ export default function Footer() {
               {/* Customer Support Links with dividers */}
               <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
                 {[
+                  { title: "About Us", path: "/about" },
                   { title: "Terms of Service", path: "/terms" },
                   { title: "Privacy Policy", path: "/privacy" },
                   {

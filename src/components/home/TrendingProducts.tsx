@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
 import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
-import Login from "../../pages/Login";
+import Login1 from "../../pages/Login1";
 const TrendingProducts = ({
   addToCart,
 }: {
@@ -115,12 +115,6 @@ const TrendingProducts = ({
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
   const handleAddToCart = (product: any) => {
-    const isUserLoggedIn = !!localStorage.getItem("token");
-
-    if (!isUserLoggedIn) {
-      setShowLoginModal(true); // Trigger login modal
-      return;
-    }
     dispatch(
       addItemToCart({
         id: product._id,
@@ -142,7 +136,7 @@ const TrendingProducts = ({
   };
 
   const handleAddToWishlist = (product: any) => {
-     const isUserLoggedIn = !!localStorage.getItem("token");
+    const isUserLoggedIn = !!localStorage.getItem("token");
 
     if (!isUserLoggedIn) {
       setShowLoginModal(true); // Trigger login modal
@@ -607,7 +601,7 @@ const TrendingProducts = ({
           isOpen={showLoginModal}
           onClose={() => setShowLoginModal(false)}
         >
-          <Login />
+          <Login1 />
         </LoginModal>
       )}
     </section>
