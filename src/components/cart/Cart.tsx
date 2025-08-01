@@ -1,75 +1,94 @@
-"use client"
-import type React from "react"
-import { X, ShoppingCart, Trash2, Plus, Minus, ArrowRight } from "lucide-react"
-import Swal from "sweetalert2"
-import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { removeItemFromCart, updateQuantity } from "../../reduxslice/CartSlice"
-
+"use client";
+import type React from "react";
+import { X, ShoppingCart, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeItemFromCart, updateQuantity } from "../../reduxslice/CartSlice";
+import LoginModal from "../loginModal/LoginModal";
+import Login1 from "../../pages/Login1";
+import { useState } from "react";
 interface Product {
-  id: string
-  name: string
-  price: number
-  quantity: number
-  image: string
-  category?: string
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  category?: string;
 }
 
 interface CartProps {
-  isOpen: boolean
-  onClose: () => void
-  cartItems: Product[]
+  isOpen: boolean;
+  onClose: () => void;
+  cartItems: Product[];
 }
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [redirectPath, setRedirectPath] = useState(null);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Total Price Calculation
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   // Increment Quantity
   const handleIncrement = (id: string) => {
-    const item = cartItems.find((i) => i.id === id)
+    const item = cartItems.find((i) => i.id === id);
     if (item) {
-      dispatch(updateQuantity({ id, quantity: item.quantity + 1 }))
+      dispatch(updateQuantity({ id, quantity: item.quantity + 1 }));
     }
-  }
+  };
 
   // Decrement Quantity
   const handleDecrement = (id: string) => {
-    const item = cartItems.find((i) => i.id === id)
+    const item = cartItems.find((i) => i.id === id);
     if (item && item.quantity > 1) {
-      dispatch(updateQuantity({ id, quantity: item.quantity - 1 }))
+      dispatch(updateQuantity({ id, quantity: item.quantity - 1 }));
     }
-  }
+  };
 
   // Remove Item from Cart
   const handleDelete = (id: string) => {
-    dispatch(removeItemFromCart(id))
-  }
+    dispatch(removeItemFromCart(id));
+  };
 
   // Checkout Logic with Login Check
+  // const handleCheckout = () => {
+  //   const token = localStorage.getItem("userData")
+  //   if (!token) {
+  //     Swal.fire({
+  //       title: "Login Required",
+  //       text: "You need to login before proceeding to checkout.",
+  //       icon: "warning",
+  //       confirmButtonText: "Go to Login",
+  //       confirmButtonColor: "rgb(157 48 137)",
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         navigate("/login")
+  //         onClose()
+  //       }
+  //     })
+  //     return
+  //   }
+  //   navigate("/address")
+  //   onClose()
+  // }
+
   const handleCheckout = () => {
-    const token = localStorage.getItem("userData")
+    const token = localStorage.getItem("userData");
     if (!token) {
-      Swal.fire({
-        title: "Login Required",
-        text: "You need to login before proceeding to checkout.",
-        icon: "warning",
-        confirmButtonText: "Go to Login",
-        confirmButtonColor: "rgb(157 48 137)",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/login")
-          onClose()
-        }
-      })
-      return
+      setRedirectPath("/address"); // Save where to go after login
+      setShowLoginModal(true);
+      return;
     }
-    navigate("/address")
-    onClose()
-  }
+    navigate("/address");
+    onClose();
+  };
 
   return (
     <>
@@ -95,11 +114,18 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                 className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{ background: "rgba(157, 48, 137, 0.1)" }}
               >
-                <ShoppingCart className="w-5 h-5" style={{ color: "rgb(157 48 137)" }} />
+                <ShoppingCart
+                  className="w-5 h-5"
+                  style={{ color: "rgb(157 48 137)" }}
+                />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Shopping Cart</h2>
-                <p className="text-sm text-gray-500">{cartItems.length} items</p>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Shopping Cart
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {cartItems.length} items
+                </p>
               </div>
             </div>
             <button
@@ -119,10 +145,17 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                   className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
                   style={{ background: "rgba(157, 48, 137, 0.1)" }}
                 >
-                  <ShoppingCart className="w-10 h-10" style={{ color: "rgb(157 48 137)" }} />
+                  <ShoppingCart
+                    className="w-10 h-10"
+                    style={{ color: "rgb(157 48 137)" }}
+                  />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Your cart is empty</h3>
-                <p className="text-gray-500 mb-6">Add some items to get started!</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Your cart is empty
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Add some items to get started!
+                </p>
                 <button
                   onClick={onClose}
                   className="flex items-center gap-2 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
@@ -151,10 +184,19 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
                     {/* Product Details */}
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">{item.name}</h3>
-                      {item.category && <p className="text-xs text-gray-500 mb-2">{item.category}</p>}
+                      <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
+                        {item.name}
+                      </h3>
+                      {item.category && (
+                        <p className="text-xs text-gray-500 mb-2">
+                          {item.category}
+                        </p>
+                      )}
                       <div className="flex items-center justify-between">
-                        <span className="font-bold" style={{ color: "rgb(157 48 137)" }}>
+                        <span
+                          className="font-bold"
+                          style={{ color: "rgb(157 48 137)" }}
+                        >
                           ₹{item.price.toLocaleString()}
                         </span>
                         <button
@@ -189,7 +231,8 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
                           </button>
                         </div>
                         <span className="text-sm text-gray-600">
-                          Total: ₹{(item.price * item.quantity).toLocaleString()}
+                          Total: ₹
+                          {(item.price * item.quantity).toLocaleString()}
                         </span>
                       </div>
                     </div>
@@ -238,14 +281,30 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose, cartItems }) => {
 
               {/* Additional Info */}
               <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500">Shipping and taxes calculated at checkout</p>
+                <p className="text-xs text-gray-500">
+                  Shipping and taxes calculated at checkout
+                </p>
               </div>
             </div>
           )}
         </div>
       </div>
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <Login1
+            redirectPath={redirectPath}
+            onLoginSuccess={() => {
+              setShowLoginModal(false);
+              setRedirectPath(null);
+            }}
+          />
+        </LoginModal>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

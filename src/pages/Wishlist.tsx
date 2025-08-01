@@ -90,7 +90,7 @@ const Wishlist = () => {
           </div>
         )}
 
-        {/* Empty State */}
+       
         {!loading && (!wishlistItems || wishlistItems.length === 0) && (
           <div className="bg-gray-50 rounded-lg p-12 text-center">
             <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-200 text-gray-500">
@@ -115,7 +115,7 @@ const Wishlist = () => {
         {!loading && wishlistItems && wishlistItems.length > 0 && (
           <div className="space-y-6">
             {wishlistItems
-              .filter((item: any) => item?.product) // skip null product
+              .filter((item: any) => item?.product) 
               .map((item: any) => (
                 <div
                   key={item?.product?._id}
