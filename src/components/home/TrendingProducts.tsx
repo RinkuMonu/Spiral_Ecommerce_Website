@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
+import LoginModal from "../loginModal/LoginModal"; 
 import Login1 from "../../pages/Login1";
 const TrendingProducts = ({
   addToCart,
@@ -114,27 +114,46 @@ const TrendingProducts = ({
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
-  const handleAddToCart = (product: any) => {
-    dispatch(
-      addItemToCart({
-        id: product._id,
-        name: product.productName,
-        image: product.images?.[0] || "",
-        category: product.category?.name || "Uncategorized",
-        price: product.actualPrice || product.price,
-        quantity,
-      })
-    );
-    setAddedProduct(product);
-    setIsPopupVisible(true);
+  // const handleAddToCart = (product: any) => {
+  //   dispatch(
+  //     addItemToCart({
+  //       id: product._id,
+  //       name: product.productName,
+  //       image: product.images?.[0] || "",
+  //       category: product.category?.name || "Uncategorized",
+  //       price: product.actualPrice || product.price,
+  //       quantity,
+  //     })
+  //   );
+  //   setAddedProduct(product);
+  //   setIsPopupVisible(true);
 
-    setTimeout(() => {
-      setIsPopupVisible(false);
-    }, 3000);
+  //   setTimeout(() => {
+  //     setIsPopupVisible(false);
+  //   }, 3000);
 
-    closeModal();
-  };
+  //   closeModal();
+  // };
+const handleAddToCart = (product: any) => {
+  dispatch(
+    addItemToCart({
+      id: product._id,
+      name: product.productName,
+      image: product.images?.[0] || "",
+      category: product.category?.name || "Uncategorized",
+      price: product.actualPrice || product.price,
+      quantity: quantity || 1 
+    })
+  );
+  setAddedProduct(product);
+  setIsPopupVisible(true);
 
+  setTimeout(() => {
+    setIsPopupVisible(false);
+  }, 3000);
+
+  closeModal();
+};
   const handleAddToWishlist = (product: any) => {
     const isUserLoggedIn = !!localStorage.getItem("token");
 

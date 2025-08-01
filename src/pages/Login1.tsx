@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Login1() {
+export default function Login1({ redirectPath, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -255,44 +255,84 @@ export default function Login1() {
     setResetErrors(newErrors);
   };
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     const res = await axios.post(
+  //       `${baseUrl}/auth/login`,
+  //       {
+  //         email,
+  //         password,
+  //         referenceWebsite,
+  //       },
+  //       { withCredentials: true }
+  //     );
+
+  //     const data = res.data;
+  //     if (data && data.accessToken) {
+  //       localStorage.setItem("userData", JSON.stringify(data.userData));
+  //       localStorage.setItem("token", data.accessToken);
+  //       Swal.fire("Login Successful", "", "success");
+  //       navigate("/");
+  //       window.location.reload();
+  //     } else {
+  //       Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
+  //     }
+  //   } catch (err) {
+  //     Swal.fire(
+  //       "Login failed",
+  //       err.response?.data?.msg || "Something went wrong",
+  //       "error"
+  //     );
+  //   }
+
+  //   setIsLoading(false);
+  // };
+
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validateForm()) return;
+  if (!validateForm()) return;
+  setIsLoading(true);
 
-    setIsLoading(true);
+  try {
+    const res = await axios.post(
+      `${baseUrl}/auth/login`,
+      {
+        email,
+        password,
+        referenceWebsite,
+      },
+      { withCredentials: true }
+    );
 
-    try {
-      const res = await axios.post(
-        `${baseUrl}/auth/login`,
-        {
-          email,
-          password,
-          referenceWebsite,
-        },
-        { withCredentials: true }
-      );
+    const data = res.data;
+    if (data && data.accessToken) {
+      localStorage.setItem("userData", JSON.stringify(data.userData));
+      localStorage.setItem("token", data.accessToken);
+      Swal.fire("Login Successful", "", "success");
 
-      const data = res.data;
-      if (data && data.accessToken) {
-        localStorage.setItem("userData", JSON.stringify(data.userData));
-        localStorage.setItem("token", data.accessToken);
-        Swal.fire("Login Successful", "", "success");
-        navigate("/");
-        window.location.reload();
-      } else {
-        Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
-      }
-    } catch (err) {
-      Swal.fire(
-        "Login failed",
-        err.response?.data?.msg || "Something went wrong",
-        "error"
-      );
+      // Use redirectPath if available
+      navigate(redirectPath || "/");
+      onLoginSuccess(); // Close modal
+    } else {
+      Swal.fire("Login failed", data?.msg || "Invalid credentials", "error");
     }
+  } catch (err) {
+    Swal.fire(
+      "Login failed",
+      err.response?.data?.msg || "Something went wrong",
+      "error"
+    );
+  }
 
-    setIsLoading(false);
-  };
+  setIsLoading(false);
+};
 
   const handleRegister = async (e) => {
     e.preventDefault();

@@ -1,53 +1,61 @@
-
-
-"use client"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { ShoppingCart, Star } from "lucide-react"
-import { FaFacebookF, FaTwitter, FaPinterestP, FaLinkedinIn, FaWhatsapp, FaEnvelope, FaRegCopy } from "react-icons/fa"
-import Arrivals from "../components/home/Arrivals"
-import { useDispatch } from "react-redux"
-import LoginModal from "../components/loginModal/LoginModal"; 
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ShoppingCart, Star } from "lucide-react";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaPinterestP,
+  FaLinkedinIn,
+  FaWhatsapp,
+  FaEnvelope,
+  FaRegCopy,
+} from "react-icons/fa";
+import Arrivals from "../components/home/Arrivals";
+import { useDispatch } from "react-redux";
+import LoginModal from "../components/loginModal/LoginModal";
 // import Login from "../pages/Login";
+
 import { addItemToCart } from "../reduxslice/CartSlice"
 import Login1 from "./Login1"
 import { X } from "react-feather"
 // Define Product type directly in this file as requested
 interface Product {
-  _id: string
-  productName: string
-  description: string
-  images: string[]
-  actualPrice: number
-  price?: number // Original price, optional
-  discount?: number // Discount percentage, optional
-  size?: string // Size, optional
+  _id: string;
+  productName: string;
+  description: string;
+  images: string[];
+  actualPrice: number;
+  price?: number; // Original price, optional
+  discount?: number; // Discount percentage, optional
+  size?: string; // Size, optional
   category: {
-    _id: string
-    name: string
-  }
-  rating?: number // Rating, optional
-  quantity?: number // Used in cart context, optional
+    _id: string;
+    name: string;
+  };
+  rating?: number; // Rating, optional
+  quantity?: number; // Used in cart context, optional
 }
 
 interface ProductDetailsProps {
-  addToCart: (product: Product) => void
+  addToCart: (product: Product) => void;
 }
 
 const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
-  const [product, setProduct] = useState<Product | null>(null)
-  const [allProducts, setAllProducts] = useState<Product[]>([])
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState<"description" | "reviews">("description")
-  const [mainImage, setMainImage] = useState<string>("") // Re-introducing mainImage state
+  const [product, setProduct] = useState<Product | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState<"description" | "reviews">(
+    "description"
+  );
+  const [mainImage, setMainImage] = useState<string>(""); // Re-introducing mainImage state
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const dispatch = useDispatch()
-  const { id } = useParams()
-  const baseUrl = import.meta.env.VITE_API_BASE_URL
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
 
-
-    // Popup States
+  // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [addedProduct, setAddedProduct] = useState<any>(null);
   const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
@@ -56,29 +64,33 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`)
-        const data = await res.json()
+        const res = await fetch(
+          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
         if (Array.isArray(data.products)) {
-          setAllProducts(data.products)
-          const matched = data.products.find((item: Product) => item._id === id)
-          setProduct(matched || null)
+          setAllProducts(data.products);
+          const matched = data.products.find(
+            (item: Product) => item._id === id
+          );
+          setProduct(matched || null);
           if (matched && matched.images && matched.images.length > 0) {
-            setMainImage(matched.images[0])
+            setMainImage(matched.images[0]);
           } else {
-            setMainImage("/placeholder.svg?height=600&width=600")
+            setMainImage("/placeholder.svg?height=600&width=600");
           }
         }
       } catch (err) {
-        console.error("Error loading product:", err)
-        setProduct(null)
-        setMainImage("/placeholder.svg?height=600&width=600")
+        console.error("Error loading product:", err);
+        setProduct(null);
+        setMainImage("/placeholder.svg?height=600&width=600");
       }
-    }
-    fetchProducts()
-  }, [id, baseUrl, referenceWebsite])
+    };
+    fetchProducts();
+  }, [id, baseUrl, referenceWebsite]);
 
-  const handleIncrease = () => setQuantity((prev) => prev + 1)
-  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1)
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
   // const handleAddToCart = () => {
   //   if (product) {
@@ -93,51 +105,44 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   //     dispatch(addItemToWishlist(product._id))
   //   }
   const handleAddToCart = (e: React.MouseEvent) => {
-  e.preventDefault()
-  e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-   const isUserLoggedIn = !!localStorage.getItem("token");
+    const isUserLoggedIn = !!localStorage.getItem("token");
 
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
 
-
-  if (!isUserLoggedIn) {
-    
-    setShowLoginModal(true)
-    return
-  }
-
-  if (product) {
-   
-    dispatch(
-      addItemToCart({
-        id: product._id,
-        name: product.productName,
-        image: product.images?.[0] || "",
-        category: product.category?.name || "Uncategorized",
-        price: product.actualPrice,
-        quantity: 1,
-      })
-      
-    );
+    if (product) {
+      dispatch(
+        addItemToCart({
+          id: product._id,
+          name: product.productName,
+          image: product.images?.[0] || "",
+          category: product.category?.name || "Uncategorized",
+          price: product.actualPrice,
+          quantity: 1,
+        })
+      );
       setAddedProduct(product);
-    setIsPopupVisible(true);
+      setIsPopupVisible(true);
 
-    setTimeout(() => {
-      setIsPopupVisible(false);
-    }, 3000);
-  } else {
-    console.warn("Product is undefined")
-  }
-}
-
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 3000);
+    } else {
+      console.warn("Product is undefined");
+    }
+  };
 
   const handleBuyNow = () => {
-  const isUserLoggedIn = !!localStorage.getItem("token");
-  if (!isUserLoggedIn) {
-    
-    setShowLoginModal(true)
-    return
-  }
+    const isUserLoggedIn = !!localStorage.getItem("token");
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
     if (product) {
       addToCart({
         id: product._id,
@@ -146,26 +151,36 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         category: product.category?.name || "Uncategorized",
         price: product.actualPrice || product.price,
         quantity,
-      })
+      });
     }
-  }
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         size={16}
-        className={`${i < Math.floor(rating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}`}
+        className={`${
+          i < Math.floor(rating)
+            ? "fill-yellow-400 stroke-yellow-400"
+            : "stroke-gray-300"
+        }`}
       />
-    ))
-  }
+    ));
+  };
 
-  let relatedProductsFiltered = allProducts.filter((p) => p._id !== id && p.category?._id === product?.category?._id)
+  let relatedProductsFiltered = allProducts.filter(
+    (p) => p._id !== id && p.category?._id === product?.category?._id
+  );
   if (relatedProductsFiltered.length < 4) {
     const otherProducts = allProducts.filter(
-      (p) => p._id !== id && !relatedProductsFiltered.some((rp) => rp._id === p._id),
-    )
-    relatedProductsFiltered = [...relatedProductsFiltered, ...otherProducts].slice(0, 4)
+      (p) =>
+        p._id !== id && !relatedProductsFiltered.some((rp) => rp._id === p._id)
+    );
+    relatedProductsFiltered = [
+      ...relatedProductsFiltered,
+      ...otherProducts,
+    ].slice(0, 4);
   }
 
   const dummyReviews = [
@@ -181,24 +196,26 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       id: 2,
       author: "Rahul Singh",
       rating: 4,
-      comment: "Good quality product. The delivery was quick, and it looks just like the picture. Highly recommend!",
+      comment:
+        "Good quality product. The delivery was quick, and it looks just like the picture. Highly recommend!",
       date: "July 10, 2024",
     },
     {
       id: 3,
       author: "Anjali Devi",
       rating: 5,
-      comment: "Exceeded my expectations! The craftsmanship is superb. Will definitely buy from here again.",
+      comment:
+        "Exceeded my expectations! The craftsmanship is superb. Will definitely buy from here again.",
       date: "July 01, 2024",
     },
-  ]
+  ];
 
   if (!product)
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-2xl font-semibold text-gray-700">
         Loading product details...
       </div>
-    )
+    );
 
   return (
     <div className="container mx-auto px-4 py-16 min-h-screen">
@@ -222,8 +239,11 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                 // src={img || "/placeholder.svg?height=100&width=100&query=product thumbnail"}
                 src={`http://api.jajamblockprints.com${product.images}`}
                 alt={`Thumbnail ${index + 1}`}
-                className={`w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 ${mainImage === img ? "border-purple-600 shadow-lg" : "border-gray-200 hover:border-purple-300"
-                  }`}
+                className={`w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 ${
+                  mainImage === img
+                    ? "border-purple-600 shadow-lg"
+                    : "border-gray-200 hover:border-purple-300"
+                }`}
                 onClick={() => setMainImage(img)}
               />
             ))}
@@ -234,13 +254,17 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 2"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() => setMainImage("/placeholder.svg?height=600&width=600")}
+                  onClick={() =>
+                    setMainImage("/placeholder.svg?height=600&width=600")
+                  }
                 />
                 <img
                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 3"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() => setMainImage("/placeholder.svg?height=600&width=600")}
+                  onClick={() =>
+                    setMainImage("/placeholder.svg?height=600&width=600")
+                  }
                 />
               </>
             )}
@@ -250,13 +274,23 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 2"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
+                  onClick={() =>
+                    setMainImage(
+                      product.images[0] ||
+                        "/placeholder.svg?height=600&width=600"
+                    )
+                  }
                 />
                 <img
                   src={`http://api.jajamblockprints.com${product.images}`}
                   alt="Thumbnail 3"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
+                  onClick={() =>
+                    setMainImage(
+                      product.images[0] ||
+                        "/placeholder.svg?height=600&width=600"
+                    )
+                  }
                 />
               </>
             )}
@@ -265,7 +299,11 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                 src={`http://api.jajamblockprints.com${product.images}`}
                 alt="Thumbnail 3"
                 className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                onClick={() => setMainImage(product.images[0] || "/placeholder.svg?height=600&width=600")}
+                onClick={() =>
+                  setMainImage(
+                    product.images[0] || "/placeholder.svg?height=600&width=600"
+                  )
+                }
               />
             )}
           </div>
@@ -273,10 +311,15 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
 
         {/* Product Details */}
         <div className="p-2">
-          <h1 className="text-5xl font-extrabold mb-4 leading-tight" style={{ color: "#1B2E4F" }}>
+          <h1
+            className="text-5xl font-extrabold mb-4 leading-tight"
+            style={{ color: "#1B2E4F" }}
+          >
             {product.productName}
           </h1>
-          <p className="text-gray-700 text-xl mb-6 leading-relaxed">{product.description}</p>
+          <p className="text-gray-700 text-xl mb-6 leading-relaxed">
+            {product.description}
+          </p>
 
           <div className="flex items-center mb-5">
             <div className="flex mr-3">{renderStars(product.rating || 4)}</div>
@@ -284,11 +327,16 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           </div>
 
           <div className="flex items-baseline mb-8">
-            <span className="text-5xl font-bold mr-4" style={{ color: "rgb(157 48 137)" }}>
+            <span
+              className="text-5xl font-bold mr-4"
+              style={{ color: "rgb(157 48 137)" }}
+            >
               ₹{product.actualPrice}
             </span>
             {product.price && product.price !== product.actualPrice && (
-              <span className="text-2xl text-gray-500 line-through">₹{product.price}</span>
+              <span className="text-2xl text-gray-500 line-through">
+                ₹{product.price}
+              </span>
             )}
             {product.discount && (
               <span
@@ -303,14 +351,19 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="grid grid-cols-2 gap-y-3 gap-x-8 text-gray-800 text-lg mb-8">
             <div>
               <span className="font-semibold">Size:</span>{" "}
-              <span className="text-gray-700">{product.size || "Standard"}</span>
+              <span className="text-gray-700">
+                {product.size || "Standard"}
+              </span>
             </div>
             <div>
               <span className="font-semibold">Category:</span>{" "}
-              <span className="text-gray-700">{product.category?.name || "Uncategorized"}</span>
+              <span className="text-gray-700">
+                {product.category?.name || "Uncategorized"}
+              </span>
             </div>
             <div>
-              <span className="font-semibold">Material:</span> <span className="text-gray-700">Premium Silk Blend</span>
+              <span className="font-semibold">Material:</span>{" "}
+              <span className="text-gray-700">Premium Silk Blend</span>
             </div>
             <div>
               <span className="font-semibold">Availability:</span>{" "}
@@ -319,7 +372,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           </div>
 
           <div className="flex items-center mb-10">
-            <span className="mr-6 text-gray-800 font-semibold text-lg">Quantity:</span>
+            <span className="mr-6 text-gray-800 font-semibold text-lg">
+              Quantity:
+            </span>
             <div className="flex items-center border-2 border-gray-300 rounded-full overflow-hidden shadow-sm">
               <button
                 onClick={handleDecrease}
@@ -328,7 +383,10 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               >
                 -
               </button>
-              <span className="px-4 py-1 text-base font-semibold text-gray-900">{quantity}</span> {/* Smaller font */}
+              <span className="px-4 py-1 text-base font-semibold text-gray-900">
+                {quantity}
+              </span>{" "}
+              {/* Smaller font */}
               <button
                 onClick={handleIncrease}
                 className="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 text-base font-semibold" // Smaller buttons
@@ -349,7 +407,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             >
               <ShoppingCart size={20} /> Add to Cart
             </button>
-            <button 
+            <button
               onClick={handleBuyNow}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:bg-gray-900 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
             >
@@ -374,25 +432,52 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           {/* Share Options */}
           <div className="flex items-center gap-4 text-gray-600 text-xl">
             <span className="font-semibold text-lg text-gray-800">Share:</span>
-            <a href="#" aria-label="Share on Facebook" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share on Facebook"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaFacebookF />
             </a>
-            <a href="#" aria-label="Share on Twitter" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share on Twitter"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaTwitter />
             </a>
-            <a href="#" aria-label="Share on Pinterest" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share on Pinterest"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaPinterestP />
             </a>
-            <a href="#" aria-label="Share on LinkedIn" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share on LinkedIn"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaLinkedinIn />
             </a>
-            <a href="#" aria-label="Share on WhatsApp" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share on WhatsApp"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaWhatsapp />
             </a>
-            <a href="#" aria-label="Share via Email" className="hover:text-purple-600 transition-colors">
+            <a
+              href="#"
+              aria-label="Share via Email"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaEnvelope />
             </a>
-            <button aria-label="Copy link" className="hover:text-purple-600 transition-colors">
+            <button
+              aria-label="Copy link"
+              className="hover:text-purple-600 transition-colors"
+            >
               <FaRegCopy />
             </button>
           </div>
@@ -405,11 +490,14 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           {/* Button for Description Tab */}
           <button
             onClick={() => setActiveTab("description")}
-            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "description"
-              ? "border-b-4 border-purple-600 text-purple-800"
-              : "text-gray-700 hover:text-purple-600"
-              }`}
-            style={{ borderColor: activeTab === "description" ? "rgb(157 48 137)" : "" }}
+            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
+              activeTab === "description"
+                ? "border-b-4 border-purple-600 text-purple-800"
+                : "text-gray-700 hover:text-purple-600"
+            }`}
+            style={{
+              borderColor: activeTab === "description" ? "rgb(157 48 137)" : "",
+            }}
           >
             Description
           </button>
@@ -417,26 +505,39 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           {/* Button for Reviews Tab */}
           <button
             onClick={() => setActiveTab("reviews")}
-            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${activeTab === "reviews"
-              ? "border-b-4 border-purple-600 text-purple-800"
-              : "text-gray-700 hover:text-purple-600"
-              }`}
-            style={{ borderColor: activeTab === "reviews" ? "rgb(157 48 137)" : "" }}
+            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
+              activeTab === "reviews"
+                ? "border-b-4 border-purple-600 text-purple-800"
+                : "text-gray-700 hover:text-purple-600"
+            }`}
+            style={{
+              borderColor: activeTab === "reviews" ? "rgb(157 48 137)" : "",
+            }}
           >
             Reviews
+          </button>
+          <button
+            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto `}
+          >
+            Rate Product
           </button>
         </div>
 
         <div className="py-8 text-gray-700 text-lg leading-relaxed">
           {activeTab === "description" ? (
             <div>
-              <h3 className="text-2xl font-bold mb-5" style={{ color: "#1B2E4F" }}>
+              <h3
+                className="text-2xl font-bold mb-5"
+                style={{ color: "#1B2E4F" }}
+              >
                 Product Overview
               </h3>
               <p className="mb-5">{product.description}</p>
               <p className="mb-5">
-                This exquisite piece is crafted with the finest traditional techniques, ensuring both authenticity and
-                durability. Perfect for special occasions, it embodies the rich cultural heritage of our artisans.
+                This exquisite piece is crafted with the finest traditional
+                techniques, ensuring both authenticity and durability. Perfect
+                for special occasions, it embodies the rich cultural heritage of
+                our artisans.
               </p>
               <ul className="list-disc list-inside space-y-3 text-gray-700">
                 <li>Handwoven with premium threads</li>
@@ -447,30 +548,44 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             </div>
           ) : (
             <div>
-              <h3 className="text-2xl font-bold mb-5" style={{ color: "#1B2E4F" }}>
+              <h3
+                className="text-2xl font-bold mb-5"
+                style={{ color: "#1B2E4F" }}
+              >
                 Customer Reviews
               </h3>
               {dummyReviews.length > 0 ? (
                 <div className="space-y-8">
                   {dummyReviews.map((review) => (
-                    <div key={review.id} className="border-b pb-6 last:border-b-0 last:pb-0">
+                    <div
+                      key={review.id}
+                      className="border-b pb-6 last:border-b-0 last:pb-0"
+                    >
                       <div className="flex items-center mb-2">
-                        <span className="font-semibold text-gray-900 mr-3">{review.author}</span>
+                        <span className="font-semibold text-gray-900 mr-3">
+                          {review.author}
+                        </span>
                         <div className="flex">{renderStars(review.rating)}</div>
                       </div>
-                      <p className="text-sm text-gray-500 mb-3">{review.date}</p>
-                      <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                      <p className="text-sm text-gray-500 mb-3">
+                        {review.date}
+                      </p>
+                      <p className="text-gray-700 leading-relaxed">
+                        {review.comment}
+                      </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-700">No reviews yet. Be the first to share your experience!</p>
+                <p className="text-gray-700">
+                  No reviews yet. Be the first to share your experience!
+                </p>
               )}
             </div>
           )}
         </div>
       </div>
-           {showLoginModal && (
+      {showLoginModal && (
         <LoginModal
           isOpen={showLoginModal}
           onClose={() => setShowLoginModal(false)}
@@ -478,7 +593,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <Login1 />
         </LoginModal>
       )}
- {isPopupVisible && addedProduct && (
+      {isPopupVisible && addedProduct && (
         <div
           className="fixed top-4 right-4 bg-green-100 text-green-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
           style={{
@@ -555,11 +670,13 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
 
     
       </div> */}
-      <Arrivals addToCart={function (): void {
-        throw new Error("Function not implemented.")
-      }} />
+      <Arrivals
+        addToCart={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
     </div>
-  )
-}
+  );
+};
 
 export default ProductDetails;
