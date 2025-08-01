@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
 import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
-import Login from "../../pages/Login";
+import Login1 from "../../pages/Login1";
 const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
@@ -607,7 +607,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                 isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
               >
-                <Login />
+                <Login1 />
               </LoginModal>
             )}
     </section>

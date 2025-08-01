@@ -333,6 +333,7 @@ export default function Footer() {
               {/* Customer Support Links with dividers */}
               <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
                 {[
+                  { title: "About Us", path: "/about" },
                   { title: "Terms of Service", path: "/terms" },
                   { title: "Privacy Policy", path: "/privacy" },
                   {

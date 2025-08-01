@@ -21,12 +21,12 @@ const DeliveryFeatures = () => {
       description: "Multiple Safe Payment Options",
       highlight: "100% Secure",
     },
-    {
-      icon: <Headphones className="text-4xl" />,
-      title: "Heritage Support",
-      description: "Expert Guidance & Quick Solutions",
-      highlight: "24/7 Support",
-    },
+    // {
+    //   icon: <Headphones className="text-4xl" />,
+    //   title: "Heritage Support",
+    //   description: "Expert Guidance & Quick Solutions",
+    //   highlight: "24/7 Support",
+    // },
   ]
 
   return (

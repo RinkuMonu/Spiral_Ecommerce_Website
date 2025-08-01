@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux"
 import LoginModal from "../components/loginModal/LoginModal"; 
 // import Login from "../pages/Login";
 import { addItemToCart } from "../reduxslice/CartSlice"
-import Login from "./Login"
+import Login1 from "./Login1"
 import { X } from "react-feather"
 // Define Product type directly in this file as requested
 interface Product {
@@ -475,7 +475,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           isOpen={showLoginModal}
           onClose={() => setShowLoginModal(false)}
         >
-          <Login />
+          <Login1 />
         </LoginModal>
       )}
  {isPopupVisible && addedProduct && (
@@ -562,4 +562,4 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   )
 }
 
-export default ProductDetails
+export default ProductDetails;

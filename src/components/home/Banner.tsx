@@ -16,9 +16,6 @@ interface APIBanner {
   deviceType: string;
   images: string[];
   position: string;
-  // Add these new fields if they exist in your API response
-  heightMobile?: number;
-  heightDesktop?: number;
 }
 
 const Banner: React.FC = () => {
@@ -27,7 +24,6 @@ const Banner: React.FC = () => {
 
   const [banners, setBanners] = useState<APIBanner[]>([]);
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">("desktop");
-  const [frameHeight, setFrameHeight] = useState<string>("auto");
   const [categories, setCategories] = useState<string[]>([]);
   const [isNewArrival, setIsNewArrival] = useState(false);
 
@@ -86,40 +82,38 @@ const Banner: React.FC = () => {
     window.addEventListener("resize", checkDevice);
     return () => window.removeEventListener("resize", checkDevice);
   }, []);
+// useEffect(() => {
+//   const checkDevice = () => {
+//     const isMobile = /android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos/i
+//       .test(navigator.userAgent);
+//     setDeviceType(isMobile ? "mobile" : "desktop");
+//   };
 
-  // ✅ Fetch banners based on device and set height
-  useEffect(() => {
-    const fetchBanners = async () => {
-      try {
-        const endpoint = deviceType === "mobile" ? "mobile" : "desktop";
-        const res = await fetch(
-          `${baseUrl}/banners/${endpoint}?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
-        const filtered = (data.banners || []).filter(
-          (item: APIBanner) => item.deviceType === deviceType
-        );
-        
-        // Set banners first
-        setBanners(filtered);
-        
-        // Then set height based on device type and banner data
-        if (filtered.length > 0) {
-          const firstBanner = filtered[0];
-          // Use banner-specific height if available, otherwise fallback to device-based height
-          const height = deviceType === "mobile" 
-            ? (firstBanner.heightMobile || 300) // Default mobile height 300px
-            : (firstBanner.heightDesktop || 500); // Default desktop height 500px
-            
-          setFrameHeight(`${height}px`);
-        }
-      } catch (err) {
-        console.error("Failed to fetch banners", err);
-      }
-    };
+//   checkDevice();
+// }, []);
 
-    fetchBanners();
-  }, [deviceType, baseUrl, referenceWebsite]);
+
+  // ✅ Fetch banners based on device
+ useEffect(() => {
+  const fetchBanners = async () => {
+    try {
+      const endpoint = deviceType === "mobile" ? "mobile" : "desktop";
+      const res = await fetch(
+        `${baseUrl}/banners/${endpoint}?referenceWebsite=${referenceWebsite}`
+      );
+      const data = await res.json();
+      const filtered = (data.banners || []).filter(
+        (item: APIBanner) => item.deviceType === deviceType
+      );
+      setBanners(filtered);
+    } catch (err) {
+      console.error("Failed to fetch banners", err);
+    }
+  };
+
+  fetchBanners();
+}, [deviceType]);
+
 
   if (banners.length === 0) return null;
 
@@ -143,16 +137,15 @@ const Banner: React.FC = () => {
             disableOnInteraction: false,
           }}
           modules={[Autoplay, Pagination, Navigation]}
-          className="w-full"
-          style={{ height: frameHeight }} // Set the dynamic height here
+          className="w-full h-auto"
         >
           {banners.map((item) => (
             <SwiperSlide key={item._id}>
-              <div className="relative w-full h-auto"> {/* Changed to h-full */}
+              <div className="relative w-full h-auto">
                 <img
                   src={`https://api.jajamblockprints.com${item.images[0]}`}
                   alt={item.bannerName}
-                  className="w-full h-auto object-fill" // Changed to h-full and object-cover
+                  className="w-full h-auto object-fill"
                   loading="eager"
                 />
                 <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4">
@@ -161,7 +154,7 @@ const Banner: React.FC = () => {
                       <Link
                         to={
                           item.description?.toLowerCase() === "new arrivals"
-                            ? `/products?newArrival=true`
+                            ? `/products?newArrival=true` 
                             : `/category/${encodeURIComponent(
                                 item?.description
                               ).toLowerCase()}`
