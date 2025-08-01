@@ -10,15 +10,17 @@ import {
   FaWhatsapp,
   FaEnvelope,
   FaRegCopy,
+  FaRegUser,
 } from "react-icons/fa";
 import Arrivals from "../components/home/Arrivals";
 import { useDispatch } from "react-redux";
 import LoginModal from "../components/loginModal/LoginModal";
 // import Login from "../pages/Login";
 
-import { addItemToCart } from "../reduxslice/CartSlice"
-import Login1 from "./Login1"
-import { X } from "react-feather"
+import { addItemToCart } from "../reduxslice/CartSlice";
+import Login1 from "./Login1";
+import { X } from "react-feather";
+import { RatingModal } from "./reviewmodal";
 // Define Product type directly in this file as requested
 interface Product {
   _id: string;
@@ -50,6 +52,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   );
   const [mainImage, setMainImage] = useState<string>(""); // Re-introducing mainImage state
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isRatingModalOpen, setRatingModalOpen] = useState(false);
   const dispatch = useDispatch();
   const { id } = useParams();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -58,8 +61,24 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [addedProduct, setAddedProduct] = useState<any>(null);
-  const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+  const [review, setReview] = useState(null);
+  const [gettoken, settoken] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    settoken(token);
+    const fetchReview = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/sendreview/${id}`);
+        const data = await response.json();
+        setReview(data);
+        console.log(data);
+      } catch (err) {}
+    };
+
+    if (id) {
+      fetchReview();
+    }
+  }, [id, isRatingModalOpen]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -183,32 +202,32 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
     ].slice(0, 4);
   }
 
-  const dummyReviews = [
-    {
-      id: 1,
-      author: "Priya Sharma",
-      rating: 5,
-      comment:
-        "Absolutely stunning saree! The fabric is so soft and the colors are vibrant. Received many compliments.",
-      date: "July 15, 2024",
-    },
-    {
-      id: 2,
-      author: "Rahul Singh",
-      rating: 4,
-      comment:
-        "Good quality product. The delivery was quick, and it looks just like the picture. Highly recommend!",
-      date: "July 10, 2024",
-    },
-    {
-      id: 3,
-      author: "Anjali Devi",
-      rating: 5,
-      comment:
-        "Exceeded my expectations! The craftsmanship is superb. Will definitely buy from here again.",
-      date: "July 01, 2024",
-    },
-  ];
+  // const dummyReviews = [
+  //   {
+  //     id: 1,
+  //     author: "Priya Sharma",
+  //     rating: 5,
+  //     comment:
+  //       "Absolutely stunning saree! The fabric is so soft and the colors are vibrant. Received many compliments.",
+  //     date: "July 15, 2024",
+  //   },
+  //   {
+  //     id: 2,
+  //     author: "Rahul Singh",
+  //     rating: 4,
+  //     comment:
+  //       "Good quality product. The delivery was quick, and it looks just like the picture. Highly recommend!",
+  //     date: "July 10, 2024",
+  //   },
+  //   {
+  //     id: 3,
+  //     author: "Anjali Devi",
+  //     rating: 5,
+  //     comment:
+  //       "Exceeded my expectations! The craftsmanship is superb. Will definitely buy from here again.",
+  //     date: "July 01, 2024",
+  //   },
+  // ];
 
   if (!product)
     return (
@@ -503,24 +522,33 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           </button>
 
           {/* Button for Reviews Tab */}
-          <button
-            onClick={() => setActiveTab("reviews")}
-            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
-              activeTab === "reviews"
-                ? "border-b-4 border-purple-600 text-purple-800"
-                : "text-gray-700 hover:text-purple-600"
-            }`}
-            style={{
-              borderColor: activeTab === "reviews" ? "rgb(157 48 137)" : "",
-            }}
-          >
-            Reviews
-          </button>
-          <button
-            className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto `}
-          >
-            Rate Product
-          </button>
+          <div className=" flex justify-between gap-6 ">
+            <button
+              onClick={() => setActiveTab("reviews")}
+              className={`px-10 py-4 text-xl font-bold transition-all duration-300 w-full sm:w-auto ${
+                activeTab === "reviews"
+                  ? "border-b-4 border-purple-600 text-purple-800"
+                  : "text-gray-700 hover:text-purple-600"
+              }`}
+              style={{
+                borderColor: activeTab === "reviews" ? "rgb(157 48 137)" : "",
+              }}
+            >
+              Reviews
+            </button>
+            {activeTab === "reviews" && gettoken && (
+              <button
+                onClick={() => setRatingModalOpen(true)}
+                className="px-10 py-4 text-xl font-bold transition-all duration-300 
+    bg-white text-gray-800 
+    hover:bg-gray-100 hover:border-gray-400 
+    focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50
+    rounded-lg shadow-sm hover:shadow-md"
+              >
+                Rate Product
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="py-8 text-gray-700 text-lg leading-relaxed">
@@ -554,16 +582,17 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               >
                 Customer Reviews
               </h3>
-              {dummyReviews.length > 0 ? (
+              {review.length > 0 ? (
                 <div className="space-y-8">
-                  {dummyReviews.map((review) => (
+                  {review.map((review) => (
                     <div
                       key={review.id}
                       className="border-b pb-6 last:border-b-0 last:pb-0"
                     >
-                      <div className="flex items-center mb-2">
-                        <span className="font-semibold text-gray-900 mr-3">
-                          {review.author}
+                      <div className="flex flex-col items-start mb-2 gap-3">
+                        <span className="flex justify-center items-center gap-3 font-semibold text-gray-900 mr-3">
+                          <FaRegUser />
+                          {review?.user?.firstName} {review?.user?.lastName}
                         </span>
                         <div className="flex">{renderStars(review.rating)}</div>
                       </div>
@@ -675,6 +704,12 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           throw new Error("Function not implemented.");
         }}
       />
+      {isRatingModalOpen && (
+        <RatingModal
+          isOpen={isRatingModalOpen}
+          onClose={() => setRatingModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -6,6 +6,8 @@ import logo from "../../assest/logo.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";
+import { FaHeart, FaUser } from "react-icons/fa";
+import { CiLogin } from "react-icons/ci";
 
 interface NavbarProps {
   onCartClick: () => void;
@@ -237,17 +239,32 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               borderColor: primaryColor,
             }}
           >
-            <p className="text-sm font-bold" style={{ color: textColor }}>
-              {user.firstName} {user.lastName || ""}
-            </p>
-            <p className="text-xs truncate" style={{ color: primaryColor }}>
-              {user.email}
-            </p>
+            <button onClick={() => setUserMenuOpen(false)}>
+              <Link
+                to={"/profile"}
+                className="flex justify-start items-center gap-3"
+              >
+                <div>
+                  <FaUser color="#C35DAE" />
+                </div>
+                <div className="flex flex-col items-start">
+                  <p className="text-sm font-bold" style={{ color: textColor }}>
+                    {user?.firstName} {user?.lastName || ""}
+                  </p>
+                  <p
+                    className="text-xs truncate"
+                    style={{ color: primaryColor }}
+                  >
+                    {user.email}
+                  </p>
+                </div>
+              </Link>
+            </button>
           </div>
           <div className="py-2">
             <Link
               to="/wishlist"
-              className="block px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md"
+              className="block px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md flex justify-start items-center gap-3"
               style={{ color: textColor }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = buttonHoverStyle.background;
@@ -259,6 +276,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               }}
               onClick={() => setUserMenuOpen(false)}
             >
+              <FaHeart color="#C35DAE" />
               Your Wishlist
             </Link>
           </div>
@@ -268,7 +286,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           >
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md"
+              className="block w-full text-left px-4 xl:px-6 py-3 text-sm font-semibold transition-all hover:shadow-md flex justify-start items-center gap-3"
               style={{ color: textColor }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background =
@@ -280,6 +298,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 e.currentTarget.style.color = textColor;
               }}
             >
+              <CiLogin color="#C35DAE" size={20} />
               Sign out
             </button>
           </div>
@@ -328,15 +347,17 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
             </button>
             {user ? (
               <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white bg-opacity-20 text-white rounded-full border-2 border-white border-opacity-30">
-                  <User size={20} className="sm:w-6 sm:h-6" />
-                </div>
-                <div>
-                  <p className="font-bold text-white text-base sm:text-lg">
-                    {user.firstName}
-                  </p>
-                  <p className="text-xs text-blue-100">Welcome back!</p>
-                </div>
+                <Link to={"/profile"} className="flex items-center space-x-3 sm:space-x-4 relative z-10">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white bg-opacity-20 text-white rounded-full border-2 border-white border-opacity-30">
+                    <User size={20} className="sm:w-6 sm:h-6" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white text-base sm:text-lg">
+                      {user.firstName}
+                    </p>
+                    <p className="text-xs text-blue-100">Welcome back!</p>
+                  </div>
+                </Link>
               </div>
             ) : (
               <div
@@ -670,7 +691,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
               >
                 {menuOpen ? (
-                  <X size={22} className="sm:w-7 sm:h-7"  />
+                  <X size={22} className="sm:w-7 sm:h-7" />
                 ) : (
                   <Menu size={22} className="sm:w-7 sm:h-7" />
                 )}
