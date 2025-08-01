@@ -17,11 +17,7 @@ interface RatingPayload {
   referenceWebsite?: string;
 }
 
-export const RatingModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-}: RatingModalProps) => {
+export const RatingModal = ({ isOpen, onClose }: RatingModalProps) => {
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number>(0);
   const [review, setReview] = useState<string>("");
@@ -69,9 +65,10 @@ export const RatingModal = ({
         throw new Error(data.message || "Failed to post review");
 
       toast.success("Thank You... Review submitted!");
-      onSubmit(payload);
       resetForm();
-      onClose();
+      setTimeout(() => {
+        onClose();
+      }, 3000);
     } catch (error: any) {
       console.error("Review error:", error.message);
       toast.error(error.message, {
@@ -155,7 +152,7 @@ export const RatingModal = ({
             className={`w-full py-3 px-4 rounded-md font-medium text-white ${
               rating === 0
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
+                : "bg-[#9D3089] hover:bg-[#C561B1"
             }`}
           >
             Submit Rating

@@ -33,8 +33,7 @@ export const OrderPage = () => {
 
         const data = await response.json();
         setOrders(data.orders || []);
-        console.log(data.orders);
-        
+        // console.log(data.orders);
       } catch (err) {
         setError(err.message);
       } finally {
