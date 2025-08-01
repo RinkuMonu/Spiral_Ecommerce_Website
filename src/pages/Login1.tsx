@@ -40,6 +40,10 @@ export default function Login1() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [resetPasswordLoading, setResetPasswordLoading] = useState(false);
+  const [resetErrors, setResetErrors] = useState({
+    newPassword: "",
+    confirmNewPassword: "",
+  });
   const navigate = useNavigate();
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -142,6 +146,34 @@ export default function Login1() {
     return valid;
   };
 
+  const validateResetPassword = () => {
+    let valid = true;
+    const newErrors = {
+      newPassword: "",
+      confirmNewPassword: "",
+    };
+
+    if (!newPassword) {
+      newErrors.newPassword = "New password is required";
+      valid = false;
+    } else if (!validatePassword(newPassword)) {
+      newErrors.newPassword =
+        "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char";
+      valid = false;
+    }
+
+    if (!confirmNewPassword) {
+      newErrors.confirmNewPassword = "Please confirm your new password";
+      valid = false;
+    } else if (newPassword !== confirmNewPassword) {
+      newErrors.confirmNewPassword = "Passwords don't match";
+      valid = false;
+    }
+
+    setResetErrors(newErrors);
+    return valid;
+  };
+
   const handleBlur = (field) => {
     const newErrors = { ...errors };
 
@@ -193,6 +225,34 @@ export default function Login1() {
     }
 
     setErrors(newErrors);
+  };
+
+  const handleResetPasswordBlur = (field) => {
+    const newErrors = { ...resetErrors };
+
+    switch (field) {
+      case "newPassword":
+        if (!newPassword) {
+          newErrors.newPassword = "New password is required";
+        } else if (!validatePassword(newPassword)) {
+          newErrors.newPassword =
+            "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char";
+        } else {
+          newErrors.newPassword = "";
+        }
+        break;
+      case "confirmNewPassword":
+        if (!confirmNewPassword) {
+          newErrors.confirmNewPassword = "Please confirm your new password";
+        } else if (newPassword !== confirmNewPassword) {
+          newErrors.confirmNewPassword = "Passwords don't match";
+        } else {
+          newErrors.confirmNewPassword = "";
+        }
+        break;
+    }
+
+    setResetErrors(newErrors);
   };
 
   const handleLogin = async (e) => {
@@ -302,7 +362,6 @@ export default function Login1() {
         icon: "success",
       });
 
-      // 👇 Automatically move to password reset form
       setShowForgotPassword(false);
       setShowResetPassword(true);
       setResetToken(res?.data?.resetToken);
@@ -321,24 +380,7 @@ export default function Login1() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
-    if (!newPassword || !confirmNewPassword) {
-      Swal.fire("Error", "Please enter and confirm your new password", "error");
-      return;
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      Swal.fire("Error", "Passwords don't match", "error");
-      return;
-    }
-
-    if (!validatePassword(newPassword)) {
-      Swal.fire(
-        "Error",
-        "Password must contain: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char",
-        "error"
-      );
-      return;
-    }
+    if (!validateResetPassword()) return;
 
     setResetPasswordLoading(true);
 
@@ -427,10 +469,15 @@ export default function Login1() {
                           size={18}
                         />
                         <input
-                          className="w-full p-3 pl-10 pr-10 rounded-xl border border-gray-200"
+                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                            resetErrors.newPassword
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
                           type={showNewPassword ? "text" : "password"}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
+                          onBlur={() => handleResetPasswordBlur("newPassword")}
                           placeholder="New password"
                           required
                         />
@@ -446,6 +493,53 @@ export default function Login1() {
                           )}
                         </button>
                       </div>
+                      {resetErrors.newPassword && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {resetErrors.newPassword}
+                        </p>
+                      )}
+                      <div className="text-xs text-gray-500 mt-1">
+                        Password must contain:
+                        <ul className="list-disc pl-5">
+                          <li
+                            className={
+                              newPassword.length >= 8 ? "text-green-500" : ""
+                            }
+                          >
+                            At least 8 characters
+                          </li>
+                          <li
+                            className={
+                              /[A-Z]/.test(newPassword) ? "text-green-500" : ""
+                            }
+                          >
+                            One uppercase letter
+                          </li>
+                          <li
+                            className={
+                              /[a-z]/.test(newPassword) ? "text-green-500" : ""
+                            }
+                          >
+                            One lowercase letter
+                          </li>
+                          <li
+                            className={
+                              /[0-9]/.test(newPassword) ? "text-green-500" : ""
+                            }
+                          >
+                            One number
+                          </li>
+                          <li
+                            className={
+                              /[!@#$%^&*(),.?":{}|<>]/.test(newPassword)
+                                ? "text-green-500"
+                                : ""
+                            }
+                          >
+                            One special character
+                          </li>
+                        </ul>
+                      </div>
                     </div>
 
                     <div className="mb-6">
@@ -458,11 +552,18 @@ export default function Login1() {
                           size={18}
                         />
                         <input
-                          className="w-full p-3 pl-10 pr-10 rounded-xl border border-gray-200"
+                          className={`w-full p-3 pl-10 pr-10 rounded-xl border ${
+                            resetErrors.confirmNewPassword
+                              ? "border-red-500"
+                              : "border-gray-200"
+                          }`}
                           type={showConfirmNewPassword ? "text" : "password"}
                           value={confirmNewPassword}
                           onChange={(e) =>
                             setConfirmNewPassword(e.target.value)
+                          }
+                          onBlur={() =>
+                            handleResetPasswordBlur("confirmNewPassword")
                           }
                           placeholder="Confirm new password"
                           required
@@ -481,11 +582,20 @@ export default function Login1() {
                           )}
                         </button>
                       </div>
+                      {resetErrors.confirmNewPassword && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {resetErrors.confirmNewPassword}
+                        </p>
+                      )}
                     </div>
 
                     <button
                       type="submit"
-                      disabled={resetPasswordLoading}
+                      disabled={
+                        resetPasswordLoading ||
+                        resetErrors.newPassword ||
+                        resetErrors.confirmNewPassword
+                      }
                       className={`w-full py-4 px-4 rounded-xl text-white font-medium transition-all duration-300 flex items-center justify-center relative ${
                         resetPasswordLoading
                           ? "bg-indigo-400 cursor-not-allowed"
