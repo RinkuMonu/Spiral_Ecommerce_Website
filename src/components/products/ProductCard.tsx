@@ -2,7 +2,7 @@
 import { useState } from "react"
 import type React from "react"
 
-import { Eye, Heart, ShoppingCart, Star } from "lucide-react"
+import { Eye, Heart, ShoppingCart, Star, X } from "lucide-react"
 import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice"
@@ -33,35 +33,90 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false)
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
+      const [wishlistProduct, setWishlistProduct] = useState<any>(null);
   const dispatch = useDispatch()
    
+  // const handleAddToCart = (e: React.MouseEvent) => {
+  //   e.preventDefault()
+  //   e.stopPropagation()
+  //     const isUserLoggedIn = !!localStorage.getItem("token");
+
+  //   if (!isUserLoggedIn) {
+  //     setShowLoginModal(true); // Trigger login modal
+  //     return;
+  //   }
+  //   dispatch(
+  //     addItemToCart({
+  //       id: product._id,
+  //       name: product.productName,
+  //       image: product.images?.[0] || "",
+  //       category: product.category?.name || "Uncategorized",
+  //       price: product.actualPrice,
+  //       quantity: 1,
+  //     }),
+  //   )
+  // }
+
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-      const isUserLoggedIn = !!localStorage.getItem("token");
+  e.preventDefault();
+  e.stopPropagation();
 
-    if (!isUserLoggedIn) {
-      setShowLoginModal(true); // Trigger login modal
-      return;
+  const token = localStorage.getItem("token");
+
+  const cartItem = {
+    id: product._id,
+    name: product.productName,
+    image: product.images?.[0] || "",
+    category: product.category?.name || "Uncategorized",
+    price: product.actualPrice,
+    quantity: 1,
+  };
+
+  if (!token) {
+    // Guest user: Use localStorage
+    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+
+    const existingIndex = existingCart.findIndex((item: any) => item.id === product._id);
+
+    if (existingIndex !== -1) {
+      existingCart[existingIndex].quantity += 1;
+    } else {
+      existingCart.push(cartItem);
     }
-    dispatch(
-      addItemToCart({
-        id: product._id,
-        name: product.productName,
-        image: product.images?.[0] || "",
-        category: product.category?.name || "Uncategorized",
-        price: product.actualPrice,
-        quantity: 1,
-      }),
-    )
-  }
 
-  const handleAddToWishlist = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    dispatch(addItemToWishlist(product._id))
+    localStorage.setItem("addtocart", JSON.stringify(existingCart));
+    window.dispatchEvent(new Event("guestCartUpdated"));
+  } else {
+    // Logged-in user: Use Redux
+    dispatch(addItemToCart(cartItem));
   }
+};
 
+  // const handleAddToWishlist = (e: React.MouseEvent) => {
+  //   e.preventDefault()
+  //   e.stopPropagation()
+  //   dispatch(addItemToWishlist(product._id))
+  // }
+
+    const handleAddToWishlist = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const isUserLoggedIn = !!localStorage.getItem("token");
+  
+      if (!isUserLoggedIn) {
+        setShowLoginModal(true); // Trigger login modal
+        return;
+      }
+      dispatch(addItemToWishlist(product._id));
+      setWishlistProduct(product);
+      setIsWishlistPopupVisible(true);
+  
+      setTimeout(() => {
+        setIsWishlistPopupVisible(false);
+      }, 3000);
+    };
+  
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
@@ -141,7 +196,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <Eye size={16} />
             </Link>
           </div>
-
+  {isWishlistPopupVisible && wishlistProduct && (
+        <div
+          className="fixed top-4 right-4 bg-yellow-100 text-yellow-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
+          style={{
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span className="text-[12px]">Product Added to Wishlist</span>
+            <button onClick={() => setIsWishlistPopupVisible(false)}>
+              <X size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-[12px]">{wishlistProduct.productName}</p>
+        </div>
+      )}
           {/* Quick Add to Cart Overlay */}
           <div
             className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-300 ${

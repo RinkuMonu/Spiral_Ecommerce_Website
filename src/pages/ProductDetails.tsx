@@ -156,50 +156,54 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   //   }
   // };
 
-    const handleAddToCart = (product: any) => {
-  const token = localStorage.getItem("token");
+  const handleAddToCart = (product: any) => {
+    const token = localStorage.getItem("token");
 
-  const cartItem = {
-    id: product._id,
-    name: product.productName,
-    image: product.images?.[0] || "",
-    category: product.category?.name || "Uncategorized",
-    price: product.actualPrice || product.price,
-    quantity,
-  };
+    const cartItem = {
+      id: product._id,
+      name: product.productName,
+      image: product.images?.[0] || "",
+      category: product.category?.name || "Uncategorized",
+      price: product.actualPrice || product.price,
+      quantity,
+    };
 
-  if (!token) {
-    // Get existing cart or initialize empty array
-    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+    if (!token) {
+      // Get existing cart or initialize empty array
+      const existingCart = JSON.parse(
+        localStorage.getItem("addtocart") || "[]"
+      );
 
-    // Check if product already in cart
-    const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
+      // Check if product already in cart
+      const existingProductIndex = existingCart.findIndex(
+        (item: any) => item.id === product._id
+      );
 
-    if (existingProductIndex !== -1) {
-      // Product exists – increase quantity
-      existingCart[existingProductIndex].quantity += quantity;
+      if (existingProductIndex !== -1) {
+        // Product exists – increase quantity
+        existingCart[existingProductIndex].quantity += quantity;
+      } else {
+        // New product – add to cart
+        existingCart.push(cartItem);
+      }
+
+      // Save updated cart back to localStorage
+      localStorage.setItem("addtocart", JSON.stringify(existingCart));
+      window.dispatchEvent(new Event("guestCartUpdated"));
     } else {
-      // New product – add to cart
-      existingCart.push(cartItem);
+      // User is logged in – use Redux
+      dispatch(addItemToCart(cartItem));
     }
 
-    // Save updated cart back to localStorage
-    localStorage.setItem("addtocart", JSON.stringify(existingCart));
-    window.dispatchEvent(new Event("guestCartUpdated"));
-  } else {
-    // User is logged in – use Redux
-    dispatch(addItemToCart(cartItem));
-  }
+    // UI feedback
+    setAddedProduct(product);
+    setIsPopupVisible(true);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
 
-  // UI feedback
-  setAddedProduct(product);
-  setIsPopupVisible(true);
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
-
-  // closeModal();
-};
+    // closeModal();
+  };
 
   const handleBuyNow = () => {
     const isUserLoggedIn = !!localStorage.getItem("token");
@@ -465,7 +469,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {" "}
             {/* Reduced gap */}
             <button
-              onClick={()=>handleAddToCart(product)}
+              onClick={() => handleAddToCart(product)}
               className="flex-1 flex items-center justify-center gap-2 px-5 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
               style={{ background: "rgb(157 48 137)" }}
             >
