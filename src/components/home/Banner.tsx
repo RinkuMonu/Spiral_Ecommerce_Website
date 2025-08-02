@@ -26,7 +26,7 @@ const Banner: React.FC = () => {
   const [deviceType, setDeviceType] = useState<"mobile" | "desktop">("desktop");
   const [categories, setCategories] = useState<string[]>([]);
   const [isNewArrival, setIsNewArrival] = useState(false);
-
+console.log(banners,"banneres ")
   // ✅ Detect "new arrivals" banner
   useEffect(() => {
     const hasNewArrivalBanner = banners.some(
@@ -150,7 +150,7 @@ const Banner: React.FC = () => {
                 />
                 <div className="absolute inset-0 flex items-center justify-center text-white text-center z-20 px-4">
                   <div className="w-full max-w-3xl space-y-4">
-                    <div className="flex flex-row justify-center items-center gap-3 -mt-16 sm:mt-72">
+                    <div className="flex flex-row justify-center items-center gap-3 -mt-16 sm:mt-64">
                       <Link
                         to={
                           item.description?.toLowerCase() === "new arrivals"
