@@ -46,18 +46,20 @@ export const RatingModal = ({ isOpen, onClose }: RatingModalProps) => {
     const payload: RatingPayload = {
       rating,
       comment: review.trim(),
-      referenceWebsite,
     };
 
     try {
-      const response = await fetch(`${baseUrl}/sendreview/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${baseUrl}/sendreview/${id}?referenceWebsite=${referenceWebsite}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await response.json();
 
