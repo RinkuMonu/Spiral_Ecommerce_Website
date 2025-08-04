@@ -46,7 +46,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [subCateName, setSubCateName] = useState([]);
   const [user, setUser] = useState<UserData | null>(null);
+  // console.log("cateeee", categories);
 
   // Refs
   const searchRef = useRef<HTMLDivElement>(null);
@@ -103,20 +105,33 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   );
 
   // Data fetching
+  const [groupedCategories, setGroupedCategories] = useState({});
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
-        if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name));
+
+        // Group items by subcategory
+        const grouped = {};
+        if (Array.isArray(data?.website?.categories)) {
+          data?.website?.categories.forEach((item) => {
+            const sub = item?.subcategory;
+            if (!grouped[sub]) grouped[sub] = [];
+            grouped[sub].push(item);
+          });
         }
+
+        setGroupedCategories(grouped);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
     };
+
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
+
   function slugify(text) {
     return text
       .toLowerCase()
@@ -767,7 +782,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       {/* Category Navigation */}
       <div
         className={`hidden xl:block border-t-2 transition-all duration-300 ${
-          isSticky ? "sticky top-0 z-50 shadow-lg" : "relative"
+          isSticky ? "sticky top-0 z-50 shadow-lg" : "reltive"
         }`}
         style={{
           background:
@@ -775,8 +790,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           borderColor: primaryColor,
         }}
       >
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between py-3">
+        <div className="container mx-auto px-4 relative z-10 ">
+          <div className="flex items-center justify-center py-3 gap-10">
             {/* Traditional ornamental left divider */}
             <div className="flex items-center space-x-2">
               <div
@@ -808,39 +823,59 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               Home
             </Link>
 
-            {/* Main Categories (First 6) */}
+            {/* Main Categories  */}
             <div className="flex items-center space-x-1">
-              {categories.slice(0, 6).map((item) => (
-                <Link
-                  key={item}
-                 to={`/category/${slugify(item)}`}
-                  className="relative group px-3 py-2 text-sm font-bold transition-all duration-300"
-                  style={{ color: textColor }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 25px rgba(157, 48, 137, 0.4)";
-                    e.currentTarget.style.borderColor = primaryColor;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.background =
-                      "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <span className="relative z-10 text-[12px]">{item}</span>
+              {Object.entries(groupedCategories).map(([subcategory, items]) => (
+                <div key={subcategory} className="relative group">
                   <div
-                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    style={{
-                      background: "linear-gradient(135deg, #C1467F, #A13C78)",
+                    // to={`/category/${slugify(subcategory)}`}
+                    className="relative px-3 py-2 text-sm font-bold transition-all duration-300"
+                    style={{ color: textColor }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = textColor;
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 25px rgba(157, 48, 137, 0.4)";
+                      e.currentTarget.style.borderColor = primaryColor;
                     }}
-                  ></div>
-                </Link>
-              ))}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = textColor;
+                      e.currentTarget.style.background =
+                        "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <span className="relative z-10 text-[12px]">
+                      {subcategory.toUpperCase()}
+                    </span>
+                  </div>
 
+                  {/* Hover Tooltip */}
+                  <div className="absolute top-full mt-1 left-0 w-50 bg-[#FFF3FD] border border-gray-100 text-gray-800 rounded-lg shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transform origin-top transition-all duration-200 ease-out z-50">
+                    <ul className="py-1">
+                      {items.map((item) => (
+                        <li key={item._id}>
+                          <Link
+                            to={`/category/${slugify(item?.name)}`}
+                            className="flex items-center px-4 py-2.5 text-sm group/link transition-colors duration-200"
+                          >
+                            <span className="relative truncate">
+                              {item?.name}
+                              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-purple-500 transition-all duration-300 group-hover/link:w-full"></span>
+                            </span>
+                            {item?.icon && (
+                              <span className="ml-2 text-gray-400 group-hover/link:text-purple-400 transition-colors">
+                                <item.icon className="w-4 h-4" />
+                              </span>
+                            )}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
               {/* More Categories Dropdown */}
               {categories.length > 6 && (
                 <div className="relative" ref={moreMenuRef}>
@@ -900,7 +935,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                           {categories.slice(6).map((item) => (
                             <Link
                               key={item}
-                           to={`/category/${slugify(item)}`}
+                              to={`/category/${slugify(item)}`}
                               className="relative group px-4 py-3 text-sm font-semibold transition-all duration-300 rounded-lg border"
                               style={{
                                 color: textColor,
