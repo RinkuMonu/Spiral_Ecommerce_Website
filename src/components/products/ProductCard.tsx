@@ -1,14 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import type React from "react";
-
 import { Eye, Heart, ShoppingCart, Star, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
+import LoginModal from "../loginModal/LoginModal";
 import Login1 from "../../pages/Login1";
+
 interface Product {
   _id: string;
   productName: string;
@@ -24,6 +24,7 @@ interface Product {
     name: string;
   };
   rating?: number;
+  reviewCount?: number;
 }
 
 interface ProductCardProps {
@@ -34,39 +35,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
-  const [reviewCount, setReviewCount] = useState(0);
+  const [wishlistProduct, setWishlistProduct] = useState<Product | null>(null);
   const dispatch = useDispatch();
-  // console.log(product, "Products");
-  // const handleAddToCart = (e: React.MouseEvent) => {
-  //   e.preventDefault()
-  //   e.stopPropagation()
-  //     const isUserLoggedIn = !!localStorage.getItem("token");
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [addedProduct, setAddedProduct] = useState<Product | null>(null);
 
-  //   if (!isUserLoggedIn) {
-  //     setShowLoginModal(true); // Trigger login modal
-  //     return;
-  //   }
-  //   dispatch(
-  //     addItemToCart({
-  //       id: product._id,
-  //       name: product.productName,
-  //       image: product.images?.[0] || "",
-  //       category: product.category?.name || "Uncategorized",
-  //       price: product.actualPrice,
-  //       quantity: 1,
-  //     }),
-  //   )
-  // }
+  // Generate random review count and rating if not provided
+  const ratedProduct = useMemo(() => {
+    return {
+      ...product,
+      rating: product.rating ?? Math.floor(Math.random() * 5) + 1, // 1-5
+      reviewCount:
+        product.reviewCount ?? Math.floor(Math.random() * (100 - 25 + 1)) + 25, // 25-100
+    };
+  }, [product]);
 
-  useEffect(() => {
-    setReviewCount(Math.floor(Math.random() * (100 - 25 + 1)) + 25);
-  }, []);
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleAddToCart = (product: Product) => {
     const token = localStorage.getItem("token");
 
     const cartItem = {
@@ -74,22 +58,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
       name: product.productName,
       image: product.images?.[0] || "",
       category: product.category?.name || "Uncategorized",
-      price: product.actualPrice,
-      quantity: 1,
+      price: product.actualPrice || product.price || 0,
+      quantity,
     };
 
     if (!token) {
-      // Guest user: Use localStorage
       const existingCart = JSON.parse(
         localStorage.getItem("addtocart") || "[]"
       );
 
-      const existingIndex = existingCart.findIndex(
+      const existingProductIndex = existingCart.findIndex(
         (item: any) => item.id === product._id
       );
 
-      if (existingIndex !== -1) {
-        existingCart[existingIndex].quantity += 1;
+      if (existingProductIndex !== -1) {
+        existingCart[existingProductIndex].quantity += quantity;
       } else {
         existingCart.push(cartItem);
       }
@@ -97,16 +80,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
       localStorage.setItem("addtocart", JSON.stringify(existingCart));
       window.dispatchEvent(new Event("guestCartUpdated"));
     } else {
-      // Logged-in user: Use Redux
       dispatch(addItemToCart(cartItem));
     }
-  };
 
-  // const handleAddToWishlist = (e: React.MouseEvent) => {
-  //   e.preventDefault()
-  //   e.stopPropagation()
-  //   dispatch(addItemToWishlist(product._id))
-  // }
+    setAddedProduct(product);
+    setIsPopupVisible(true);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
+
+    // closeModal();
+  };
 
   const handleAddToWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -114,11 +98,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
     const isUserLoggedIn = !!localStorage.getItem("token");
 
     if (!isUserLoggedIn) {
-      setShowLoginModal(true); // Trigger login modal
+      setShowLoginModal(true);
       return;
     }
-    dispatch(addItemToWishlist(product._id));
-    setWishlistProduct(product);
+    dispatch(addItemToWishlist(ratedProduct));
+    setWishlistProduct(ratedProduct);
     setIsWishlistPopupVisible(true);
 
     setTimeout(() => {
@@ -140,9 +124,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
     ));
   };
 
+  // Handle image URL construction more safely
+  const getImageUrl = (imagePath: string) => {
+    if (!imagePath) return "";
+    return imagePath.startsWith("http")
+      ? imagePath
+      : `http://api.jajamblockprints.com${imagePath}`;
+  };
+
   return (
     <>
-      <Link to={`/product/${product._id}`} className="group block">
+      <Link
+        to={`/product/${ratedProduct._id}`}
+        state={{
+          rating: ratedProduct.rating,
+          reviewCount: ratedProduct.reviewCount,
+        }}
+        className="group block"
+      >
         <div
           className="bg-white rounded-xl shadow-sm overflow-hidden h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-gray-100"
           onMouseEnter={() => setIsHovered(true)}
@@ -150,38 +149,41 @@ const ProductCard = ({ product }: ProductCardProps) => {
         >
           {/* Image Section */}
           <div className="relative aspect-square overflow-hidden bg-gray-50">
-            {/* Main Image */}
-            <img
-              src={`http://api.jajamblockprints.com${product.images}`}
-              alt={product.productName}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-
-            {/* Second Image on Hover */}
-            {product.images?.[1] && (
+            {ratedProduct.images?.[0] && (
               <img
-                src={
-                  `https://api.jajamblockprints.com/api${product.images} ` ||
-                  "/placeholder.svg"
-                }
-                alt={`${product.productName} - View 2`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                  isHovered ? "opacity-100" : "opacity-0"
-                }`}
+                src={getImageUrl(ratedProduct.images[0])}
+                alt={ratedProduct.productName}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
               />
             )}
 
-            {/* Discount Badge */}
-            {product.discount && (
+            {ratedProduct.images?.[1] && (
+              <img
+                src={getImageUrl(ratedProduct.images[1])}
+                alt={`${ratedProduct.productName} - View 2`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  isHovered ? "opacity-100" : "opacity-0"
+                }`}
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            )}
+
+            {ratedProduct.discount && (
               <div
                 className="absolute top-3 left-3 text-white text-xs font-bold px-2 py-1 rounded-full z-10"
                 style={{ background: "rgb(157 48 137)" }}
               >
-                {product.discount}% OFF
+                {ratedProduct.discount}% OFF
               </div>
             )}
 
-            {/* Action Buttons */}
             <div
               className={`absolute top-3 right-3 flex flex-col gap-2 transition-all duration-300 ${
                 isHovered
@@ -194,6 +196,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
                 style={{ color: "rgb(157 48 137)" }}
                 title="Add to Cart"
+                aria-label="Add to cart"
               >
                 <ShoppingCart size={16} />
               </button>
@@ -202,37 +205,21 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
                 style={{ color: "rgb(157 48 137)" }}
                 title="Add to Wishlist"
+                aria-label="Add to wishlist"
               >
                 <Heart size={16} />
               </button>
               <Link
-                to={`/product/${product._id}`}
+                to={`/product/${ratedProduct._id}`}
                 className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
                 style={{ color: "rgb(157 48 137)" }}
                 title="Quick View"
+                aria-label="Quick view"
               >
                 <Eye size={16} />
               </Link>
             </div>
-            {isWishlistPopupVisible && wishlistProduct && (
-              <div
-                className="fixed top-4 right-4 bg-yellow-100 text-yellow-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
-                style={{
-                  transition: "transform 0.5s ease, opacity 0.5s ease",
-                }}
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-[12px]">Product Added to Wishlist</span>
-                  <button onClick={() => setIsWishlistPopupVisible(false)}>
-                    <X size={20} />
-                  </button>
-                </div>
-                <p className="mt-2 text-[12px]">
-                  {wishlistProduct.productName}
-                </p>
-              </div>
-            )}
-            {/* Quick Add to Cart Overlay */}
+
             <div
               className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-all duration-300 ${
                 isHovered
@@ -244,6 +231,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 onClick={handleAddToCart}
                 className="w-full text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
                 style={{ background: "rgb(157 48 137)" }}
+                aria-label="Add to cart"
               >
                 ADD TO CART
               </button>
@@ -252,56 +240,107 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           {/* Content Section */}
           <div className="p-4">
-            {/* Brand */}
-            {product.brand && (
+            {ratedProduct.brand && (
               <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">
-                {product.brand}
+                {ratedProduct.brand}
               </p>
             )}
 
-            {/* Product Name */}
             <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 text-sm leading-tight">
-              {product.productName}
+              {ratedProduct.productName}
             </h3>
 
-            {/* Category */}
             <p className="text-xs text-gray-500 mb-2">
-              {product.category?.name || "Traditional Wear"}
+              {ratedProduct.category?.name || "Traditional Wear"}
             </p>
 
-            {/* Rating */}
-            <div className="flex items-center mb-3">
-              <div className="flex mr-2">
-                {renderStars(product.rating || 0)}
+            {/* Enhanced Rating Display */}
+            <div className="flex items-center mb-3 gap-1">
+              <div className="flex mr-1">
+                {renderStars(ratedProduct.rating ?? 0)}
               </div>
-              <span className="text-xs text-gray-500">({reviewCount})</span>
+              <span className="text-xs text-gray-500">
+                ({ratedProduct.reviewCount?.toLocaleString() ?? 0})
+              </span>
             </div>
 
-            {/* Price */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <span
                   className="text-lg font-bold"
                   style={{ color: "rgb(157 48 137)" }}
                 >
-                  ₹{product.actualPrice.toLocaleString()}
+                  ₹{ratedProduct.actualPrice.toLocaleString()}
                 </span>
-                {product.price && product.price !== product.actualPrice && (
-                  // <span className="text-sm text-gray-400 line-through">₹{product.price.toLocaleString()}</span>
-                  <span className="text-sm text-gray-400 line-through">
-                    ₹{product.price.toFixed(0)}
-                  </span>
-                )}
+                {ratedProduct.price &&
+                  ratedProduct.price !== ratedProduct.actualPrice && (
+                    <span className="text-sm text-gray-400 line-through">
+                      ₹{ratedProduct.price.toLocaleString()}
+                    </span>
+                  )}
               </div>
-              {product.discount && (
+              {ratedProduct.discount && (
                 <span className="text-xs font-medium text-green-600">
-                  Save {product.discount}%
+                  Save {ratedProduct.discount}%
                 </span>
               )}
             </div>
           </div>
         </div>
       </Link>
+
+      {isWishlistPopupVisible && wishlistProduct && (
+        <div
+          className="fixed top-4 right-4 bg-yellow-100 text-yellow-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
+          style={{
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span className="text-[12px]">Product Added to Wishlist</span>
+            <button
+              onClick={() => setIsWishlistPopupVisible(false)}
+              aria-label="Close notification"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-[12px]">{wishlistProduct.productName}</p>
+        </div>
+      )}
+      {/* Product Added Popup */}
+      {isPopupVisible && addedProduct && (
+        <div
+          className="fixed top-4 right-4 bg-green-100 text-green-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
+          style={{
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span className="text-[12px]">Product Added to Cart</span>
+            <button onClick={() => setIsPopupVisible(false)}>
+              <X size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-[12px]">{addedProduct.productName}</p>
+        </div>
+      )}
+      {isWishlistPopupVisible && wishlistProduct && (
+        <div
+          className="fixed top-4 right-4 bg-yellow-100 text-yellow-500 p-4 rounded-lg shadow-lg z-50 transition-transform transform translate-x-0 opacity-100"
+          style={{
+            transition: "transform 0.5s ease, opacity 0.5s ease",
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <span className="text-[12px]">Product Added to Wishlist</span>
+            <button onClick={() => setIsWishlistPopupVisible(false)}>
+              <X size={20} />
+            </button>
+          </div>
+          <p className="mt-2 text-[12px]">{wishlistProduct.productName}</p>
+        </div>
+      )}
       {showLoginModal && (
         <LoginModal
           isOpen={showLoginModal}

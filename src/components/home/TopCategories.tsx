@@ -165,14 +165,14 @@ export default function TopCategories() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                     {/* Category Number Badge */}
-                    <div className="absolute top-4 left-4">
+                    {/* <div className="absolute top-4 left-4">
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg"
                         style={{ background: "rgb(157 48 137)" }}
                       >
                         {index + 1}
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Product Count Badge */}
                     <div className="absolute top-4 right-4">
