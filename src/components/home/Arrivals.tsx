@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Eye,
   Heart,
@@ -13,24 +13,52 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-import LoginModal from "../loginModal/LoginModal"; // adjust the path accordingly
+import LoginModal from "../loginModal/LoginModal";
 import Login1 from "../../pages/Login1";
-const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+
+interface Product {
+  _id: string;
+  productName: string;
+  images: string;
+  category: {
+    name: string;
+  };
+  actualPrice: number;
+  price?: number;
+  discount?: number;
+  description?: string;
+  rating?: number;
+  reviewCount?: number;
+}
+
+const Arrivals = ({ addToCart }: { addToCart: (product: Product) => void }) => {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [products, setProducts] = useState<any[]>([]);
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const dispatch = useDispatch();
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
+
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [addedProduct, setAddedProduct] = useState<any>(null);
+  const [addedProduct, setAddedProduct] = useState<Product | null>(null);
   const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+  const [wishlistProduct, setWishlistProduct] = useState<Product | null>(null);
+
+  // Generate rated products with random ratings and review counts
+  const ratedProducts = useMemo(() => {
+    return products.map((product) => ({
+      ...product,
+      rating: Math.floor(Math.random() * 5) + 1,
+      reviewCount: Math.floor(Math.random() * (100 - 25 + 1)) + 25,
+    }));
+  }, [products]);
 
   // Responsive items per slide
   useEffect(() => {
@@ -53,15 +81,15 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
 
   // Auto-slide functionality
   useEffect(() => {
-    if (products.length === 0) return;
+    if (ratedProducts.length === 0) return;
 
-    const maxSlides = Math.ceil(products.length / itemsPerSlide);
+    const maxSlides = Math.ceil(ratedProducts.length / itemsPerSlide);
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % maxSlides);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [products.length, itemsPerSlide]);
+  }, [ratedProducts.length, itemsPerSlide]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -74,7 +102,26 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
     };
   }, [isModalOpen]);
 
-  const openProductModal = (product: any) => {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
+        );
+        const data = await res.json();
+        if (Array.isArray(data.products)) {
+          setProducts(data.products.slice(5, 17)); // Get different slice for arrivals
+        } else {
+          console.error("Unexpected products format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, [baseUrl, referenceWebsite]);
+
+  const openProductModal = (product: Product) => {
     setSelectedProduct(product);
     setQuantity(1);
     setIsModalOpen(true);
@@ -88,170 +135,79 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
-   const handleAddToCart = (product: any) => {
-  const token = localStorage.getItem("token");
+  const handleAddToCart = (product: Product) => {
+    const token = localStorage.getItem("token");
 
-  const cartItem = {
-    id: product._id,
-    name: product.productName,
-    image: product.images?.[0] || "",
-    category: product.category?.name || "Uncategorized",
-    price: product.actualPrice || product.price,
-    quantity,
-  };
+    const cartItem = {
+      id: product._id,
+      name: product.productName,
+      image: product.images?.[0] || "",
+      category: product.category?.name || "Uncategorized",
+      price: product.actualPrice || product.price || 0,
+      quantity,
+    };
 
-  if (!token) {
-    // Get existing cart or initialize empty array
-    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+    if (!token) {
+      const existingCart = JSON.parse(
+        localStorage.getItem("addtocart") || "[]"
+      );
 
-    // Check if product already in cart
-    const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
+      const existingProductIndex = existingCart.findIndex(
+        (item: any) => item.id === product._id
+      );
 
-    if (existingProductIndex !== -1) {
-      // Product exists – increase quantity
-      existingCart[existingProductIndex].quantity += quantity;
+      if (existingProductIndex !== -1) {
+        existingCart[existingProductIndex].quantity += quantity;
+      } else {
+        existingCart.push(cartItem);
+      }
+
+      localStorage.setItem("addtocart", JSON.stringify(existingCart));
+      window.dispatchEvent(new Event("guestCartUpdated"));
     } else {
-      // New product – add to cart
-      existingCart.push(cartItem);
+      dispatch(addItemToCart(cartItem));
     }
 
-    // Save updated cart back to localStorage
-    localStorage.setItem("addtocart", JSON.stringify(existingCart));
-    window.dispatchEvent(new Event("guestCartUpdated"));
-  } else {
-    // User is logged in – use Redux
-    dispatch(addItemToCart(cartItem));
-  }
+    setAddedProduct(product);
+    setIsPopupVisible(true);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
 
-  // UI feedback
-  setAddedProduct(product);
-  setIsPopupVisible(true);
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
+    closeModal();
+  };
 
-  closeModal();
-};
+  const handleAddToWishlist = (product: Product) => {
+    const isUserLoggedIn = !!localStorage.getItem("token");
 
-//     const handleAddToCart = (product: any) => {
-//   const token = localStorage.getItem("token");
+    if (!isUserLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    dispatch(addItemToWishlist(product._id));
+    setWishlistProduct(product);
+    setIsWishlistPopupVisible(true);
 
-//   const cartItem = {
-//     id: product._id,
-//     name: product.productName,
-//     image: product.images?.[0] || "",
-//     category: product.category?.name || "Uncategorized",
-//     price: product.actualPrice || product.price,
-//     quantity,
-//   };
-
-//   if (!token) {
-//     // Get existing cart or initialize empty array
-//     const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
-
-//     // Check if product already in cart
-//     const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
-
-//     if (existingProductIndex !== -1) {
-//       // Product exists – increase quantity
-//       existingCart[existingProductIndex].quantity += quantity;
-//     } else {
-//       // New product – add to cart
-//       existingCart.push(cartItem);
-//     }
-
-//     // Save updated cart back to localStorage
-//     localStorage.setItem("addtocart", JSON.stringify(existingCart));
-//     window.dispatchEvent(new Event("guestCartUpdated"));
-//   } else {
-//     // User is logged in – use Redux
-//     dispatch(addItemToCart(cartItem));
-//   }
-
-//   // UI feedback
-//   setAddedProduct(product); 
-//   setIsPopupVisible(true);
-//   setTimeout(() => {
-//     setIsPopupVisible(false);
-//   }, 3000);
-
-//   closeModal();
-// };
-
-  // const handleAddToCart = (product: any) => {
-  //     const isUserLoggedIn = !!localStorage.getItem("token");
-
-  //   if (!isUserLoggedIn) {
-  //     setShowLoginModal(true); // Trigger login modal
-  //     return;
-  //   }
-  //   dispatch(
-  //     addItemToCart({
-  //       id: product._id,
-  //       name: product.productName,
-  //       image: product.images?.[0] || "",
-  //       category: product.category?.name || "Uncategorized",
-  //       price: product.actualPrice || product.price,
-  //       quantity,
-  //     })
-  //   );
-  //   setIsPopupVisible(true);
-  //   setAddedProduct(product);
-  //   // Hide the popup after 3 seconds
-  //   setTimeout(() => {
-  //     setIsPopupVisible(false);
-  //   }, 3000);
-
-  //   closeModal();
-  // };
+    setTimeout(() => {
+      setIsWishlistPopupVisible(false);
+    }, 3000);
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         size={14}
-        className={`${i < Math.floor(rating)
+        className={`${
+          i < Math.floor(rating)
             ? "fill-yellow-400 stroke-yellow-400"
             : "stroke-gray-300"
-          }`}
+        }`}
       />
     ));
   };
 
-  const handleAddToWishlist = (product: any) => {
-    dispatch(addItemToWishlist(product._id));
-    setWishlistProduct(product);
-    setIsWishlistPopupVisible(true);
-
-    // Hide the popup after 3 seconds
-    setTimeout(() => {
-      setIsWishlistPopupVisible(false);
-    }, 3000);
-  };
-
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${baseUrl}/product/getproducts?referenceWebsite=${referenceWebsite}`
-        );
-        const data = await res.json();
-        if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(5, 17));
-        } else {
-          console.error("Unexpected products format:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-    fetchProducts();
-  }, [baseUrl, referenceWebsite]);
-
-  const maxSlides = Math.ceil(products.length / itemsPerSlide);
+  const maxSlides = Math.ceil(ratedProducts.length / itemsPerSlide);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % maxSlides);
@@ -340,22 +296,17 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                       gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
                     }}
                   >
-                    {products
+                    {ratedProducts
                       .slice(
                         slideIndex * itemsPerSlide,
                         (slideIndex + 1) * itemsPerSlide
                       )
                       .map((product) => (
                         <div
-                          // key={product._id}
-                          // to={`/product/${product._id}`} // Redirect to the product details page on hover
+                          key={product._id}
                           className="group relative bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden"
-                          onMouseEnter={() => {
-                            setHoveredProduct(product._id);
-                          }}
-                          onMouseLeave={() => {
-                            setHoveredProduct(null);
-                          }}
+                          onMouseEnter={() => setHoveredProduct(product._id)}
+                          onMouseLeave={() => setHoveredProduct(null)}
                         >
                           {/* Product Image */}
                           <div className="relative aspect-square overflow-hidden">
@@ -363,6 +314,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                               className="absolute inset-0 w-full h-full object-cover"
                               src={`http://api.jajamblockprints.com${product.images}`}
                               alt={product.productName}
+                              loading="lazy"
                             />
 
                             {/* Discount Badge */}
@@ -379,14 +331,14 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                             <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
                               <button
                                 onClick={() => handleAddToCart(product)}
-                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:bg-[rgb(157,48,137)] group"
+                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
                                 style={{
                                   color: "rgb(157 48 137)",
                                 }}
                                 onMouseEnter={(e) => {
                                   e.currentTarget.style.background =
                                     "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "#fff";
+                                  e.currentTarget.style.color = "white";
                                 }}
                                 onMouseLeave={(e) => {
                                   e.currentTarget.style.background = "white";
@@ -396,17 +348,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                               >
                                 <ShoppingCart size={18} />
                               </button>
-
                               <button
                                 onClick={() => openProductModal(product)}
-                                className="bg-white rounded-full p-2 shadow-lg transition-all "
+                                className="bg-white rounded-full p-2 shadow-lg transition-all hover:text-white"
                                 style={{
                                   color: "rgb(157 48 137)",
                                 }}
                                 onMouseEnter={(e) => {
                                   e.currentTarget.style.background =
                                     "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "#fff";
+                                  e.currentTarget.style.color = "white";
                                 }}
                                 onMouseLeave={(e) => {
                                   e.currentTarget.style.background = "white";
@@ -428,7 +379,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                                 onMouseEnter={(e) => {
                                   e.currentTarget.style.background =
                                     "rgb(157 48 137)";
-                                  e.currentTarget.style.color = "#fff";
+                                  e.currentTarget.style.color = "white";
                                 }}
                                 onMouseLeave={(e) => {
                                   e.currentTarget.style.background = "white";
@@ -443,10 +394,11 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                             {/* Add to Cart Overlay */}
                             <button
                               onClick={() => handleAddToCart(product)}
-                              className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 z-20 ${hoveredProduct === product._id
+                              className={`absolute bottom-0 left-0 w-full text-white py-3 text-center font-semibold transition-all duration-300 z-20 ${
+                                hoveredProduct === product._id
                                   ? "translate-y-0 opacity-100"
                                   : "translate-y-full opacity-0"
-                                }`}
+                              }`}
                               style={{ background: "rgb(157 48 137)" }}
                             >
                               ADD TO CART
@@ -457,8 +409,11 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                           <div className="p-5">
                             <div className="mb-3">
                               <Link
-                                key={product._id}
                                 to={`/product/${product._id}`}
+                                state={{
+                                  rating: product.rating,
+                                  reviewCount: product.reviewCount,
+                                }}
                                 className="text-lg font-bold mb-1 line-clamp-1"
                                 style={{ color: "#1B2E4F" }}
                               >
@@ -468,14 +423,14 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                                 {product.category?.name || "Traditional Wear"}
                               </p>
                             </div>
-
+                              
                             {/* Rating */}
                             <div className="flex items-center mb-3">
                               <div className="flex mr-2">
-                                {renderStars(product.rating || 4)}
+                                {renderStars(product.rating)}
                               </div>
                               <span className="text-xs text-gray-500">
-                                (Reviews)
+                                ({product.reviewCount} Reviews)
                               </span>
                             </div>
 
@@ -511,8 +466,9 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index ? "w-8" : ""
-                  }`}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  currentSlide === index ? "w-8" : ""
+                }`}
                 style={{
                   background:
                     currentSlide === index
@@ -546,6 +502,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
           </Link>
         </div>
       </div>
+
       {/* Product Added Popup */}
       {isPopupVisible && addedProduct && (
         <div
@@ -579,14 +536,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
           <p className="mt-2 text-[12px]">{wishlistProduct.productName}</p>
         </div>
       )}
+      {/* Product Modal */}
       {isModalOpen && selectedProduct && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
           onClick={closeModal}
         >
           <div
-            className={`relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-              }`}
+            className={`relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ${
+              isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="sticky top-0 z-10 bg-white p-6 border-b flex justify-between items-center">
@@ -607,6 +566,7 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                   className="rounded-xl object-contain max-h-[400px]"
                   src={`http://api.jajamblockprints.com${selectedProduct.images}`}
                   alt={selectedProduct.productName}
+                  loading="lazy"
                 />
               </div>
 
@@ -616,7 +576,9 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
                     <div className="flex mr-2">
                       {renderStars(selectedProduct.rating || 4)}
                     </div>
-                    <span className="text-sm text-gray-500">(Reviews)</span>
+                    <span className="text-sm text-gray-500">
+                      ({selectedProduct.reviewCount} Reviews)
+                    </span>
                   </div>
                   <div className="flex items-center mb-6">
                     <span
@@ -692,16 +654,16 @@ const Arrivals = ({ addToCart }: { addToCart: (product: any) => void }) => {
           </div>
         </div>
       )}
-       {showLoginModal && (
-              <LoginModal
-                isOpen={showLoginModal}
-                onClose={() => setShowLoginModal(false)}
-              >
-                <Login1 />
-              </LoginModal>
-            )}
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        >
+          <Login1 />
+        </LoginModal>
+      )}
     </section>
   );
-}; 
+};
 
 export default Arrivals;

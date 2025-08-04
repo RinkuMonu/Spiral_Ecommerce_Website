@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Eye,
   Heart,
@@ -13,18 +13,34 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItemToWishlist } from "../../reduxslice/WishlistSlice";
 import { addItemToCart } from "../../reduxslice/CartSlice";
-import LoginModal from "../loginModal/LoginModal"; 
+import LoginModal from "../loginModal/LoginModal";
 import Login1 from "../../pages/Login1";
+
+interface Product {
+  _id: string;
+  productName: string;
+  images: string;
+  category: {
+    name: string;
+  };
+  actualPrice: number;
+  price?: number;
+  discount?: number;
+  description?: string;
+  rating?: number;
+  reviewCount?: number;
+}
+
 const TrendingProducts = ({
   addToCart,
 }: {
-  addToCart: (product: any) => void;
+  addToCart: (product: Product) => void;
 }) => {
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const [products, setProducts] = useState<any[]>([]);
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(4);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -35,9 +51,18 @@ const TrendingProducts = ({
 
   // Popup States
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [addedProduct, setAddedProduct] = useState<any>(null);
+  const [addedProduct, setAddedProduct] = useState<Product | null>(null);
   const [isWishlistPopupVisible, setIsWishlistPopupVisible] = useState(false);
-  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+  const [wishlistProduct, setWishlistProduct] = useState<Product | null>(null);
+
+  // Generate rated products with random ratings and review counts
+  const ratedProducts = useMemo(() => {
+    return products.map((product) => ({
+      ...product,
+      rating: Math.floor(Math.random() * 5) + 1,
+      reviewCount: Math.floor(Math.random() * (100 - 25 + 1)) + 25,
+    }));
+  }, [products]);
 
   // Responsive items per slide
   useEffect(() => {
@@ -60,15 +85,15 @@ const TrendingProducts = ({
 
   // Auto-slide functionality
   useEffect(() => {
-    if (products.length === 0) return;
+    if (ratedProducts.length === 0) return;
 
-    const maxSlides = Math.ceil(products.length / itemsPerSlide);
+    const maxSlides = Math.ceil(ratedProducts.length / itemsPerSlide);
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % maxSlides);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [products.length, itemsPerSlide]);
+  }, [ratedProducts.length, itemsPerSlide]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -89,7 +114,7 @@ const TrendingProducts = ({
         );
         const data = await res.json();
         if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, 12)); // Get 12 products for slider
+          setProducts(data.products.slice(0, 12));
         } else {
           console.error("Unexpected products format:", data);
         }
@@ -100,7 +125,7 @@ const TrendingProducts = ({
     fetchProducts();
   }, [baseUrl, referenceWebsite]);
 
-  const openProductModal = (product: any) => {
+  const openProductModal = (product: Product) => {
     setSelectedProduct(product);
     setQuantity(1);
     setIsModalOpen(true);
@@ -114,99 +139,53 @@ const TrendingProducts = ({
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
-  const handleAddToCart = (product: any) => {
-  const token = localStorage.getItem("token");
+  const handleAddToCart = (product: Product) => {
+    const token = localStorage.getItem("token");
 
-  const cartItem = {
-    id: product._id,
-    name: product.productName,
-    image: product.images?.[0] || "",
-    category: product.category?.name || "Uncategorized",
-    price: product.actualPrice || product.price,
-    quantity,
-  };
+    const cartItem = {
+      id: product._id,
+      name: product.productName,
+      image: product.images?.[0] || "",
+      category: product.category?.name || "Uncategorized",
+      price: product.actualPrice || product.price || 0,
+      quantity,
+    };
 
-  if (!token) {
-    // Get existing cart or initialize empty array
-    const existingCart = JSON.parse(localStorage.getItem("addtocart") || "[]");
+    if (!token) {
+      const existingCart = JSON.parse(
+        localStorage.getItem("addtocart") || "[]"
+      );
 
-    // Check if product already in cart
-    const existingProductIndex = existingCart.findIndex((item: any) => item.id === product._id);
+      const existingProductIndex = existingCart.findIndex(
+        (item: any) => item.id === product._id
+      );
 
-    if (existingProductIndex !== -1) {
-      // Product exists – increase quantity
-      existingCart[existingProductIndex].quantity += quantity;
+      if (existingProductIndex !== -1) {
+        existingCart[existingProductIndex].quantity += quantity;
+      } else {
+        existingCart.push(cartItem);
+      }
+
+      localStorage.setItem("addtocart", JSON.stringify(existingCart));
+      window.dispatchEvent(new Event("guestCartUpdated"));
     } else {
-      // New product – add to cart
-      existingCart.push(cartItem);
+      dispatch(addItemToCart(cartItem));
     }
 
-    // Save updated cart back to localStorage
-    localStorage.setItem("addtocart", JSON.stringify(existingCart));
-    window.dispatchEvent(new Event("guestCartUpdated"));
-  } else {
-    // User is logged in – use Redux
-    dispatch(addItemToCart(cartItem));
-  }
+    setAddedProduct(product);
+    setIsPopupVisible(true);
+    setTimeout(() => {
+      setIsPopupVisible(false);
+    }, 3000);
 
-  // UI feedback
-  setAddedProduct(product);
-  setIsPopupVisible(true);
-  setTimeout(() => {
-    setIsPopupVisible(false);
-  }, 3000);
+    closeModal();
+  };
 
-  closeModal();
-};
-
-
-  // const handleAddToCart = (product: any) => {
-    
-  //   dispatch(
-  //     addItemToCart({
-  //       id: product._id,
-  //       name: product.productName,
-  //       image: product.images?.[0] || "",
-  //       category: product.category?.name || "Uncategorized",
-  //       price: product.actualPrice || product.price,
-  //       quantity,
-  //     })
-  //   );
-  //   setAddedProduct(product);
-  //   setIsPopupVisible(true);
-
-  //   setTimeout(() => {
-  //     setIsPopupVisible(false);
-  //   }, 3000);
-
-  //   closeModal();
-  // };
-
-// const handleAddToCart = (product: any) => {
-//   dispatch(
-//     addItemToCart({
-//       id: product._id,
-//       name: product.productName,
-//       image: product.images?.[0] || "",
-//       category: product.category?.name || "Uncategorized",
-//       price: product.actualPrice || product.price,
-//       quantity: quantity || 1 
-//     })
-//   );
-//   setAddedProduct(product);
-//   setIsPopupVisible(true);
-
-//   setTimeout(() => {
-//     setIsPopupVisible(false);
-//   }, 3000);
-
-//   closeModal();
-// };
-  const handleAddToWishlist = (product: any) => {
+  const handleAddToWishlist = (product: Product) => {
     const isUserLoggedIn = !!localStorage.getItem("token");
 
     if (!isUserLoggedIn) {
-      setShowLoginModal(true); // Trigger login modal
+      setShowLoginModal(true);
       return;
     }
     dispatch(addItemToWishlist(product._id));
@@ -232,7 +211,7 @@ const TrendingProducts = ({
     ));
   };
 
-  const maxSlides = Math.ceil(products.length / itemsPerSlide);
+  const maxSlides = Math.ceil(ratedProducts.length / itemsPerSlide);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % maxSlides);
@@ -321,7 +300,7 @@ const TrendingProducts = ({
                       gridTemplateColumns: `repeat(${itemsPerSlide}, 1fr)`,
                     }}
                   >
-                    {products
+                    {ratedProducts
                       .slice(
                         slideIndex * itemsPerSlide,
                         (slideIndex + 1) * itemsPerSlide
@@ -339,6 +318,7 @@ const TrendingProducts = ({
                               className="absolute inset-0 w-full h-full object-cover"
                               src={`http://api.jajamblockprints.com${product.images}`}
                               alt={product.productName}
+                              loading="lazy"
                             />
 
                             {/* Discount Badge */}
@@ -434,6 +414,10 @@ const TrendingProducts = ({
                             <div className="mb-3">
                               <Link
                                 to={`/product/${product._id}`}
+                                state={{
+                                  rating: product.rating,
+                                  reviewCount: product.reviewCount,
+                                }}
                                 className="text-lg font-bold mb-1 line-clamp-1"
                                 style={{ color: "#1B2E4F" }}
                               >
@@ -443,14 +427,14 @@ const TrendingProducts = ({
                                 {product.category?.name || "Traditional Wear"}
                               </p>
                             </div>
-
+                              
                             {/* Rating */}
                             <div className="flex items-center mb-3">
                               <div className="flex mr-2">
                                 {renderStars(product.rating || 4)}
                               </div>
                               <span className="text-xs text-gray-500">
-                                (Reviews)
+                                ({product.reviewCount} Reviews)
                               </span>
                             </div>
 
@@ -578,6 +562,7 @@ const TrendingProducts = ({
                   className="rounded-xl object-contain max-h-[400px]"
                   src={`http://api.jajamblockprints.com${selectedProduct.images}`}
                   alt={selectedProduct.productName}
+                  loading="lazy"
                 />
               </div>
 
@@ -587,7 +572,9 @@ const TrendingProducts = ({
                     <div className="flex mr-2">
                       {renderStars(selectedProduct.rating || 4)}
                     </div>
-                    <span className="text-sm text-gray-500">(Reviews)</span>
+                    <span className="text-sm text-gray-500">
+                      ({selectedProduct.reviewCount} Reviews)
+                    </span>
                   </div>
                   <div className="flex items-center mb-6">
                     <span

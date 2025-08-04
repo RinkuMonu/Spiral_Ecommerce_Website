@@ -37,7 +37,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const [wishlistProduct, setWishlistProduct] = useState<any>(null);
   const [reviewCount, setReviewCount] = useState(0);
   const dispatch = useDispatch();
- console.log(product,"Products")
+  // console.log(product, "Products");
   // const handleAddToCart = (e: React.MouseEvent) => {
   //   e.preventDefault()
   //   e.stopPropagation()
@@ -60,8 +60,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
   // }
 
   useEffect(() => {
-  setReviewCount(Math.floor(Math.random() * 50) + 10);
-}, []);
+    setReviewCount(Math.floor(Math.random() * (100 - 25 + 1)) + 25);
+  }, []);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -274,9 +274,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <div className="flex mr-2">
                 {renderStars(product.rating || 0)}
               </div>
-              <span className="text-xs text-gray-500">
-                ({reviewCount})
-              </span>
+              <span className="text-xs text-gray-500">({reviewCount})</span>
             </div>
 
             {/* Price */}

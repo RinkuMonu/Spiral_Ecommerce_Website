@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { ShoppingCart, Star } from "lucide-react";
 import {
   FaFacebookF,
@@ -44,7 +44,11 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
+    const location = useLocation();
+  const rating = location.state?.rating || 4;
+  const reviewCount = location.state?.reviewCount;
   const [product, setProduct] = useState<Product | null>(null);
+  // console.log(product,"sadfg")
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "reviews">(
@@ -250,33 +254,10 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       ...otherProducts,
     ].slice(0, 4);
   }
+//  const reviewCount = useMemo(() => {
+//   return Math.floor(Math.random() * (100 - 25 + 1)) + 25;
+// }, []);
 
-  // const dummyReviews = [
-  //   {
-  //     id: 1,
-  //     author: "Priya Sharma",
-  //     rating: 5,
-  //     comment:
-  //       "Absolutely stunning saree! The fabric is so soft and the colors are vibrant. Received many compliments.",
-  //     date: "July 15, 2024",
-  //   },
-  //   {
-  //     id: 2,
-  //     author: "Rahul Singh",
-  //     rating: 4,
-  //     comment:
-  //       "Good quality product. The delivery was quick, and it looks just like the picture. Highly recommend!",
-  //     date: "July 10, 2024",
-  //   },
-  //   {
-  //     id: 3,
-  //     author: "Anjali Devi",
-  //     rating: 5,
-  //     comment:
-  //       "Exceeded my expectations! The craftsmanship is superb. Will definitely buy from here again.",
-  //     date: "July 01, 2024",
-  //   },
-  // ];
 
   if (!product)
     return (
@@ -390,8 +371,8 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           </p>
 
           <div className="flex items-center mb-5">
-            <div className="flex mr-3">{renderStars(product.rating || 4)}</div>
-            <span className="text-base text-gray-600">(Reviews)</span>
+            <div className="flex mr-3">{renderStars(rating)}</div>
+            <span className="text-base text-gray-600">({reviewCount} Reviews)</span>
           </div>
 
           <div className="flex items-baseline mb-8">
