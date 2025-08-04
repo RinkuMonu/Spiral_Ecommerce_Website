@@ -8,7 +8,7 @@ export default function CategoryPage() {
   let initialMinPrice = 0
   let initialMaxPrice = 50000
   const { category } = useParams()
-  const catagory1 = category?.replace("-", " ")
+  const catagory1 = category?.replace(/-/g, " ");
   const [products, setProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
   const [priceRange, setPriceRange] = useState([initialMinPrice, initialMaxPrice])
@@ -227,6 +227,7 @@ const handleSizeChange = (size: string) => {
                       min={initialMinPrice}
                       max={initialMaxPrice}
                       value={priceRange[1]}
+                      readOnly
                       onChange={(e) => {
                         const value = Math.max(Number(e.target.value), priceRange[0] + 1)
                         setPriceRange([priceRange[0], value])
@@ -243,6 +244,7 @@ const handleSizeChange = (size: string) => {
                         min={initialMinPrice}
                         max={initialMaxPrice}
                         value={priceRange[0]}
+                        readOnly
                         onChange={(e) => {
                           const value = Number(e.target.value) || 0
                           if (value <= priceRange[1]) setPriceRange([value, priceRange[1]])
@@ -258,6 +260,7 @@ const handleSizeChange = (size: string) => {
                         min={initialMinPrice}
                         max={initialMaxPrice}
                         value={priceRange[1]}
+                        readOnly
                         onChange={(e) => {
                           const value = Number(e.target.value) || initialMaxPrice
                           if (value >= priceRange[0]) setPriceRange([priceRange[0], value])

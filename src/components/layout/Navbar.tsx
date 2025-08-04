@@ -117,7 +117,14 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
     };
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
-
+  function slugify(text) {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-") // spaces → hyphens
+      .replace(/[^\w-]+/g, "") // remove special chars
+      .replace(/--+/g, "-"); // collapse multiple hyphens
+  }
   // User and scroll effects
   useEffect(() => {
     const loadUser = () => {
@@ -417,7 +424,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                 {categories.map((item) => (
                   <Link
                     key={item}
-                    to={`/category/${item.toLowerCase()}`}
+                    to={`/category/${slugify(item)}`}
                     className="block px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-all border-l-4 border-transparent text-sm sm:text-base"
                     style={{ color: textColor }}
                     onMouseEnter={(e) => {
@@ -806,7 +813,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               {categories.slice(0, 6).map((item) => (
                 <Link
                   key={item}
-                  to={`/category/${item.toLowerCase()}`}
+                 to={`/category/${slugify(item)}`}
                   className="relative group px-3 py-2 text-sm font-bold transition-all duration-300"
                   style={{ color: textColor }}
                   onMouseEnter={(e) => {
@@ -893,7 +900,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                           {categories.slice(6).map((item) => (
                             <Link
                               key={item}
-                              to={`/category/${item.toLowerCase()}`}
+                           to={`/category/${slugify(item)}`}
                               className="relative group px-4 py-3 text-sm font-semibold transition-all duration-300 rounded-lg border"
                               style={{
                                 color: textColor,

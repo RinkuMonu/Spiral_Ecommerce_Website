@@ -18,7 +18,6 @@ export default function Footer() {
   const [categories, setCategories] = useState<string[]>([]);
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
   const referenceWebsite = import.meta.env.VITE_REFERENCE_WEBSITE;
-  
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -34,6 +33,15 @@ export default function Footer() {
     };
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
+
+  function slugify(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')      // Replace spaces with hyphens
+    .replace(/[^\w-]+/g, '')   // Remove special characters
+    .replace(/--+/g, '-');     // Remove duplicate hyphens
+}
 
   return (
     <footer className="relative overflow-hidden">
@@ -78,7 +86,17 @@ export default function Footer() {
 
               <div className="space-y-6">
                 <p className="text-gray-700 text-lg leading-relaxed max-w-sm">
-                 Where tradition gracefully meets modern style, bringing you handcrafted elegance inspired by the rich art of block printing. With every piece, <Link to={'/about'} className="text-purple-900 hover:underline">Jajam Block Print </Link> celebrates culture, craftsmanship, and contemporary fashion in harmony.
+                  Where tradition gracefully meets modern style, bringing you
+                  handcrafted elegance inspired by the rich art of block
+                  printing. With every piece,{" "}
+                  <Link
+                    to={"/about"}
+                    className="text-purple-900 hover:underline"
+                  >
+                    Jajam Block Print{" "}
+                  </Link>{" "}
+                  celebrates culture, craftsmanship, and contemporary fashion in
+                  harmony.
                   {/* <span
                     className="font-semibold"
                     style={{ color: "rgb(157 48 137)" }}
@@ -102,7 +120,7 @@ export default function Footer() {
                         icon: <Facebook className="h-5 w-5" />,
                         label: "Facebook",
                         color: "#1877F2",
-                        link: "#", 
+                        link: "#",
                       },
                       {
                         icon: <Twitter className="h-5 w-5" />,
@@ -187,7 +205,7 @@ export default function Footer() {
                 {categories.slice(0, 10).map((item, index) => (
                   <Link
                     key={item}
-                    to={`/category/${encodeURIComponent(item).toLowerCase()}`}
+                   to={`/category/${slugify(item)}`}
                     className="group flex items-center p-1  duration-300 "
                     // style={{
                     //   background: "rgba(157, 48, 137, 0.05)",
@@ -259,7 +277,7 @@ export default function Footer() {
                     </p>
                   </div>
                 </div>
-                 <div className="flex items-center space-x-4   ">
+                <div className="flex items-center space-x-4   ">
                   <Workflow
                     className="h-6 w-6 flex-shrink-0"
                     style={{ color: "rgb(157 48 137)" }}
@@ -269,8 +287,8 @@ export default function Footer() {
                       Working Hours
                     </h5>
                     <p className="text-gray-600">
-                     <p>Mon-sat</p>
-                     <p>09:30AM-06:00PM</p>
+                      <p>Mon-sat</p>
+                      <p>09:30AM-06:00PM</p>
                     </p>
                   </div>
                 </div>
@@ -285,7 +303,7 @@ export default function Footer() {
                     </h5>
                     <p className="text-gray-600">
                       <a href="tel:9116131960" className="hover:underline">
-                       +91-9116131960
+                        +91-9116131960
                       </a>
                     </p>
                   </div>
@@ -327,21 +345,25 @@ export default function Footer() {
           <div className="container mx-auto px-4">
             <div className="text-center space-y-6">
               <p className="text-gray-700 text-lg font-medium">
-                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS . All rights reserved.
+                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS . All
+                rights reserved.
               </p>
 
               {/* Customer Support Links with dividers */}
               <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
                 {[
-                  { title: "About Us", path: "/about" },
-                  { title: "Terms of Service", path: "/terms" },
-                  { title: "Privacy Policy", path: "/privacy" },
+                  { title: "About Us", path: "/about-us" },
+                  { title: "Terms of Service", path: "/terms-of-service" },
+                  { title: "Privacy Policy", path: "/privacy-policy" },
                   {
                     title: "Terms And Conditions",
-                    path: "/termsandcondition",
+                    path: "/terms-and-conditions",
                   },
-                  { title: "Shipping Policy", path: "/shipping" },
-                  { title: "Returns & Exchanges", path: "/refund" },
+                  { title: "Shipping Policy", path: "/shipping-policy" },
+                  {
+                    title: "Returns & Exchanges",
+                    path: "/returns-and-exchanges",
+                  },
                   // { title: "Cancellation Policy", path: "/cancellation_policy" },
                 ].map((item, index, array) => (
                   <div key={index} className="flex items-center">

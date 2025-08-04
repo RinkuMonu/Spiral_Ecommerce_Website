@@ -127,7 +127,7 @@ function App() {
             }
           />
           <Route path="/login" element={<Login />} />
-          <Route path="/about" element={<AboutUs />} />
+          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route
             path="/product/:id"
@@ -138,11 +138,11 @@ function App() {
           {/* <Route path="/policy" element={<Policy />} />  */}
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/refund" element={<Refund />} />
+          <Route path="/returns-and-exchanges" element={<Refund />} />
           <Route path="/cancellation_policy" element={<CancellationPolicy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/shipping" element={<Shipping />} />
-          <Route path="/Privacy" element={<Privacy />} />
+          <Route path="/terms-of-service" element={<Terms />} />
+          <Route path="/shipping-policy" element={<Shipping />} />
+          <Route path="/privacy-policy" element={<Privacy />} />
           <Route
             path="/address"
             element={
@@ -165,7 +165,7 @@ function App() {
           <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/trackorder" element={<TrackOrder />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/termsandcondition" element={<Termsandcondition />} />
+          <Route path="/terms-and-conditions" element={<Termsandcondition />} />
 
           {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
         </Routes>

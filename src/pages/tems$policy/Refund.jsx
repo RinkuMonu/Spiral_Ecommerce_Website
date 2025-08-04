@@ -60,7 +60,7 @@ export default function ExchangeReturn() {
         </p>
 
         <p className="text-justify text-gray-700 leading-relaxed">
-          Late or missing refunds (if applicable): If you haven’t received a refund yet, please check with your bank or credit card provider. If you've done this and still haven’t received the refund, please contact us at <a href="mailto:jajamblockprint@gmail.com" className="text-blue-600">jajamblockprint@gmail.com</a>.
+          Late or missing refunds (if applicable): If you haven’t received a refund yet, please check with your bank or credit card provider. If you've done this and still haven’t received the refund, please contact us at <a href="mailto:shreeshyamblockprints.1@gmail.com" className="text-blue-600">shreeshyamblockprints.1@gmail.com</a>.
         </p>
       </div>
 

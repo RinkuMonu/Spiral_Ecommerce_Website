@@ -148,9 +148,9 @@ export default function TermsOfService() {
         <p>
           <strong>Shop by Collection:</strong> Cotton Suit Sets | Cotton Suit With Chiffon Dupatta | Cotton Suit With Cotton Dupatta | Cotton Suit With Kota Doria Dupatta | Maheshwari Silk Suit | Chanderi Silk Suit Sets
         </p>
-        <p className="text-xs text-gray-500">
+        {/* <p className="text-xs text-gray-500">
           Copyright © {new Date().getFullYear()} Jajam Block Print. All rights reserved.
-        </p>
+        </p> */}
       </div>
     </div>
   );
