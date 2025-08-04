@@ -39,7 +39,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const dispatch = useDispatch();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [addedProduct, setAddedProduct] = useState<Product | null>(null);
-
+  const [quantity, setQuantity] = useState(1);
   // Generate random review count and rating if not provided
   const ratedProduct = useMemo(() => {
     return {
@@ -50,7 +50,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
     };
   }, [product]);
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+     e.preventDefault(); // Prevent default behavior
+  e.stopPropagation();
     const token = localStorage.getItem("token");
 
     const cartItem = {
@@ -192,7 +194,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               }`}
             >
               <button
-                onClick={handleAddToCart}
+                  onClick={(e) => handleAddToCart(e, product)}
                 className="bg-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
                 style={{ color: "rgb(157 48 137)" }}
                 title="Add to Cart"
@@ -228,7 +230,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               }`}
             >
               <button
-                onClick={handleAddToCart}
+                  onClick={(e) => handleAddToCart(e, product)}
                 className="w-full text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:scale-105"
                 style={{ background: "rgb(157 48 137)" }}
                 aria-label="Add to cart"
