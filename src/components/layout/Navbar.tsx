@@ -46,7 +46,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [subCateName, setSubCateName] = useState([]);
   const [user, setUser] = useState<UserData | null>(null);
+  // console.log("cateeee", categories);
 
   // Refs
   const searchRef = useRef<HTMLDivElement>(null);
@@ -103,20 +105,33 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
   );
 
   // Data fetching
+  const [groupedCategories, setGroupedCategories] = useState({});
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch(`${baseUrl}/website/${referenceWebsite}`);
         const data = await res.json();
-        if (Array.isArray(data.website?.categories)) {
-          setCategories(data.website.categories.map((cat: any) => cat.name));
+
+        // Group items by subcategory
+        const grouped = {};
+        if (Array.isArray(data?.website?.categories)) {
+          data?.website?.categories.forEach((item) => {
+            const sub = item?.subcategory;
+            if (!grouped[sub]) grouped[sub] = [];
+            grouped[sub].push(item);
+          });
         }
+
+        setGroupedCategories(grouped);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
     };
+
     fetchCategories();
   }, [baseUrl, referenceWebsite]);
+
   function slugify(text) {
     return text
       .toLowerCase()
@@ -420,29 +435,174 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               >
                 Heritage Categories
               </h3>
-              <div className="space-y-1 mt-2">
-                {categories.map((item) => (
-                  <Link
-                    key={item}
-                    to={`/category/${slugify(item)}`}
-                    className="block px-4 sm:px-6 py-3 sm:py-4 font-semibold transition-all border-l-4 border-transparent text-sm sm:text-base"
-                    style={{ color: textColor }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background =
-                        buttonHoverStyle.background;
-                      e.currentTarget.style.color = primaryColor;
-                      e.currentTarget.style.borderColor = primaryColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = textColor;
-                      e.currentTarget.style.borderColor = "transparent";
-                    }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {item}
-                  </Link>
-                ))}
+              <div className="flex flex-col space-x-1">
+                {Object.entries(groupedCategories).map(
+                  ([subcategory, items]) => (
+                    <div key={subcategory} className="relative group">
+                      <div
+                        // to={`/category/${slugify(subcategory)}`}
+                        className="relative px-3 py-2 text-sm font-bold transition-all duration-300"
+                        style={{ color: textColor }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = textColor;
+                          e.currentTarget.style.transform = "translateY(-2px)";
+                          e.currentTarget.style.boxShadow =
+                            "0 8px 25px rgba(157, 48, 137, 0.4)";
+                          e.currentTarget.style.borderColor = primaryColor;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = textColor;
+                          e.currentTarget.style.background =
+                            "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "none";
+                        }}
+                      >
+                        <span className="relative z-10 text-[12px]">
+                          {subcategory.toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* Hover Tooltip */}
+                      <div className="absolute top-full mt-1 left-0 w-50 bg-[#FFF3FD] border border-gray-100 text-gray-800 rounded-lg shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transform origin-top transition-all duration-200 ease-out z-50">
+                        <ul className="py-1">
+                          {items.map((item) => (
+                            <li key={item._id}>
+                              <Link
+                                to={`/category/${slugify(item?.name)}`}
+                                className="flex items-center px-4 py-2.5 text-sm group/link transition-colors duration-200"
+                              >
+                                <span className="relative truncate">
+                                  {item?.name}
+                                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-purple-500 transition-all duration-300 group-hover/link:w-full"></span>
+                                </span>
+                                {item?.icon && (
+                                  <span className="ml-2 text-gray-400 group-hover/link:text-purple-400 transition-colors">
+                                    <item.icon className="w-4 h-4" />
+                                  </span>
+                                )}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )
+                )}
+                {/* More Categories Dropdown */}
+                {categories.length > 6 && (
+                  <div className="relative" ref={moreMenuRef}>
+                    <button
+                      onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                      className="relative px-4 py-2 text-sm bg-[#c561b1] font-bold transition-all duration-300 rounded-full flex items-center space-x-2 group"
+                      style={{ color: "#fff" }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "#fff";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                        e.currentTarget.style.borderColor = primaryColor;
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!moreMenuOpen) {
+                          e.currentTarget.style.color = "#fff";
+                          e.currentTarget.style.transform = "translateY(0)";
+                        }
+                      }}
+                    >
+                      <span>More Categories</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-300 ${
+                          moreMenuOpen ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {moreMenuOpen && (
+                      <div
+                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-80 z-50"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #f8fafc, #f1f5f9)",
+                          border: "1px solid rgb(157 48 137)",
+                          borderRadius: "10px",
+                          boxShadow: "0 20px 40px rgba(157, 48, 137, 0.2)",
+                        }}
+                      >
+                        <div className="px-6 py-4 border-b-2">
+                          <h3 className="text-sm font-bold text-center relative z-10">
+                            ✦ Explore More Collections ✦
+                          </h3>
+                        </div>
+
+                        <div className="p-4">
+                          <div className="grid grid-cols-2 gap-2">
+                            {categories.slice(6).map((item) => (
+                              <Link
+                                key={item}
+                                to={`/category/${slugify(item)}`}
+                                className="relative group px-4 py-3 text-sm font-semibold transition-all duration-300 rounded-lg border"
+                                style={{
+                                  color: textColor,
+                                  background: "rgba(157, 48, 137, 0.05)",
+                                  borderColor: "rgba(157, 48, 137, 0.1)",
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.color = "white";
+                                  e.currentTarget.style.background =
+                                    "linear-gradient(135deg, rgb(157, 48, 137), rgb(135, 45, 103))";
+                                  e.currentTarget.style.transform =
+                                    "translateX(4px)";
+                                  e.currentTarget.style.boxShadow =
+                                    "0 4px 15px rgba(157, 48, 137, 0.3)";
+                                  e.currentTarget.style.borderColor =
+                                    primaryColor;
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.color = textColor;
+                                  e.currentTarget.style.background =
+                                    "rgba(157, 48, 137, 0.05)";
+                                  e.currentTarget.style.transform =
+                                    "translateX(0)";
+                                  e.currentTarget.style.boxShadow = "none";
+                                  e.currentTarget.style.borderColor =
+                                    "rgba(157, 48, 137, 0.1)";
+                                }}
+                                onClick={() => handleCategorySelect(item)}
+                              >
+                                <div className="flex items-center justify-between text-xs">
+                                  <span>{item}</span>
+                                  <svg
+                                    className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M9 5l7 7-7 7"
+                                    />
+                                  </svg>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div
@@ -767,7 +927,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
       {/* Category Navigation */}
       <div
         className={`hidden xl:block border-t-2 transition-all duration-300 ${
-          isSticky ? "sticky top-0 z-50 shadow-lg" : "relative"
+          isSticky ? "sticky top-0 z-50 shadow-lg" : "reltive"
         }`}
         style={{
           background:
@@ -775,8 +935,8 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
           borderColor: primaryColor,
         }}
       >
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex items-center justify-between py-3">
+        <div className="container mx-auto px-4 relative z-10 ">
+          <div className="flex items-center justify-center py-3 gap-10">
             {/* Traditional ornamental left divider */}
             <div className="flex items-center space-x-2">
               <div
@@ -808,39 +968,59 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
               Home
             </Link>
 
-            {/* Main Categories (First 6) */}
+            {/* Main Categories  */}
             <div className="flex items-center space-x-1">
-              {categories.slice(0, 6).map((item) => (
-                <Link
-                  key={item}
-                 to={`/category/${slugify(item)}`}
-                  className="relative group px-3 py-2 text-sm font-bold transition-all duration-300"
-                  style={{ color: textColor }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 25px rgba(157, 48, 137, 0.4)";
-                    e.currentTarget.style.borderColor = primaryColor;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = textColor;
-                    e.currentTarget.style.background =
-                      "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <span className="relative z-10 text-[12px]">{item}</span>
+              {Object.entries(groupedCategories).map(([subcategory, items]) => (
+                <div key={subcategory} className="relative group">
                   <div
-                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
-                    style={{
-                      background: "linear-gradient(135deg, #C1467F, #A13C78)",
+                    // to={`/category/${slugify(subcategory)}`}
+                    className="relative px-3 py-2 text-sm font-bold transition-all duration-300"
+                    style={{ color: textColor }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = textColor;
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 25px rgba(157, 48, 137, 0.4)";
+                      e.currentTarget.style.borderColor = primaryColor;
                     }}
-                  ></div>
-                </Link>
-              ))}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = textColor;
+                      e.currentTarget.style.background =
+                        "linear-gradient(135deg, rgb(255 255 255 / 5%), rgb(255 201 233 / 5%))";
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    <span className="relative z-10 text-[12px]">
+                      {subcategory.toUpperCase()}
+                    </span>
+                  </div>
 
+                  {/* Hover Tooltip */}
+                  <div className="absolute top-full mt-1 left-0 w-50 bg-[#FFF3FD] border border-gray-100 text-gray-800 rounded-lg shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transform origin-top transition-all duration-200 ease-out z-50">
+                    <ul className="py-1">
+                      {items.map((item) => (
+                        <li key={item._id}>
+                          <Link
+                            to={`/category/${slugify(item?.name)}`}
+                            className="flex items-center px-4 py-2.5 text-sm group/link transition-colors duration-200"
+                          >
+                            <span className="relative truncate">
+                              {item?.name}
+                              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-purple-500 transition-all duration-300 group-hover/link:w-full"></span>
+                            </span>
+                            {item?.icon && (
+                              <span className="ml-2 text-gray-400 group-hover/link:text-purple-400 transition-colors">
+                                <item.icon className="w-4 h-4" />
+                              </span>
+                            )}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
               {/* More Categories Dropdown */}
               {categories.length > 6 && (
                 <div className="relative" ref={moreMenuRef}>
@@ -900,7 +1080,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                           {categories.slice(6).map((item) => (
                             <Link
                               key={item}
-                           to={`/category/${slugify(item)}`}
+                              to={`/category/${slugify(item)}`}
                               className="relative group px-4 py-3 text-sm font-semibold transition-all duration-300 rounded-lg border"
                               style={{
                                 color: textColor,
@@ -950,28 +1130,6 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick, cartItemCount }) => {
                           ))}
                         </div>
                       </div>
-
-                      {/* <div
-                        className="px-6 py-3 border-t"
-                        style={{ borderColor: "rgba(157, 48, 137, 0.2)" }}
-                      >
-                        <div className="flex justify-center">
-                          <div className="flex items-center space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="w-1 h-1 rounded-full"
-                                style={{
-                                  background:
-                                    i === 2
-                                      ? primaryColor
-                                      : "rgba(157, 48, 137, 0.3)",
-                                }}
-                              ></div>
-                            ))}
-                          </div>
-                        </div>
-                      </div> */}
                     </div>
                   )}
                 </div>

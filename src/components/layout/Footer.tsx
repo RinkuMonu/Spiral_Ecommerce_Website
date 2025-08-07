@@ -90,7 +90,7 @@ export default function Footer() {
                   handcrafted elegance inspired by the rich art of block
                   printing. With every piece,{" "}
                   <Link
-                    to={"/about"}
+                    to={"/about-us"}
                     className="text-purple-900 hover:underline"
                   >
                     Jajam Block Print{" "}

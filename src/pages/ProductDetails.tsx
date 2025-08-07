@@ -663,7 +663,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                           <FaRegUser />
                           {review?.user?.firstName} {review?.user?.lastName}
                         </span>
-                        <div className="flex">{renderStars(review.rating)}</div>
+                        <div className="flex">{renderStars(review?.rating)}</div>
                       </div>
                       <p className="text-sm text-gray-500 mb-3">
                         {review.date}
