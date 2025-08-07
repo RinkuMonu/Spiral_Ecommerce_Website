@@ -44,7 +44,7 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
-    const location = useLocation();
+  const location = useLocation();
   const rating = location.state?.rating || 4;
   const reviewCount = location.state?.reviewCount;
   const [product, setProduct] = useState<Product | null>(null);
@@ -57,6 +57,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const [mainImage, setMainImage] = useState<string>(""); // Re-introducing mainImage state
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isRatingModalOpen, setRatingModalOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<any>(null);
   const dispatch = useDispatch();
   const { id } = useParams();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -115,6 +116,11 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => quantity > 1 && setQuantity((prev) => prev - 1);
 
+  useEffect(() => {
+    if (product?.size?.length) {
+      setSelectedSize(product.size[0]);
+    }
+  }, [product]);
   // const handleAddToCart = () => {
   //   if (product) {
   //     addToCart({
@@ -168,7 +174,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       name: product.productName,
       image: product.images?.[0] || "",
       category: product.category?.name || "Uncategorized",
-      price: product.actualPrice || product.price,
+      price: selectedSize?.price || product.actualPrice || product.price,
       quantity,
     };
 
@@ -221,7 +227,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
         name: product.productName,
         image: product.images?.[0] || "",
         category: product.category?.name || "Uncategorized",
-        price: product.actualPrice || product.price,
+        price: selectedSize?.price || product.actualPrice || product.price,
         quantity,
       });
     }
@@ -254,10 +260,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
       ...otherProducts,
     ].slice(0, 4);
   }
-//  const reviewCount = useMemo(() => {
-//   return Math.floor(Math.random() * (100 - 25 + 1)) + 25;
-// }, []);
-
+  //  const reviewCount = useMemo(() => {
+  //   return Math.floor(Math.random() * (100 - 25 + 1)) + 25;
+  // }, []);
 
   if (!product)
     return (
@@ -331,26 +336,27 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                   }
                 />
                 <img
-                  src={`http://api.jajamblockprints.com${product.images}`}
+                  src={`http://api.jajamblockprints.com${product?.images}`}
                   alt="Thumbnail 3"
                   className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                   onClick={() =>
                     setMainImage(
-                      product.images[0] ||
+                      product?.images[0] ||
                         "/placeholder.svg?height=600&width=600"
                     )
                   }
                 />
               </>
             )}
-            {product.images.length === 2 && (
+            {product?.images?.length === 2 && (
               <img
-                src={`http://api.jajamblockprints.com${product.images}`}
+                src={`http://api.jajamblockprints.com${product?.images}`}
                 alt="Thumbnail 3"
                 className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
                 onClick={() =>
                   setMainImage(
-                    product.images[0] || "/placeholder.svg?height=600&width=600"
+                    product?.images[0] ||
+                      "/placeholder.svg?height=600&width=600"
                   )
                 }
               />
@@ -364,35 +370,45 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             className="text-5xl font-extrabold mb-4 leading-tight"
             style={{ color: "#1B2E4F" }}
           >
-            {product.productName}
+            {product?.productName}
           </h1>
           <p className="text-gray-700 text-xl mb-6 leading-relaxed">
-            {product.description}
+            {product?.description}
           </p>
 
           <div className="flex items-center mb-5">
             <div className="flex mr-3">{renderStars(rating)}</div>
-            <span className="text-base text-gray-600">({reviewCount} Reviews)</span>
+            <span className="text-base text-gray-600">
+              ({reviewCount} Reviews)
+            </span>
           </div>
 
           <div className="flex items-baseline mb-8">
+            {/* Selected size price OR fallback to actual price */}
             <span
               className="text-5xl font-bold mr-4"
               style={{ color: "rgb(157 48 137)" }}
             >
-              ₹{product.actualPrice}
+              ₹{selectedSize?.price || product?.actualPrice}
             </span>
-            {product.price && product.price !== product.actualPrice && (
-              <span className="text-2xl text-gray-500 line-through">
-                ₹{product.price}
-              </span>
-            )}
-            {product.discount && (
+
+            {/* Show strikethrough price only if there's a difference */}
+            {product?.price &&
+              (selectedSize?.price
+                ? selectedSize.price < product.price
+                : product.actualPrice < product.price) && (
+                <span className="text-2xl text-gray-500 line-through">
+                  ₹{product?.price}
+                </span>
+              )}
+
+            {/* Show discount badge */}
+            {product?.discount && (
               <span
                 className="ml-6 px-4 py-2 rounded-full text-lg font-semibold text-white shadow-md"
                 style={{ background: "rgb(157 48 137)" }}
               >
-                {product.discount}% OFF
+                {product?.discount}% OFF
               </span>
             )}
           </div>
@@ -400,14 +416,37 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           <div className="grid grid-cols-2 gap-y-3 gap-x-8 text-gray-800 text-lg mb-8">
             <div>
               <span className="font-semibold">Size:</span>{" "}
-              <span className="text-gray-700">
-                {product.size || "Standard"}
-              </span>
+              {Array.isArray(product?.size) && product.size.length > 0 ? (
+                <div className="mt-2 flex flex-wrap gap-3">
+                  {product.size.map((s) => (
+                    <button
+                      key={s._id}
+                      onClick={() => setSelectedSize(s)}
+                      className={`px-4 py-2 rounded-full border text-sm font-semibold transition-all
+            ${
+              selectedSize?._id === s._id
+                ? "bg-black text-white border-black"
+                : "bg-white text-black border-gray-400 hover:border-black"
+            }`}
+                    >
+                      {s.sizes}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-gray-700 ml-2">Standard</span>
+              )}
+              {selectedSize && (
+                <div className="mt-3 text-green-700 font-medium text-base">
+                  Price for {selectedSize.sizes}: ₹{selectedSize.price}
+                </div>
+              )}
             </div>
+
             <div>
               <span className="font-semibold">Category:</span>{" "}
               <span className="text-gray-700">
-                {product.category?.name || "Uncategorized"}
+                {product?.category?.name || "Uncategorized"}
               </span>
             </div>
             <div>
@@ -591,18 +630,18 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                 Product Overview
               </h3>
               <p className="mb-5">{product.description}</p>
-              <p className="mb-5">
+              {/* <p className="mb-5">
                 This exquisite piece is crafted with the finest traditional
                 techniques, ensuring both authenticity and durability. Perfect
                 for special occasions, it embodies the rich cultural heritage of
                 our artisans.
-              </p>
-              <ul className="list-disc list-inside space-y-3 text-gray-700">
+              </p> */}
+              {/* <ul className="list-disc list-inside space-y-3 text-gray-700">
                 <li>Handwoven with premium threads</li>
                 <li>Intricate traditional patterns</li>
                 <li>Comfortable and breathable fabric</li>
                 <li>Ideal for festive wear and celebrations</li>
-              </ul>
+              </ul> */}
             </div>
           ) : (
             <div>
@@ -612,9 +651,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               >
                 Customer Reviews
               </h3>
-              {review.length > 0 ? (
+              {review?.length > 0 ? (
                 <div className="space-y-8">
-                  {review.map((review) => (
+                  {review?.map((review) => (
                     <div
                       key={review.id}
                       className="border-b pb-6 last:border-b-0 last:pb-0"
@@ -630,7 +669,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                         {review.date}
                       </p>
                       <p className="text-gray-700 leading-relaxed">
-                        {review.comment}
+                        {review?.comment}
                       </p>
                     </div>
                   ))}

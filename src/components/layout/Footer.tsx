@@ -269,7 +269,7 @@ export default function Footer() {
                       Our Location
                     </h5>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA
+                       PLOT NO 21-A (2), RAMDWARA
                       COLONY-2, SANGANER, JAIPUR-302029
                     </p>
                     <p className="text-gray-500 text-xs mt-1">

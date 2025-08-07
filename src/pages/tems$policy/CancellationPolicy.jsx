@@ -391,7 +391,7 @@ const CancellationPolicy = () => {
                     
                     <div className="space-y-6">
                       <p className="text-gray-700 leading-relaxed">
-                        The cancellation policy of JAJAM BLOCK PRINTS PRIVATE LIMITED serves as a
+                        The cancellation policy of JAJAM BLOCK PRINTS serves as a
                         structured framework that outlines the terms and conditions for
                         canceling services, projects, or subscriptions. It is designed to
                         provide clarity and transparency regarding how cancellations
