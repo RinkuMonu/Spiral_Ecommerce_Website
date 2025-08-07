@@ -47,11 +47,11 @@ const features = [
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 w-full">
           {features.map((item, index) => (
             <div
               key={index}
-              className="group relative bg-white rounded-2xl p-8 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border-2"
+              className="group relative bg-white  rounded-2xl p-8 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border-2"
               style={{
                 borderColor: "rgba(157, 48, 137, 0.1)",
               }}
