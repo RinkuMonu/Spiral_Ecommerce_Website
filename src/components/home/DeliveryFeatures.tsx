@@ -11,13 +11,13 @@ const features = [
       "Each fabric tells a story — hand-printed using traditional techniques from Rajasthan & Andhra.",
     highlight: "Authentic Artisanal Prints",
   },
-  {
-    icon: <Layers  className="text-4xl" />, 
-    title: "Chanderi, Kota Doriya, Maheshwari, Cotton Malmal",
-    description:
-      "Pure, breathable and elegant – sourced directly from trusted weavers across India.",
-    highlight: "Premium Handloom Fabrics",
-  },
+  // {
+  //   icon: <Layers  className="text-4xl" />, 
+  //   title: "Chanderi, Kota Doriya, Maheshwari, Cotton Malmal",
+  //   description:
+  //     "Pure, breathable and elegant – sourced directly from trusted weavers across India.",
+  //   highlight: "Premium Handloom Fabrics",
+  // },
   {
     icon: <Leaf className="text-4xl" />, 
     title: "Natural Dyes. Zero Chemicals.",
