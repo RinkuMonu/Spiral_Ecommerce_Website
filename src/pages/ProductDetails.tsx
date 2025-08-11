@@ -584,7 +584,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
               >
                 Product Overview
               </h3>
-              <p className="mb-5">{product.description}</p>
+              <p className="mb-5"><div dangerouslySetInnerHTML={{ __html: product.description }} /></p>
               {/* <p className="mb-5">
                 This exquisite piece is crafted with the finest traditional
                 techniques, ensuring both authenticity and durability. Perfect
