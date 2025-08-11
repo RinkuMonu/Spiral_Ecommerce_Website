@@ -7,7 +7,7 @@ import logo from "../assest/logo.jpg"
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
-import LoginModal from "../components/loginModal/loginModal"; 
+import LoginModal from "../components/loginModal/LoginModal"; 
 import Login1 from "../pages/Login1";
 interface Address {
   id: string
