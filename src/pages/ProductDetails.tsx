@@ -58,6 +58,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isRatingModalOpen, setRatingModalOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<any>(null);
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -281,86 +282,28 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
           >
             <img
               // src={mainImage || "/placeholder.svg?height=600&width=600&query=main product image"}
-              src={`http://api.jajamblockprints.com${product.images}`}
+              src={`http://api.jajamblockprints.com${mainImage}`}
               alt={product.productName}
               className="w-full h-auto object-cover"
             />
           </div>
           <div className="flex mt-6 space-x-4">
-            {product.images.map((img: string, index: number) => (
-              <img
-                key={index}
-                // src={img || "/placeholder.svg?height=100&width=100&query=product thumbnail"}
-                src={`http://api.jajamblockprints.com${product.images}`}
-                alt={`Thumbnail ${index + 1}`}
-                className={`w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 ${
-                  mainImage === img
-                    ? "border-purple-600 shadow-lg"
-                    : "border-gray-200 hover:border-purple-300"
-                }`}
-                onClick={() => setMainImage(img)}
-              />
-            ))}
-
-            {product.images.length === 0 && (
-              <>
+            {product.images.map((img, index) => {
+              const fullUrl = `http://api.jajamblockprints.com${img}`;
+              return (
                 <img
-                  src={`http://api.jajamblockprints.com${product.images}`}
-                  alt="Thumbnail 2"
-                  className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() =>
-                    setMainImage("/placeholder.svg?height=600&width=600")
-                  }
+                  key={index}
+                  src={fullUrl}
+                  alt={`Thumbnail ${index + 1}`}
+                  className={`w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 ${
+                    mainImage === img
+                      ? "border-purple-600 shadow-lg"
+                      : "border-gray-200 hover:border-purple-300"
+                  }`}
+                  onClick={() => setMainImage(img)}
                 />
-                <img
-                  src={`http://api.jajamblockprints.com${product.images}`}
-                  alt="Thumbnail 3"
-                  className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() =>
-                    setMainImage("/placeholder.svg?height=600&width=600")
-                  }
-                />
-              </>
-            )}
-            {product.images.length === 1 && (
-              <>
-                <img
-                  src={`http://api.jajamblockprints.com${product.images}`}
-                  alt="Thumbnail 2"
-                  className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() =>
-                    setMainImage(
-                      product.images[0] ||
-                        "/placeholder.svg?height=600&width=600"
-                    )
-                  }
-                />
-                <img
-                  src={`http://api.jajamblockprints.com${product?.images}`}
-                  alt="Thumbnail 3"
-                  className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                  onClick={() =>
-                    setMainImage(
-                      product?.images[0] ||
-                        "/placeholder.svg?height=600&width=600"
-                    )
-                  }
-                />
-              </>
-            )}
-            {product?.images?.length === 2 && (
-              <img
-                src={`http://api.jajamblockprints.com${product?.images}`}
-                alt="Thumbnail 3"
-                className="w-24 h-24 object-cover rounded-xl cursor-pointer border-3 transition-all duration-300 transform hover:scale-105 border-gray-200 hover:border-purple-300"
-                onClick={() =>
-                  setMainImage(
-                    product?.images[0] ||
-                      "/placeholder.svg?height=600&width=600"
-                  )
-                }
-              />
-            )}
+              );
+            })}
           </div>
         </div>
 
