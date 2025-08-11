@@ -451,11 +451,17 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             </div>
             <div>
               <span className="font-semibold">Material:</span>{" "}
-              <span className="text-gray-700">Premium Silk Blend</span>
+              <span className="text-gray-700">{product?.material}</span>
             </div>
             <div>
               <span className="font-semibold">Availability:</span>{" "}
-              <span className="text-green-600 font-medium">In Stock</span>
+              <span
+                className={`font-medium ${
+                  product?.stock ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {product?.stock ? "In stock" : "Out of stock"}
+              </span>
             </div>
           </div>
 
@@ -490,14 +496,20 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {/* Reduced gap */}
             <button
               onClick={() => handleAddToCart(product)}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
+              disabled={product.stock <= 0}
+              className={`flex-1 flex items-center justify-center gap-2 px-5 py-3 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] text-sm ${
+                product?.stock <= 0 && "cursor-not-allowed opacity-50"
+              } `} // Smaller buttons
               style={{ background: "rgb(157 48 137)" }}
             >
               <ShoppingCart size={20} /> Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:bg-gray-900 hover:shadow-xl hover:scale-[1.02] text-sm" // Smaller buttons
+              disabled={product.stock <= 0}
+              className={`flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gray-800 text-white font-bold rounded-full shadow-lg transition-all duration-300 hover:bg-gray-900 hover:shadow-xl hover:scale-[1.02] text-sm ${
+                product?.stock <= 0 && "cursor-not-allowed opacity-50"
+              }`} // Smaller buttons
             >
               Buy Now
             </button>
@@ -663,7 +675,9 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
                           <FaRegUser />
                           {review?.user?.firstName} {review?.user?.lastName}
                         </span>
-                        <div className="flex">{renderStars(review?.rating)}</div>
+                        <div className="flex">
+                          {renderStars(review?.rating)}
+                        </div>
                       </div>
                       <p className="text-sm text-gray-500 mb-3">
                         {review.date}
