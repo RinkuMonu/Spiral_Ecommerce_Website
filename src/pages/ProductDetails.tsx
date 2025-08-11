@@ -373,7 +373,7 @@ const ProductDetails = ({ addToCart }: ProductDetailsProps) => {
             {product?.productName}
           </h1>
           <p className="text-gray-700 text-xl mb-6 leading-relaxed">
-            {product?.description}
+            <div dangerouslySetInnerHTML={{ __html: product.description }} />
           </p>
 
           <div className="flex items-center mb-5">
