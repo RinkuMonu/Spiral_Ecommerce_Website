@@ -316,7 +316,7 @@ const TrendingProducts = ({
                           <div className="relative aspect-square overflow-hidden">
                             <img
                               className="absolute inset-0 w-full h-full object-cover"
-                              src={`http://api.jajamblockprints.com${product.images}`}
+                              src={`http://api.jajamblockprints.com${product.images[0]}`}
                               alt={product.productName}
                               loading="lazy"
                             />
