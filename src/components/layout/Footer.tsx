@@ -132,7 +132,7 @@ export default function Footer() {
                         icon: <Instagram className="h-5 w-5" />,
                         label: "Instagram",
                         color: "#E4405F",
-                        link: "https://www.instagram.com/jajamblockprints/",
+                        link: "https://www.instagram.com/",
                       },
                       {
                         icon: <Youtube className="h-5 w-5" />,
@@ -269,12 +269,10 @@ export default function Footer() {
                       Our Location
                     </h5>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                       PLOT NO 21-A (2), RAMDWARA
-                      COLONY-2, SANGANER, JAIPUR-302029
+                       SHOP NO F-5 227/228
+                      MANGLAM TOWER, JAGNNATHPURI, KANTA CHAORAHA KALWAD ROAD, JAIPUR, RAJASTHAN 302012
                     </p>
-                    <p className="text-gray-500 text-xs mt-1">
-                      LANDMARK: BEHIND SPARSH HOSPITAL
-                    </p>
+                   
                   </div>
                 </div>
                 <div className="flex items-center space-x-4   ">
