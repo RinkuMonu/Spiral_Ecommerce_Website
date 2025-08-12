@@ -3,15 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 5174,
-  },
+  base: './', // relative paths ताकि Cloudflare सही serve करे
   build: {
     outDir: 'dist',
+    assetsDir: '', // कभी-कभी sub-folder issue खत्म करने के लिए
   },
-  base: './', // ये बहुत जरूरी है Cloudflare Pages के लिए
 });
