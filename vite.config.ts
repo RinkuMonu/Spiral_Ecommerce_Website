@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
@@ -10,15 +9,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5174,
-    mimeTypes: {
-      'js': 'application/javascript',
-      'mjs': 'application/javascript',
-      'css': 'text/css',
-      'wasm': 'application/wasm'
-    }
   },
   build: {
     outDir: 'dist',
-  }
+  },
+  base: './', // ये बहुत जरूरी है Cloudflare Pages के लिए
 });
-
