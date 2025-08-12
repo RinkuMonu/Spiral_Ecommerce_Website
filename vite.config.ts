@@ -9,6 +9,16 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5174, // वही पोर्ट जो आप उपयोग कर रहे हैं
+    port: 5174,
+    mimeTypes: {
+      'js': 'application/javascript',
+      'mjs': 'application/javascript',
+      'css': 'text/css',
+      'wasm': 'application/wasm'
+    }
   },
+  build: {
+    outDir: 'dist',
+  }
 });
+
