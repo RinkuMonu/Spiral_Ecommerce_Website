@@ -1,11 +1,4 @@
 /*.js
-  Content-Type: application/javascript; charset=UTF-8
-
+  Content-Type: application/javascript
 /*.mjs
-  Content-Type: application/javascript; charset=UTF-8
-
-/*.css
-  Content-Type: text/css; charset=UTF-8
-
-/*.wasm
-  Content-Type: application/wasm
+  Content-Type: application/javascript
