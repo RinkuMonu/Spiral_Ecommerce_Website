@@ -1061,8 +1061,8 @@ const TrackOrder = () => {
                     Call Support
                   </h4>
                   <p className="text-gray-600">
-                    <a href="tel:9116131960" className="hover:underline">
-                      9116131960
+                    <a href="tel:7691097859" className="hover:underline">
+                      7691097859
                     </a>
                   </p>
                 </div>
@@ -1074,10 +1074,10 @@ const TrackOrder = () => {
                   <h4 className="font-semibold text-gray-900 mb-1">Email Us</h4>
                   <p className="text-gray-600 text-sm">
                     <a
-                      href="mailto:shreeshyamblockprints.1@gmail.com"
+                      href="mailto:spiralfashion4@gmail.com"
                       className="hover:underline"
                     >
-                      shreeshyamblockprints.1@gmail.com
+                      spiralfashion4@gmail.com
                     </a>
                   </p>
                 </div>

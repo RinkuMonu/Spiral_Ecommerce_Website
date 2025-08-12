@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import { Search, User, Heart, ShoppingCart, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import logo from "../../assest/logo.jpg";
+import logo from "../../assest/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchWishlist, clearWishlist } from "../../reduxslice/WishlistSlice";

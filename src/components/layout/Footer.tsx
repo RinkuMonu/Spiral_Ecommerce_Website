@@ -11,7 +11,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import footerLogo from "../../assest/footerLogo.jpg";
+import footerLogo from "../../assest/logo.png";
 import { useEffect, useState } from "react";
 
 export default function Footer() {
@@ -93,7 +93,7 @@ export default function Footer() {
                     to={"/about-us"}
                     className="text-purple-900 hover:underline"
                   >
-                    Jajam Block Print{" "}
+                    SPIRAL STYLE FASHION PRIVATE LIMITED {" "}
                   </Link>{" "}
                   celebrates culture, craftsmanship, and contemporary fashion in
                   harmony.
@@ -302,8 +302,8 @@ export default function Footer() {
                       Contact Us
                     </h5>
                     <p className="text-gray-600">
-                      <a href="tel:9116131960" className="hover:underline">
-                        +91-9116131960
+                      <a href="tel:7691097859" className="hover:underline">
+                        +91-7691097859
                       </a>
                     </p>
                   </div>
@@ -320,10 +320,10 @@ export default function Footer() {
                     </h5>
                     <p className="text-gray-600 text-sm">
                       <a
-                        href="mailto:shreeshyamblockprints.1@gmail.com"
+                        href="mailto:spiralfashion4@gmail.com"
                         className="hover:underline"
                       >
-                        shreeshyamblockprints.1@gmail.com
+                        spiralfashion4@gmail.com
                       </a>
                     </p>
                   </div>
@@ -345,7 +345,7 @@ export default function Footer() {
           <div className="container mx-auto px-4">
             <div className="text-center space-y-6">
               <p className="text-gray-700 text-lg font-medium">
-                &copy; {new Date().getFullYear()} JAJAM BLOCK PRINTS . All
+                &copy; {new Date().getFullYear()} SPIRAL STYLE FASHION PRIVATE LIMITED . All
                 rights reserved.
               </p>
 
@@ -353,16 +353,20 @@ export default function Footer() {
               <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
                 {[
                   { title: "About Us", path: "/about-us" },
-                  { title: "Terms of Service", path: "/terms-of-service" },
+                  { title: "Cancellation Policy", path: "/cancellation_policy" },
                   { title: "Privacy Policy", path: "/privacy-policy" },
                   {
                     title: "Terms And Conditions",
-                    path: "/terms-and-conditions",
+                    path: "/terms-and-condition",
                   },
                   { title: "Shipping Policy", path: "/shipping-policy" },
                   {
                     title: "Returns & Exchanges",
-                    path: "/returns-and-exchanges",
+                    path: "/returns-and-exchange",
+                  },
+                    {
+                    title: "Cookies",
+                    path: "/cookies",
                   },
                   // { title: "Cancellation Policy", path: "/cancellation_policy" },
                 ].map((item, index, array) => (

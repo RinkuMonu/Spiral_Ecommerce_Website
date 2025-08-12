@@ -47,23 +47,23 @@ export default function AboutUs() {
         </div>
       </div>
 
-      {/* Jajam Block Prints Section */}
+      {/* SPIRAL STYLE FASHION PRIVATE LIMITED Section */}
       <div className="bg-gradient-to-r from-[#9d3089]/5 to-purple-50 rounded-3xl p-8 md:p-12 mb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Text Content */}
           <div className="space-y-8">
             <div className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-bold text-[#9d3089]">
-                Jajam Block Prints
-                <span className="block text-lg font-normal text-gray-600 mt-2">A Sub-Brand by Shree Shyam</span>
+                SPIRAL STYLE FASHION PRIVATE LIMITED
+                <span className="block text-lg font-normal text-gray-600 mt-2"></span>
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To expand our legacy, we're excited to introduce Jajam Block Prints — a fresh, contemporary sub-brand
-                designed for the modern lifestyle. Named after the traditional floor spreads of Rajasthan, Jajam brings
+                To expand our legacy, we're excited to introduce SPIRAL STYLE FASHION PRIVATE LIMITED — a fresh, contemporary sub-brand
+                designed for the modern lifestyle. Named after the traditional floor spreads of Rajasthan, Spiral brings
                 the same authenticity and heritage in a more modern, design-forward format.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Whether you're looking for handcrafted apparel, home furnishings, or custom textiles, Jajam Block Prints
+                Whether you're looking for handcrafted apparel, home furnishings, or custom textiles, SPIRAL STYLE FASHION PRIVATE LIMITED
                 blends traditional techniques with contemporary style—made with heart, for you.
               </p>
             </div>
@@ -73,7 +73,7 @@ export default function AboutUs() {
           <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-xl">
             <img
               src="/1.jpeg"
-              alt="Jajam Block Prints modern designs"
+              alt="SPIRAL STYLE FASHION PRIVATE LIMITED modern designs"
               className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>

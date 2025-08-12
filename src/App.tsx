@@ -138,7 +138,7 @@ function App() {
           {/* <Route path="/policy" element={<Policy />} />  */}
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/returns-and-exchanges" element={<Refund />} />
+          <Route path="/returns-and-exchange" element={<Refund />} />
           <Route path="/cancellation_policy" element={<CancellationPolicy />} />
           <Route path="/terms-of-service" element={<Terms />} />
           <Route path="/shipping-policy" element={<Shipping />} />
@@ -165,7 +165,7 @@ function App() {
           <Route path="/orderhistory" element={<OrderHistory />} />
           <Route path="/trackorder" element={<TrackOrder />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/terms-and-conditions" element={<Termsandcondition />} />
+          <Route path="/terms-and-condition" element={<Termsandcondition />} />
 
           {/* <Route path="/phonepay" element={<Phonepay/>} />  */}
         </Routes>

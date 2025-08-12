@@ -104,9 +104,9 @@ const sectionContents = [
   ],
   [
     "Questions about the Terms of Service should be sent to us at ",
-    "Email: shreeshyamblockprints.1@gmail.com",
+    "Email: spiralfashion4@gmail.com",
     "Address: JANKI BLOCK PRINTS JANKI HOUSE, PLOT NO 21-A (2), RAMDWARA COLONY-2, SANGANER, JAIPUR-302029",
-    "Phone: +91-9116131960",
+    "Phone: +91-7691097859",
   ],
 ];
 
@@ -117,7 +117,7 @@ export default function TermsOfService() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-[#9d3089] mb-4">Terms of Service</h1>
         <p className="text-md text-gray-600">
-          Please read our terms carefully before using Jajam Block Print services.
+          Please read our terms carefully before using SPIRAL STYLE FASHION PRIVATE LIMITED  services.
         </p>
       </div>
 
@@ -143,13 +143,13 @@ export default function TermsOfService() {
 
       <div className="mt-16 text-sm text-gray-700 border-t pt-6 space-y-3">
         <p>
-          <strong>Shop by Craft:</strong> Jajam Block Print | Dabu Print | Sanganeri Print | Discharge Print | Tie And Dye Print | Black And White Print
+          <strong>Shop by Craft:</strong> SPIRAL STYLE FASHION PRIVATE LIMITED  | Dabu Print | Sanganeri Print | Discharge Print | Tie And Dye Print | Black And White Print
         </p>
         <p>
           <strong>Shop by Collection:</strong> Cotton Suit Sets | Cotton Suit With Chiffon Dupatta | Cotton Suit With Cotton Dupatta | Cotton Suit With Kota Doria Dupatta | Maheshwari Silk Suit | Chanderi Silk Suit Sets
         </p>
         {/* <p className="text-xs text-gray-500">
-          Copyright © {new Date().getFullYear()} Jajam Block Print. All rights reserved.
+          Copyright © {new Date().getFullYear()} SPIRAL STYLE FASHION PRIVATE LIMITED . All rights reserved.
         </p> */}
       </div>
     </div>
